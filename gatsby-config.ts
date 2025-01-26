@@ -29,6 +29,19 @@ const config: GatsbyConfig = {
 				path: `${__dirname}/src/pages`,
 			},
 		},
+		{
+			resolve: `gatsby-source-filesystem`,
+			options: {
+				name: `content`, // Name of the source, useful for GraphQL queries
+				path: `${__dirname}/src/content`, // Adjust the path to your MDX content directory
+			},
+		},
+		{
+			resolve: `gatsby-plugin-mdx`,
+			options: {
+				extensions: [`.mdx`, `.md`], // Ensure Gatsby processes both .mdx and .md files
+			},
+		},
 		// {
 		// 	resolve: `gatsby-omni-font-loader`,
 		// 	options: {

@@ -1,0 +1,75 @@
+---
+title: "Sample Show"
+description: "This is a sample show page."
+---
+
+import Layout from "../components/layout";
+import {
+	Message,
+	Button,
+	Badge,
+	Flex,
+	Card,
+	Image,
+	Text,
+	Link,
+	Grid,
+	Container,
+} from "theme-ui";
+
+import { Link as GatsbyLink } from "gatsby";
+
+<Layout>
+<Container
+        sx={{
+          p: 3,
+          maxWidth: ["100%", "540px", "720px", "960px", "1140px"],
+          mx: "auto",
+        }}
+      >
+<Grid gap={2} columns={[1, 2, 2]}>
+
+<Card
+  sx={{maxWidth: 600,border: '1px solid black', borderRadius: '5px'
+  }} p={2}>
+    <Link as={GatsbyLink} href="/shows/cumbia-shadows" sx={{ textDecoration: 'none', color: "inherit"}}>
+      <Image src="https://placehold.co/600x400" sx={{ borderRadius: '5px'}} />
+
+    <Flex sx={{ flexDirection: 'column', gap: '10px'}}>
+              <Flex sx={{
+        flex: 1,
+        justifyContent: "space-between", // Align items to opposite ends
+        alignItems: "center", // Vertically center items
+        width: "100%", // Ensure it fills the container
+      }}
+    >
+      <Badge variant="badges.primary">Episode</Badge>
+      <Text>12.23.25</Text>
+    </Flex>
+      <Text>Cumbia Shadows Episode 1</Text>
+        <Text sx={{ fontSize: '13px'}}>PSYCHEDELIC EXPLORATIONS</Text>
+          <Flex sx={{ gap: '5px'}}>
+            <Badge variant="primary">Cumbia</Badge>
+            <Badge variant="primary">Latin</Badge>
+
+            <Badge variant="primary">Pscyhedelic</Badge>
+          </Flex>
+          </Flex>
+    </Link>
+
+</Card>
+
+<Card
+  sx={{maxWidth: 600,border: '1px solid black', borderRadius: '5px'
+  }} p={2}>
+
+    <Link as={GatsbyLink} href="/shows/rapha-december-social">
+      <Image src="https://placehold.co/600x400" sx={{ borderRadius: '5px'}} />
+      <Text>Rapha December Social</Text>
+    </Link>
+
+</Card>
+</Grid>
+</Container>
+</Layout>
+```

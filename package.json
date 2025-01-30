@@ -17,7 +17,6 @@
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
-    "@mdx-js/react": "^3.1.0",
     "@theme-ui/mdx": "^0.17.1",
     "@theme-ui/presets": "^0.17.1",
     "gatsby": "^5.14.1",

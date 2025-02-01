@@ -47,7 +47,7 @@ exports.createPages = async ({
                   gatsbyImageData(
                     width: 800
                     layout: CONSTRAINED
-                    formats: [AUTO, WEBP, AVIF]
+                    formats: [AUTO, WEBP]
                   )
                 }
               }

@@ -14,11 +14,18 @@ exports.createSchemaCustomization = ({ actions }) => {
       tags: [String!]
       iframeSrc: String
       slug: String
+      coverImage: File @fileByRelativePath
     }
   `);
 };
 
-exports.createPages = async ({ actions, graphql }) => {
+exports.createPages = async ({
+  actions,
+  graphql,
+}: {
+  actions: any;
+  graphql: any;
+}) => {
   const { createPage } = actions;
 
   const result = await graphql(`
@@ -35,6 +42,15 @@ exports.createPages = async ({ actions, graphql }) => {
               tags
               iframeSrc
               slug
+              coverImage {
+                childImageSharp {
+                  gatsbyImageData(
+                    width: 800
+                    layout: CONSTRAINED
+                    formats: [AUTO, WEBP, AVIF]
+                  )
+                }
+              }
             }
             body
           }
@@ -51,39 +67,21 @@ exports.createPages = async ({ actions, graphql }) => {
   const path = require('path');
   const showTemplate = path.resolve(`src/templates/show-template.tsx`);
 
-  result.data.allMdx.edges.forEach(
-    ({
-      node,
-    }: {
-      node: {
-        id: string;
-        frontmatter: {
-          title: string;
-          description: string;
-          episode: number;
-          date: string;
-          tags: string[];
-          iframeSrc: string;
-          slug: string;
-        };
-        body: string;
-      };
-    }) => {
-      const { frontmatter } = node;
-
-      createPage({
-        path: `/shows/${frontmatter.slug}`, // Use frontmatter.slug for the path
-        component: showTemplate, // Ensure this resolves correctly
-        context: {
-          title: frontmatter.title,
-          description: frontmatter.description,
-          episode: frontmatter.episode,
-          date: frontmatter.date,
-          tags: frontmatter.tags,
-          iframeSrc: frontmatter.iframeSrc,
-          content: node.body,
-        },
-      });
-    }
-  );
+  result.data.allMdx.edges.forEach(({ node }) => {
+    createPage({
+      path: `/shows/${node.frontmatter.slug}`,
+      component: showTemplate,
+      context: {
+        title: node.frontmatter.title,
+        description: node.frontmatter.description,
+        episode: node.frontmatter.episode,
+        date: node.frontmatter.date,
+        tags: node.frontmatter.tags,
+        iframeSrc: node.frontmatter.iframeSrc,
+        content: node.body,
+        coverImage:
+          node.frontmatter.coverImage?.childImageSharp?.gatsbyImageData || null,
+      },
+    });
+  });
 };

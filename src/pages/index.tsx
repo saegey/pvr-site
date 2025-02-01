@@ -13,7 +13,41 @@ import {
 } from 'theme-ui';
 import { Link as GatsbyLink } from 'gatsby';
 
-const ShowsPage = ({ data }) => {
+import { PageProps } from 'gatsby';
+import { GatsbyImage, getImage, IGatsbyImageData } from 'gatsby-plugin-image';
+
+interface Show {
+  id: string;
+  frontmatter: {
+    title: string;
+    description: string;
+    slug: string;
+    date: string;
+    tags: string[];
+    coverImage?: IGatsbyImageData;
+  };
+}
+
+interface DataProps {
+  allMdx: {
+    nodes: Show[];
+  };
+}
+
+const MyDynamicImage = ({ coverImage }: { coverImage: IGatsbyImageData }) => {
+  const image = getImage(coverImage); // Convert Gatsby Image data
+
+  return (
+    <GatsbyImage
+      image={image}
+      alt='Example Image'
+      layout='constrained'
+      style={{ borderRadius: '10px' }}
+    />
+  );
+};
+
+const ShowsPage: React.FC<PageProps<DataProps>> = ({ data }) => {
   const shows = data.allMdx.nodes; // Fetch the queried nodes
 
   return (
@@ -44,11 +78,18 @@ const ShowsPage = ({ data }) => {
                   color: 'inherit',
                 }}
               >
-                <Image
+                {/* <Image
                   src={show.frontmatter.image || 'https://placehold.co/600x400'}
                   sx={{ borderRadius: '5px' }}
-                />
-                <Flex sx={{ flexDirection: 'column', gap: '10px' }}>
+                /> */}
+                <MyDynamicImage coverImage={show.frontmatter.coverImage} />
+                <Flex
+                  sx={{
+                    paddingTop: '10px',
+                    flexDirection: 'column',
+                    gap: '10px',
+                  }}
+                >
                   <Flex
                     sx={{
                       flex: 1,
@@ -96,7 +137,15 @@ export const query = graphql`
           slug
           date
           tags
-          # image
+          coverImage {
+            childImageSharp {
+              gatsbyImageData(
+                width: 600
+                layout: CONSTRAINED
+                formats: [AUTO, WEBP, AVIF]
+              )
+            }
+          }
         }
       }
     }

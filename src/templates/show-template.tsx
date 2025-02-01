@@ -4,6 +4,22 @@ import Layout from '../components/layout';
 import { MDXProvider } from '@mdx-js/react';
 import { compile, run } from '@mdx-js/mdx';
 import * as runtime from 'react/jsx-runtime';
+// import { StaticImage } from 'gatsby-plugin-image';
+
+import { GatsbyImage, getImage, IGatsbyImageData } from 'gatsby-plugin-image';
+
+const MyDynamicImage = ({ coverImage }: { coverImage: IGatsbyImageData }) => {
+  const image = getImage(coverImage); // Convert Gatsby Image data
+
+  return (
+    <GatsbyImage
+      image={image}
+      alt='Example Image'
+      layout='constrained'
+      style={{ borderRadius: '10px' }}
+    />
+  );
+};
 
 interface PageContext {
   title: string;
@@ -13,11 +29,20 @@ interface PageContext {
   tags: string[];
   iframeSrc: string;
   content: string; // Raw MDX content
+  coverImage: IGatsbyImageData;
 }
 
 const ShowTemplate = ({ pageContext }: { pageContext: PageContext }) => {
-  const { title, description, episode, date, tags, iframeSrc, content } =
-    pageContext;
+  const {
+    title,
+    description,
+    episode,
+    date,
+    tags,
+    iframeSrc,
+    content,
+    coverImage,
+  } = pageContext;
 
   const [MDXComponent, setMDXComponent] = useState<React.ComponentType | null>(
     null
@@ -56,11 +81,13 @@ const ShowTemplate = ({ pageContext }: { pageContext: PageContext }) => {
         <Grid gap='10px' columns={[1, 2]}>
           {/* Image */}
           <Box>
-            <AspectImage
+            {/* <AspectImage
+              as={StaticImage}
               ratio={3 / 3}
-              src='https://placehold.co/800x800'
+              src={coverImage}
               sx={{ borderRadius: '10px' }}
-            />
+            /> */}
+            <MyDynamicImage coverImage={coverImage} />
           </Box>
           {/* Metadata and Content */}
           <Flex sx={{ flexDirection: 'column', gap: '10px' }}>
@@ -77,7 +104,14 @@ const ShowTemplate = ({ pageContext }: { pageContext: PageContext }) => {
                 </Badge>
               ))}
             </Flex>
-            {/* Render the compiled MDX content */}
+            <Box sx={{ paddingTop: '20px' }}>
+              <iframe
+                width='100%'
+                height='120'
+                src={iframeSrc}
+                frameBorder='0'
+              ></iframe>
+            </Box>
             <MDXProvider>
               {MDXComponent ? (
                 <MDXComponent />
@@ -85,12 +119,6 @@ const ShowTemplate = ({ pageContext }: { pageContext: PageContext }) => {
                 <Text>Loading content...</Text>
               )}
             </MDXProvider>
-            <iframe
-              width='100%'
-              height='120'
-              src={iframeSrc}
-              frameBorder='0'
-            ></iframe>
           </Flex>
         </Grid>
       </Container>

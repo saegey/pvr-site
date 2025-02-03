@@ -6,6 +6,11 @@ exports.createSchemaCustomization = ({ actions }) => {
       frontmatter: Frontmatter
     }
 
+    type Track {
+      title: String
+      artist: String
+    }
+
     type Frontmatter {
       title: String!
       description: String
@@ -15,6 +20,7 @@ exports.createSchemaCustomization = ({ actions }) => {
       iframeSrc: String
       slug: String
       coverImage: File @fileByRelativePath
+      tracklist: [Track]
     }
   `);
 };
@@ -51,6 +57,11 @@ exports.createPages = async ({
                   )
                 }
               }
+              tracklist {
+                title
+                artist
+              }
+              host
             }
             body
           }
@@ -67,7 +78,7 @@ exports.createPages = async ({
   const path = require('path');
   const showTemplate = path.resolve(`src/templates/show-template.tsx`);
 
-  result.data.allMdx.edges.forEach(({ node }) => {
+  result.data.allMdx.edges.forEach(({ node }: { node: any }) => {
     createPage({
       path: `/shows/${node.frontmatter.slug}`,
       component: showTemplate,
@@ -81,6 +92,8 @@ exports.createPages = async ({
         content: node.body,
         coverImage:
           node.frontmatter.coverImage?.childImageSharp?.gatsbyImageData || null,
+        tracklist: node.frontmatter.tracklist,
+        host: node.frontmatter.host,
       },
     });
   });

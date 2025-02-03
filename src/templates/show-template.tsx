@@ -1,21 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Flex, Grid, Badge, Text, Container, AspectImage } from 'theme-ui';
+import { Box, Flex, Grid, Badge, Text, Container } from 'theme-ui';
 import Layout from '../components/layout';
 import { MDXProvider } from '@mdx-js/react';
 import { compile, run } from '@mdx-js/mdx';
 import * as runtime from 'react/jsx-runtime';
-// import { StaticImage } from 'gatsby-plugin-image';
-
 import { GatsbyImage, getImage, IGatsbyImageData } from 'gatsby-plugin-image';
 
 const MyDynamicImage = ({ coverImage }: { coverImage: IGatsbyImageData }) => {
   const image = getImage(coverImage); // Convert Gatsby Image data
+  if (!image) {
+    return null;
+  }
 
   return (
     <GatsbyImage
       image={image}
       alt='Example Image'
-      layout='constrained'
       style={{ borderRadius: '10px' }}
     />
   );
@@ -30,6 +30,8 @@ interface PageContext {
   iframeSrc: string;
   content: string; // Raw MDX content
   coverImage: IGatsbyImageData;
+  tracklist: { title: string; artist: string }[];
+  host: string;
 }
 
 const ShowTemplate = ({ pageContext }: { pageContext: PageContext }) => {
@@ -42,6 +44,8 @@ const ShowTemplate = ({ pageContext }: { pageContext: PageContext }) => {
     iframeSrc,
     content,
     coverImage,
+    tracklist,
+    host,
   } = pageContext;
 
   const [MDXComponent, setMDXComponent] = useState<React.ComponentType | null>(
@@ -79,21 +83,14 @@ const ShowTemplate = ({ pageContext }: { pageContext: PageContext }) => {
       >
         {/* Main Content Grid */}
         <Grid gap='10px' columns={[1, 2]}>
-          {/* Image */}
           <Box>
-            {/* <AspectImage
-              as={StaticImage}
-              ratio={3 / 3}
-              src={coverImage}
-              sx={{ borderRadius: '10px' }}
-            /> */}
             <MyDynamicImage coverImage={coverImage} />
           </Box>
           {/* Metadata and Content */}
           <Flex sx={{ flexDirection: 'column', gap: '10px' }}>
             <Text as='h3'>{date}</Text>
             <Box>
-              <Badge>Episode {episode}</Badge>
+              <Badge>{host}</Badge>
             </Box>
             <Text as='h2'>{title}</Text>
             <Text as='h4'>{description}</Text>
@@ -112,6 +109,20 @@ const ShowTemplate = ({ pageContext }: { pageContext: PageContext }) => {
                 frameBorder='0'
               ></iframe>
             </Box>
+            {tracklist && (
+              <Box>
+                <Text as='h3'>Tracklist</Text>
+                <Flex sx={{ flexDirection: 'column', gap: '5px' }}>
+                  {tracklist.map(({ artist, title }, index) => (
+                    <Box>
+                      <Text>
+                        {artist} - {title}
+                      </Text>
+                    </Box>
+                  ))}
+                </Flex>
+              </Box>
+            )}
             <MDXProvider>
               {MDXComponent ? (
                 <MDXComponent />

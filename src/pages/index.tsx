@@ -25,6 +25,7 @@ interface Show {
     date: string;
     tags: string[];
     coverImage?: IGatsbyImageData;
+    host: string;
   };
 }
 
@@ -78,11 +79,9 @@ const ShowsPage: React.FC<PageProps<DataProps>> = ({ data }) => {
                   color: 'inherit',
                 }}
               >
-                {/* <Image
-                  src={show.frontmatter.image || 'https://placehold.co/600x400'}
-                  sx={{ borderRadius: '5px' }}
-                /> */}
-                <MyDynamicImage coverImage={show.frontmatter.coverImage} />
+                {show.frontmatter.coverImage && (
+                  <MyDynamicImage coverImage={show.frontmatter.coverImage} />
+                )}
                 <Flex
                   sx={{
                     paddingTop: '10px',
@@ -98,7 +97,9 @@ const ShowsPage: React.FC<PageProps<DataProps>> = ({ data }) => {
                       width: '100%',
                     }}
                   >
-                    <Badge variant='badges.primary'>Episode</Badge>
+                    <Badge variant='badges.primary'>
+                      {show.frontmatter.host}
+                    </Badge>
                     <Text>{show.frontmatter.date || 'Unknown Date'}</Text>
                   </Flex>
                   <Text>{show.frontmatter.title || 'Untitled Show'}</Text>
@@ -146,6 +147,7 @@ export const query = graphql`
               )
             }
           }
+          host
         }
       }
     }

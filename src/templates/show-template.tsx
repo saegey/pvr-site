@@ -26,6 +26,21 @@ const MyDynamicImage = ({ coverImage }: { coverImage: IGatsbyImageData }) => {
   );
 };
 
+import { useColorMode } from 'theme-ui';
+
+const ResponsiveIframe = ({ iframeSrc }: { iframeSrc: string }) => {
+  const [colorMode] = useColorMode(); // Get the current color mode
+
+  return (
+    <iframe
+      width='100%'
+      height='120'
+      src={`${iframeSrc}&light=${colorMode === 'dark' ? '0' : '1'}`} // Toggle light mode
+      frameBorder='0'
+    ></iframe>
+  );
+};
+
 interface PageContext {
   title: string;
   description: string;
@@ -110,7 +125,14 @@ const ShowTemplate = ({ pageContext }: { pageContext: PageContext }) => {
                       <Badge
                         key={index}
                         variant='secondary'
-                        sx={{ background: 'black', borderRadius: '20px' }}
+                        sx={{
+                          backgroundColor: 'badgeSecondaryBg',
+                          color: 'badgeSecondaryText',
+                          borderRadius: '20px',
+                          borderStyle: 'solid',
+                          borderWidth: '1px',
+                          borderColor: 'badgeSecondaryBorder',
+                        }}
                       >
                         {h}
                       </Badge>
@@ -131,12 +153,7 @@ const ShowTemplate = ({ pageContext }: { pageContext: PageContext }) => {
 
             {/* Pushes the iframe to the bottom */}
             <Box sx={{ paddingTop: '20px' }}>
-              <iframe
-                width='100%'
-                height='120'
-                src={iframeSrc}
-                frameBorder='0'
-              ></iframe>
+              <ResponsiveIframe iframeSrc={iframeSrc} />
             </Box>
           </Flex>
         </Grid>

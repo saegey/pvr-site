@@ -21,9 +21,10 @@ const Layout = ({ children }: { children: ReactNode }) => {
       <Box
         as='header'
         sx={{
-          bg: 'white',
-          color: 'background',
-          borderBottom: '1px solid black',
+          bg: 'background',
+          borderBottomColor: 'text',
+          borderBottomWidth: '1px',
+          borderBottomStyle: 'solid',
           p: 1,
           textAlign: 'center',
           position: 'relative',
@@ -40,7 +41,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
             aria-label='Toggle Menu'
             onClick={toggleMenu}
             sx={{
-              color: 'black',
+              color: 'text',
             }}
           />
 
@@ -55,7 +56,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
               textDecoration: 'none',
             }}
           >
-            <Text as='h1' sx={{ margin: 0, fontSize: 4, color: 'black' }}>
+            <Text as='h1' sx={{ margin: 0, fontSize: 4, color: 'text' }}>
               PUBLIC VINYL RADIO
             </Text>
           </Link>
@@ -146,9 +147,13 @@ const Layout = ({ children }: { children: ReactNode }) => {
       {/* Footer */}
       <Box
         as='footer'
-        sx={{ bg: 'white', color: 'background', p: 3, textAlign: 'center' }}
+        sx={{
+          bg: 'background',
+          p: 3,
+          textAlign: 'center',
+        }}
       >
-        <Text as='p' sx={{ color: 'black' }}>
+        <Text as='p' sx={{ color: 'text' }}>
           &copy; {new Date().getFullYear()} Public Vinyl Radio
         </Text>
       </Box>

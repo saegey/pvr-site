@@ -69,7 +69,9 @@ const ShowsPage: React.FC<PageProps<DataProps>> = ({ data }) => {
               key={show.id}
               sx={{
                 maxWidth: 600,
-                border: '1px solid black',
+                borderColor: 'text',
+                borderWidth: '1px',
+                borderStyle: 'solid',
                 borderRadius: '5px',
               }}
               p={2}
@@ -107,8 +109,12 @@ const ShowsPage: React.FC<PageProps<DataProps>> = ({ data }) => {
                             key={index}
                             variant='secondary'
                             sx={{
-                              backgroundColor: 'blacK',
+                              backgroundColor: 'badgeSecondaryBg',
+                              color: 'badgeSecondaryText',
                               borderRadius: '20px',
+                              borderStyle: 'solid',
+                              borderWidth: '1px',
+                              borderColor: 'badgeSecondaryBorder',
                             }}
                           >
                             {host}

@@ -3,14 +3,34 @@ import { base } from '@theme-ui/presets';
 
 const theme = {
   ...base,
+  config: {
+    useColorSchemeMediaQuery: 'system', // Automatically respects system preferences
+  },
   colors: {
     ...base.colors,
-    primary: '#07c',
+    primary: 'black',
     secondary: '#30c',
+    badgeSecondaryBg: 'black',
+    badgeSecondaryText: 'white',
+    badgeSecondaryBorder: 'black',
+    primaryText: 'white',
+
+    modes: {
+      dark: {
+        text: 'white',
+        background: 'black',
+        badgeSecondaryBg: 'black',
+        badgeSecondaryText: 'white',
+        badgeSecondaryBorder: 'white',
+        primary: 'white',
+        primaryText: 'black',
+      },
+    },
   },
   fonts: {
     body: '"SF Mono", "SFMono-Regular", "Menlo", "Consolas", "Liberation Mono", "Courier New", monospace',
-    heading: '"Avenir Next", sans-serif',
+    heading:
+      '"SF Mono", "SFMono-Regular", "Menlo", "Consolas", "Liberation Mono", "Courier New", monospace',
     monospace: '"SF Mono", monospace',
   },
   fontSizes: [12, 14, 16, 20, 24, 32, 48, 64, 72],

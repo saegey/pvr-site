@@ -6,6 +6,7 @@ import { Link as GatsbyLink } from 'gatsby';
 
 import { PageProps } from 'gatsby';
 import { GatsbyImage, getImage, IGatsbyImageData } from 'gatsby-plugin-image';
+import SEO from '../components/seo';
 
 interface Show {
   id: string;
@@ -48,6 +49,7 @@ const ShowsPage: React.FC<PageProps<DataProps>> = ({ data }) => {
 
   return (
     <Layout>
+      <SEO title='Home | Public Vinyl Radio' />
       <Container
         sx={{
           p: 3,
@@ -57,7 +59,7 @@ const ShowsPage: React.FC<PageProps<DataProps>> = ({ data }) => {
       >
         <Grid
           gap={2}
-          columns={[1, 2, 2]}
+          columns={[1, 1, 2]}
           sx={{
             gridAutoFlow: 'row', // Ensures left-to-right ordering
           }}

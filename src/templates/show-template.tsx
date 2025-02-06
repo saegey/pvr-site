@@ -6,6 +6,7 @@ import { compile, run } from '@mdx-js/mdx';
 import * as runtime from 'react/jsx-runtime';
 import { GatsbyImage, getImage, IGatsbyImageData } from 'gatsby-plugin-image';
 import { format } from 'date-fns';
+import SEO from '../components/seo';
 
 const formatDate = (dateString: string) =>
   format(new Date(dateString), 'MM.dd.yyyy');
@@ -79,6 +80,7 @@ const ShowTemplate = ({ pageContext }: { pageContext: PageContext }) => {
 
   return (
     <Layout>
+      <SEO title={`${title} | Public Vinyl Radio`} />
       <Container
         sx={{
           p: 3,

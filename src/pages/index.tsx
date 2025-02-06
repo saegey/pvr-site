@@ -1,16 +1,7 @@
 import React from 'react';
 import { graphql } from 'gatsby';
 import Layout from '../components/layout';
-import {
-  Badge,
-  Flex,
-  Card,
-  Image,
-  Text,
-  Link,
-  Grid,
-  Container,
-} from 'theme-ui';
+import { Badge, Flex, Card, Text, Link, Grid, Container } from 'theme-ui';
 import { Link as GatsbyLink } from 'gatsby';
 
 import { PageProps } from 'gatsby';
@@ -49,7 +40,11 @@ const MyDynamicImage = ({ coverImage }: { coverImage: IGatsbyImageData }) => {
 };
 
 const ShowsPage: React.FC<PageProps<DataProps>> = ({ data }) => {
-  const shows = data.allMdx.nodes; // Fetch the queried nodes
+  const shows = [...data.allMdx.nodes].sort(
+    (a, b) =>
+      new Date(b.frontmatter.date).getTime() -
+      new Date(a.frontmatter.date).getTime()
+  );
 
   return (
     <Layout>
@@ -60,7 +55,13 @@ const ShowsPage: React.FC<PageProps<DataProps>> = ({ data }) => {
           mx: 'auto',
         }}
       >
-        <Grid gap={2} columns={[1, 2, 2]}>
+        <Grid
+          gap={2}
+          columns={[1, 2, 2]}
+          sx={{
+            gridAutoFlow: 'row', // Ensures left-to-right ordering
+          }}
+        >
           {shows.map((show) => (
             <Card
               key={show.id}
@@ -129,7 +130,7 @@ export default ShowsPage;
 // GraphQL Query
 export const query = graphql`
   query {
-    allMdx(filter: {}) {
+    allMdx(sort: { frontmatter: { date: DESC } }) {
       nodes {
         id
         frontmatter {

@@ -49,7 +49,7 @@ const ShowsPage: React.FC<PageProps<DataProps>> = ({ data }) => {
 
   return (
     <Layout>
-      <SEO title='Home | Public Vinyl Radio' />
+      <SEO title='Public Vinyl Radio' />
       <Container
         sx={{
           p: 3,

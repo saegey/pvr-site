@@ -5,6 +5,10 @@ import { MDXProvider } from '@mdx-js/react';
 import { compile, run } from '@mdx-js/mdx';
 import * as runtime from 'react/jsx-runtime';
 import { GatsbyImage, getImage, IGatsbyImageData } from 'gatsby-plugin-image';
+import { format } from 'date-fns';
+
+const formatDate = (dateString: string) =>
+  format(new Date(dateString), 'MM.dd.yyyy');
 
 const MyDynamicImage = ({ coverImage }: { coverImage: IGatsbyImageData }) => {
   const image = getImage(coverImage); // Convert Gatsby Image data
@@ -88,7 +92,7 @@ const ShowTemplate = ({ pageContext }: { pageContext: PageContext }) => {
           </Box>
           {/* Metadata and Content */}
           <Flex sx={{ flexDirection: 'column', gap: '10px' }}>
-            <Text as='h3'>{date}</Text>
+            <Text as='h3'>{formatDate(date) || 'Unknown Date'}</Text>
             <Box>
               <Badge>{host}</Badge>
             </Box>

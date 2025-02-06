@@ -2,12 +2,13 @@ import type { GatsbyConfig } from 'gatsby';
 
 const config: GatsbyConfig = {
   siteMetadata: {
-    title: `Public Vinyl Radio`,
-    siteUrl: `https://publicvinyl.com`,
+    title: 'Public Vinyl Radio',
+    description:
+      'A vinyl-focused internet radio station with curated mixtapes.',
+    siteUrl: 'https://publicvinylradio.com', // Update with your domain
+    image: '/default-social-image.jpg', // Default OG image (1200x630 recommended)
+    twitterUsername: '@your_twitter_handle', // Your Twitter handle
   },
-  // More easily incorporate content into your pages through automatic TypeScript type generation and better GraphQL IntelliSense.
-  // If you use VSCode you can also use the GraphQL plugin
-  // Learn more at: https://gatsby.dev/graphql-typegen
   graphqlTypegen: true,
   plugins: [
     'gatsby-plugin-theme-ui',
@@ -40,6 +41,19 @@ const config: GatsbyConfig = {
       resolve: `gatsby-plugin-mdx`,
       options: {
         extensions: [`.mdx`, `.md`], // Ensure Gatsby processes both .mdx and .md files
+      },
+    },
+    `gatsby-plugin-react-helmet`,
+    {
+      resolve: `gatsby-plugin-manifest`,
+      options: {
+        name: `Public Vinyl Radio`,
+        short_name: `PVR`,
+        start_url: `/`,
+        background_color: `#ffffff`,
+        theme_color: `#000000`,
+        display: `standalone`,
+        icon: `src/images/favicon.png`, // Path to your updated favicon
       },
     },
     // {

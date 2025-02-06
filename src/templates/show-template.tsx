@@ -35,7 +35,7 @@ interface PageContext {
   content: string; // Raw MDX content
   coverImage: IGatsbyImageData;
   tracklist: { title: string; artist: string }[];
-  host: string;
+  host: string[];
 }
 
 const ShowTemplate = ({ pageContext }: { pageContext: PageContext }) => {
@@ -91,20 +91,43 @@ const ShowTemplate = ({ pageContext }: { pageContext: PageContext }) => {
             <MyDynamicImage coverImage={coverImage} />
           </Box>
           {/* Metadata and Content */}
-          <Flex sx={{ flexDirection: 'column', gap: '10px' }}>
-            <Text as='h3'>{formatDate(date) || 'Unknown Date'}</Text>
+          <Flex
+            sx={{
+              flexDirection: 'column',
+              gap: '10px',
+              height: '100%',
+              justifyContent: 'space-between',
+            }}
+          >
             <Box>
-              <Badge>{host}</Badge>
+              <Flex sx={{ flexDirection: 'column', gap: '10px' }}>
+                <Text as='h3'>{formatDate(date) || 'Unknown Date'}</Text>
+                <Box sx={{ marginTop: ['0px', '0px', '80px'] }}>
+                  <Flex sx={{ gap: '5px' }}>
+                    {(host || []).map((h: string, index: number) => (
+                      <Badge
+                        key={index}
+                        variant='secondary'
+                        sx={{ background: 'black', borderRadius: '20px' }}
+                      >
+                        {h}
+                      </Badge>
+                    ))}
+                  </Flex>
+                </Box>
+                <Text as='h2'>{title}</Text>
+                <Text as='h4'>{description}</Text>
+                <Flex sx={{ gap: '5px', marginTop: '10px' }}>
+                  {tags.map((tag, index) => (
+                    <Badge key={index} variant='primary'>
+                      #{tag}
+                    </Badge>
+                  ))}
+                </Flex>
+              </Flex>
             </Box>
-            <Text as='h2'>{title}</Text>
-            <Text as='h4'>{description}</Text>
-            <Flex sx={{ gap: '5px' }}>
-              {tags.map((tag, index) => (
-                <Badge key={index} variant='primary'>
-                  {tag}
-                </Badge>
-              ))}
-            </Flex>
+
+            {/* Pushes the iframe to the bottom */}
             <Box sx={{ paddingTop: '20px' }}>
               <iframe
                 width='100%'
@@ -113,29 +136,29 @@ const ShowTemplate = ({ pageContext }: { pageContext: PageContext }) => {
                 frameBorder='0'
               ></iframe>
             </Box>
-            {tracklist && (
-              <Box>
-                <Text as='h3'>Tracklist</Text>
-                <Flex sx={{ flexDirection: 'column', gap: '5px' }}>
-                  {tracklist.map(({ artist, title }, index) => (
-                    <Box>
-                      <Text>
-                        {artist} - {title}
-                      </Text>
-                    </Box>
-                  ))}
-                </Flex>
-              </Box>
-            )}
-            <MDXProvider>
-              {MDXComponent ? (
-                <MDXComponent />
-              ) : (
-                <Text>Loading content...</Text>
-              )}
-            </MDXProvider>
           </Flex>
         </Grid>
+        <Container
+          sx={{ maxWidth: '800px', mx: 'auto', p: 3, marginTop: '20px' }}
+        >
+          {tracklist && (
+            <Box>
+              <Text as='h3'>Tracklist</Text>
+              <Flex sx={{ flexDirection: 'column', gap: '5px' }}>
+                {tracklist.map(({ artist, title }, index) => (
+                  <Box>
+                    <Text>
+                      {artist} - {title}
+                    </Text>
+                  </Box>
+                ))}
+              </Flex>
+            </Box>
+          )}
+          <MDXProvider>
+            {MDXComponent ? <MDXComponent /> : <Text>Loading content...</Text>}
+          </MDXProvider>
+        </Container>
       </Container>
     </Layout>
   );

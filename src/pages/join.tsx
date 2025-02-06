@@ -38,11 +38,17 @@ const NewsletterForm = () => {
               console.log(e.target.value);
               setEmail(e.target.value);
             }}
+            sx={{ fontFamily: 'body' }}
             required
           />
         </Box>
         <Box>
-          <Button type='submit'>Subscribe</Button>
+          <Button
+            type='submit'
+            sx={{ fontFamily: 'body', backgroundColor: 'black' }}
+          >
+            Subscribe
+          </Button>
         </Box>
         {message && <p>{message}</p>}
       </Flex>
@@ -53,21 +59,35 @@ const NewsletterForm = () => {
 const JoinPage = () => {
   return (
     <Layout>
-      <Container
+      <Box
         sx={{
-          p: 3,
-          maxWidth: ['100%', '540px', '720px', '960px', '1140px'],
-          mx: 'auto',
+          display: 'flex',
+          flexDirection: 'column',
+          minHeight: 'calc(100vh - 100px)', // Ensures full viewport height
         }}
       >
-        <Text as='h1' sx={{ fontSize: 5, mb: 3 }}>
-          Join
-        </Text>
-        <Text as='p' sx={{ fontSize: 3, mb: 3 }}>
-          Subscribe to our newsletter for the latest updates.
-        </Text>
-        <NewsletterForm />
-      </Container>
+        {/* Main Content Area */}
+        <Container
+          sx={{
+            flex: '1', // Pushes the footer down
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center', // Centers content vertically
+            // alignItems: 'center', // Centers content horizontally
+            p: 3,
+            maxWidth: ['100%', '540px', '540px', '540px', '540px'],
+            mx: 'auto',
+          }}
+        >
+          <Text as='h1' sx={{ fontSize: 5, mb: 3 }}>
+            Join
+          </Text>
+          <Text as='p' sx={{ fontSize: 3, mb: 3 }}>
+            Subscribe to our newsletter for the latest updates.
+          </Text>
+          <NewsletterForm />
+        </Container>
+      </Box>
     </Layout>
   );
 };

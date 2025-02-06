@@ -1,4 +1,4 @@
-import { Container, Box, Link, MenuButton, Flex, Text, Close } from 'theme-ui';
+import { Box, Link, MenuButton, Flex, Text, Close } from 'theme-ui';
 import { ReactNode, useState } from 'react';
 import React from 'react';
 import { Link as GatsbyLink } from 'gatsby';
@@ -81,7 +81,6 @@ const Layout = ({ children }: { children: ReactNode }) => {
           }}
         >
           <Close
-            // as='button'
             onClick={toggleMenu}
             sx={{
               position: 'absolute',
@@ -102,20 +101,39 @@ const Layout = ({ children }: { children: ReactNode }) => {
               gap: 4,
             }}
           >
-            <Link as={GatsbyLink} href='/' sx={{ color: 'white', fontSize: 4 }}>
+            <Link
+              as={GatsbyLink}
+              href='/'
+              sx={{
+                color: 'white',
+                fontSize: 100,
+                textDecoration: 'none',
+                textTransform: 'uppercase',
+              }}
+            >
               Shows
             </Link>
             <Link
               as={GatsbyLink}
               href='/about'
-              sx={{ color: 'white', fontSize: 4 }}
+              sx={{
+                color: 'white',
+                fontSize: 100,
+                textDecoration: 'none',
+                textTransform: 'uppercase',
+              }}
             >
               About
             </Link>
             <Link
               as={GatsbyLink}
               href='/join'
-              sx={{ color: 'white', fontSize: 4 }}
+              sx={{
+                color: 'white',
+                fontSize: 100,
+                textDecoration: 'none',
+                textTransform: 'uppercase',
+              }}
             >
               Join
             </Link>
@@ -123,12 +141,13 @@ const Layout = ({ children }: { children: ReactNode }) => {
         </Box>
       )}
 
-      {/* Main Content */}
-
       {children}
 
       {/* Footer */}
-      <Box as='footer' sx={{ bg: 'white', color: 'background', p: 3 }}>
+      <Box
+        as='footer'
+        sx={{ bg: 'white', color: 'background', p: 3, textAlign: 'center' }}
+      >
         <Text as='p' sx={{ color: 'black' }}>
           &copy; {new Date().getFullYear()} Public Vinyl Radio
         </Text>

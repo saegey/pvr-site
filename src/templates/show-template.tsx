@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Flex, Grid, Badge, Text, Container } from 'theme-ui';
+import { Box, Flex, Grid, Badge, Text, Container, Button } from 'theme-ui';
 import Layout from '../components/layout';
 import { MDXProvider } from '@mdx-js/react';
 import { compile, run } from '@mdx-js/mdx';
@@ -12,15 +12,13 @@ const formatDate = (dateString: string) =>
   format(new Date(dateString), 'MM.dd.yyyy');
 
 const MyDynamicImage = ({ coverImage }: { coverImage: IGatsbyImageData }) => {
-  const image = getImage(coverImage); // Convert Gatsby Image data
-  if (!image) {
-    return null;
-  }
+  const image = getImage(coverImage);
+  if (!image) return null;
 
   return (
     <GatsbyImage
       image={image}
-      alt='Example Image'
+      alt='Cover Image'
       style={{ borderRadius: '10px' }}
     />
   );
@@ -28,16 +26,59 @@ const MyDynamicImage = ({ coverImage }: { coverImage: IGatsbyImageData }) => {
 
 import { useColorMode } from 'theme-ui';
 
-const ResponsiveIframe = ({ iframeSrc }: { iframeSrc: string }) => {
-  const [colorMode] = useColorMode(); // Get the current color mode
+const BottomDrawer = ({
+  isOpen,
+  onClose,
+  iframeSrc,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+  iframeSrc: string;
+}) => {
+  const [colorMode] = useColorMode();
+  if (!isOpen) return null;
 
   return (
-    <iframe
-      width='100%'
-      height='120'
-      src={`${iframeSrc}&light=${colorMode === 'dark' ? '0' : '1'}`} // Toggle light mode
-      frameBorder='0'
-    ></iframe>
+    <Box
+      sx={{
+        position: 'fixed',
+        bottom: 0,
+        left: 0,
+        width: '100%',
+        // height: '200px',
+        bg: 'background',
+        // boxShadow: '0px -4px 10px rgba(0, 0, 0, 0.1)',
+        borderTopLeftRadius: '10px',
+        borderTopRightRadius: '10px',
+        transition: 'transform 0.3s ease-in-out',
+        zIndex: 1000,
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
+    >
+      <Button
+        onClick={onClose}
+        sx={{
+          position: 'absolute',
+          top: 10,
+          right: 10,
+          bg: 'transparent',
+          color: 'text',
+          fontSize: 3,
+          cursor: 'pointer',
+        }}
+      >
+        ✕
+      </Button>
+      <iframe
+        width='100%'
+        height='60px'
+        src={`${iframeSrc}&light=${colorMode === 'dark' ? '0' : '1'}`}
+        frameBorder='0'
+      ></iframe>
+    </Box>
   );
 };
 
@@ -48,7 +89,7 @@ interface PageContext {
   date: string;
   tags: string[];
   iframeSrc: string;
-  content: string; // Raw MDX content
+  content: string;
   coverImage: IGatsbyImageData;
   tracklist: { title: string; artist: string }[];
   host: string[];
@@ -71,19 +112,16 @@ const ShowTemplate = ({ pageContext }: { pageContext: PageContext }) => {
   const [MDXComponent, setMDXComponent] = useState<React.ComponentType | null>(
     null
   );
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   useEffect(() => {
     const doCompile = async () => {
       try {
-        // 1. Compile to JS
         const compiled = await compile(content, {
           outputFormat: 'function-body',
         });
 
-        // 2. Run the compiled code to get the actual component
         const result = await run(compiled, runtime);
-
-        // result.default is your React component
         setMDXComponent(() => result.default);
       } catch (error) {
         console.error(error);
@@ -96,18 +134,11 @@ const ShowTemplate = ({ pageContext }: { pageContext: PageContext }) => {
   return (
     <Layout>
       <SEO title={`${title} | Public Vinyl Radio`} />
-      <Container
-        sx={{
-          p: 3,
-          mx: 'auto',
-        }}
-      >
-        {/* Main Content Grid */}
+      <Container sx={{ p: 3, mx: 'auto' }}>
         <Grid gap='10px' columns={[1, 2]}>
           <Box>
             <MyDynamicImage coverImage={coverImage} />
           </Box>
-          {/* Metadata and Content */}
           <Flex
             sx={{
               flexDirection: 'column',
@@ -151,12 +182,32 @@ const ShowTemplate = ({ pageContext }: { pageContext: PageContext }) => {
               </Flex>
             </Box>
 
-            {/* Pushes the iframe to the bottom */}
+            {/* Play Mix Button */}
             <Box sx={{ paddingTop: '20px' }}>
-              <ResponsiveIframe iframeSrc={iframeSrc} />
+              <Button
+                onClick={() => setIsDrawerOpen(true)}
+                sx={{
+                  // width: '200%',
+                  bg: 'primary',
+                  color: 'background',
+                  padding: '10px',
+                  borderRadius: '20px',
+                  fontFamily: 'body',
+                  paddingX: '20px',
+                  fontSize: '16px',
+                  fontWeight: 'bold',
+                  cursor: 'pointer',
+                  textAlign: 'center',
+                  transition: 'background 0.3s',
+                  '&:hover': { bg: 'secondary' },
+                }}
+              >
+                Listen to Mix
+              </Button>
             </Box>
           </Flex>
         </Grid>
+
         <Container
           sx={{ maxWidth: '800px', mx: 'auto', p: 3, marginTop: '20px' }}
         >
@@ -165,7 +216,7 @@ const ShowTemplate = ({ pageContext }: { pageContext: PageContext }) => {
               <Text as='h3'>Tracklist</Text>
               <Flex sx={{ flexDirection: 'column', gap: '5px' }}>
                 {tracklist.map(({ artist, title }, index) => (
-                  <Box>
+                  <Box key={index}>
                     <Text>
                       {artist} - {title}
                     </Text>
@@ -179,6 +230,13 @@ const ShowTemplate = ({ pageContext }: { pageContext: PageContext }) => {
           </MDXProvider>
         </Container>
       </Container>
+
+      {/* Bottom Drawer */}
+      <BottomDrawer
+        isOpen={isDrawerOpen}
+        onClose={() => setIsDrawerOpen(false)}
+        iframeSrc={iframeSrc}
+      />
     </Layout>
   );
 };

@@ -45,7 +45,11 @@ const NewsletterForm = () => {
         <Box>
           <Button
             type='submit'
-            sx={{ fontFamily: 'body', backgroundColor: 'black' }}
+            sx={{
+              fontFamily: 'body',
+              backgroundColor: 'primary',
+              color: 'primaryText',
+            }}
           >
             Subscribe
           </Button>

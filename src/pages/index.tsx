@@ -1,7 +1,7 @@
 import React from 'react';
 import { graphql } from 'gatsby';
 import Layout from '../components/layout';
-import { Badge, Flex, Card, Text, Link, Grid, Container } from 'theme-ui';
+import { Badge, Flex, Card, Text, Link, Grid, Container, Box } from 'theme-ui';
 import { Link as GatsbyLink } from 'gatsby';
 
 import { PageProps } from 'gatsby';
@@ -16,7 +16,7 @@ interface Show {
     date: string;
     tags: string[];
     coverImage?: IGatsbyImageData;
-    host: string;
+    host: string[];
   };
 }
 
@@ -27,7 +27,7 @@ interface DataProps {
 }
 
 const MyDynamicImage = ({ coverImage }: { coverImage: IGatsbyImageData }) => {
-  const image = getImage(coverImage); // Convert Gatsby Image data
+  const image = getImage(coverImage);
 
   return (
     <GatsbyImage
@@ -94,24 +94,37 @@ const ShowsPage: React.FC<PageProps<DataProps>> = ({ data }) => {
                     sx={{
                       flex: 1,
                       justifyContent: 'space-between',
-                      alignItems: 'center',
+                      // alignItems: 'center',
                       width: '100%',
                     }}
                   >
-                    <Badge variant='badges.primary'>
-                      {show.frontmatter.host}
-                    </Badge>
+                    <Box>
+                      <Flex sx={{ gap: '5px' }}>
+                        {(show.frontmatter.host || []).map((host, index) => (
+                          <Badge
+                            key={index}
+                            variant='secondary'
+                            sx={{
+                              backgroundColor: 'blacK',
+                              borderRadius: '20px',
+                            }}
+                          >
+                            {host}
+                          </Badge>
+                        ))}
+                      </Flex>
+                    </Box>
                     <Text>{show.frontmatter.date || 'Unknown Date'}</Text>
                   </Flex>
                   <Text>{show.frontmatter.title || 'Untitled Show'}</Text>
-                  <Text sx={{ fontSize: '13px' }}>
+                  <Text sx={{ fontSize: '13px', height: '40px' }}>
                     {show.frontmatter.description ||
                       'No description available.'}
                   </Text>
                   <Flex sx={{ gap: '5px' }}>
                     {(show.frontmatter.tags || []).map((tag, index) => (
                       <Badge key={index} variant='primary'>
-                        {tag}
+                        #{tag}
                       </Badge>
                     ))}
                   </Flex>

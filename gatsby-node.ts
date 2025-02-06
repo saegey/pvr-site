@@ -1,4 +1,4 @@
-exports.createSchemaCustomization = ({ actions }) => {
+exports.createSchemaCustomization = ({ actions }: { actions: any }) => {
   const { createTypes } = actions;
 
   createTypes(`
@@ -21,6 +21,7 @@ exports.createSchemaCustomization = ({ actions }) => {
       slug: String
       coverImage: File @fileByRelativePath
       tracklist: [Track]
+      host: [String]
     }
   `);
 };
@@ -51,7 +52,7 @@ exports.createPages = async ({
               coverImage {
                 childImageSharp {
                   gatsbyImageData(
-                    width: 800
+                    width: 700
                     layout: CONSTRAINED
                     formats: [AUTO, WEBP]
                   )

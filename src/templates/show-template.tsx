@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Box, Flex, Grid, Badge, Text, Container, Button } from 'theme-ui';
 import Layout from '../components/layout';
 import { MDXProvider } from '@mdx-js/react';
@@ -10,6 +10,14 @@ import SEO from '../components/seo';
 
 const formatDate = (dateString: string) =>
   format(new Date(dateString), 'MM.dd.yyyy');
+
+const isIOS = () => {
+  return (
+    typeof navigator !== 'undefined' &&
+    (/iPad|iPhone|iPod/.test(navigator.platform) ||
+      (navigator.userAgent.includes('Mac') && navigator.maxTouchPoints > 1))
+  );
+};
 
 const MyDynamicImage = ({ coverImage }: { coverImage: IGatsbyImageData }) => {
   const image = getImage(coverImage);
@@ -36,50 +44,58 @@ const BottomDrawer = ({
   iframeSrc: string;
 }) => {
   const [colorMode] = useColorMode();
-  if (!isOpen) return null;
 
-  return (
-    <Box
-      sx={{
-        position: 'fixed',
-        bottom: 0,
-        left: 0,
-        width: '100%',
-        // height: '200px',
-        bg: 'background',
-        // boxShadow: '0px -4px 10px rgba(0, 0, 0, 0.1)',
-        borderTopLeftRadius: '10px',
-        borderTopRightRadius: '10px',
-        transition: 'transform 0.3s ease-in-out',
-        zIndex: 1000,
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}
-    >
-      <Button
-        onClick={onClose}
+  // Ensure iframeSrc is valid before parsing
+  if (!isOpen || !iframeSrc) return null;
+
+  try {
+    const urlObject = new URL(iframeSrc);
+    const path = urlObject.pathname.replace(/\/$/, ''); // Remove trailing slash
+    const encodedPath = encodeURIComponent(path);
+
+    const url = `https://player-widget.mixcloud.com/widget/iframe/?hide_cover=1&mini=1&autoplay=1&feed=${encodedPath}%2F&light=${
+      colorMode === 'dark' ? '0' : '1'
+    }`;
+
+    return (
+      <Box
         sx={{
-          position: 'absolute',
-          top: 10,
-          right: 10,
-          bg: 'transparent',
-          color: 'text',
-          fontSize: 3,
-          cursor: 'pointer',
+          position: 'fixed',
+          bottom: 0,
+          left: 0,
+          width: '100%',
+          bg: 'background',
+          borderTopLeftRadius: '10px',
+          borderTopRightRadius: '10px',
+          transition: 'transform 0.3s ease-in-out',
+          zIndex: 1000,
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
         }}
       >
-        ✕
-      </Button>
-      <iframe
-        width='100%'
-        height='60px'
-        src={`${iframeSrc}&light=${colorMode === 'dark' ? '0' : '1'}`}
-        frameBorder='0'
-      ></iframe>
-    </Box>
-  );
+        <Button
+          onClick={onClose}
+          sx={{
+            position: 'absolute',
+            top: 10,
+            right: 10,
+            bg: 'transparent',
+            color: 'text',
+            fontSize: 3,
+            cursor: 'pointer',
+          }}
+        >
+          ✕
+        </Button>
+        <iframe width='100%' height='60px' src={url} frameBorder='0'></iframe>
+      </Box>
+    );
+  } catch (error) {
+    console.error('Invalid iframeSrc:', iframeSrc, error);
+    return null;
+  }
 };
 
 interface PageContext {
@@ -130,6 +146,8 @@ const ShowTemplate = ({ pageContext }: { pageContext: PageContext }) => {
 
     doCompile();
   }, [content]);
+
+  const memoizedIframeSrc = useMemo(() => iframeSrc, [iframeSrc]);
 
   return (
     <Layout>
@@ -184,26 +202,36 @@ const ShowTemplate = ({ pageContext }: { pageContext: PageContext }) => {
 
             {/* Play Mix Button */}
             <Box sx={{ paddingTop: '20px' }}>
-              <Button
-                onClick={() => setIsDrawerOpen(true)}
-                sx={{
-                  // width: '200%',
-                  bg: 'primary',
-                  color: 'background',
-                  padding: '10px',
-                  borderRadius: '20px',
-                  fontFamily: 'body',
-                  paddingX: '20px',
-                  fontSize: '16px',
-                  fontWeight: 'bold',
-                  cursor: 'pointer',
-                  textAlign: 'center',
-                  transition: 'background 0.3s',
-                  '&:hover': { bg: 'secondary' },
-                }}
-              >
-                Listen to Mix
-              </Button>
+              <Box sx={{ paddingTop: '20px' }}>
+                <Button
+                  onClick={() => {
+                    if (!iframeSrc) return; // Prevent opening if iframeSrc is missing
+                    const onIOS = isIOS();
+                    const mixcloudURL = iframeSrc;
+                    if (onIOS) {
+                      window.location.href = mixcloudURL;
+                    } else {
+                      setIsDrawerOpen(true);
+                    }
+                  }}
+                  sx={{
+                    bg: 'primary',
+                    color: 'background',
+                    padding: '10px',
+                    borderRadius: '20px',
+                    fontFamily: 'body',
+                    paddingX: '20px',
+                    fontSize: '16px',
+                    fontWeight: 'bold',
+                    cursor: 'pointer',
+                    textAlign: 'center',
+                    transition: 'background 0.3s',
+                    '&:hover': { bg: 'secondary' },
+                  }}
+                >
+                  Listen to Mix
+                </Button>
+              </Box>
             </Box>
           </Flex>
         </Grid>
@@ -232,11 +260,13 @@ const ShowTemplate = ({ pageContext }: { pageContext: PageContext }) => {
       </Container>
 
       {/* Bottom Drawer */}
-      <BottomDrawer
-        isOpen={isDrawerOpen}
-        onClose={() => setIsDrawerOpen(false)}
-        iframeSrc={iframeSrc}
-      />
+      {iframeSrc && (
+        <BottomDrawer
+          isOpen={isDrawerOpen}
+          onClose={() => setIsDrawerOpen(false)}
+          iframeSrc={memoizedIframeSrc}
+        />
+      )}
     </Layout>
   );
 };

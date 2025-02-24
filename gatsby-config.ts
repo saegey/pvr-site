@@ -11,6 +11,15 @@ const config: GatsbyConfig = {
   },
   graphqlTypegen: true,
   plugins: [
+    {
+      resolve: 'gatsby-plugin-google-gtag',
+      options: {
+        trackingIds: ['G-J46E6ZPHFF'], // Replace with your GA Measurement ID
+        pluginConfig: {
+          head: true, // Places the tracking script in <head>
+        },
+      },
+    },
     'gatsby-plugin-theme-ui',
     `gatsby-plugin-image`,
     `gatsby-plugin-sharp`,

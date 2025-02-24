@@ -5,7 +5,6 @@ import { Link as GatsbyLink } from 'gatsby';
 
 const Layout = ({ children }: { children: ReactNode }) => {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [playerUrl, setPlayerUrl] = useState(false);
 
   const toggleMenu = () => setMenuOpen(!menuOpen);
 

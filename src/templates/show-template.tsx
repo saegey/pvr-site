@@ -1,5 +1,14 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Box, Flex, Grid, Badge, Text, Container, Button } from 'theme-ui';
+import {
+  Box,
+  Flex,
+  Grid,
+  Badge,
+  Text,
+  Container,
+  Button,
+  Embed,
+} from 'theme-ui';
 import Layout from '../components/layout';
 import { MDXProvider } from '@mdx-js/react';
 import { compile, run } from '@mdx-js/mdx';
@@ -17,6 +26,13 @@ const isIOS = () => {
     (/iPad|iPhone|iPod/.test(navigator.platform) ||
       (navigator.userAgent.includes('Mac') && navigator.maxTouchPoints > 1))
   );
+};
+
+const components = {
+  Box,
+  Text,
+  Button,
+  // Add any other Theme UI components you need here
 };
 
 const MyDynamicImage = ({ coverImage }: { coverImage: IGatsbyImageData }) => {
@@ -135,6 +151,7 @@ const ShowTemplate = ({ pageContext }: { pageContext: PageContext }) => {
       try {
         const compiled = await compile(content, {
           outputFormat: 'function-body',
+          useDynamicImport: true,
         });
 
         const result = await run(compiled, runtime);
@@ -253,7 +270,7 @@ const ShowTemplate = ({ pageContext }: { pageContext: PageContext }) => {
               </Flex>
             </Box>
           )}
-          <MDXProvider>
+          <MDXProvider components={components}>
             {MDXComponent ? <MDXComponent /> : <Text>Loading content...</Text>}
           </MDXProvider>
         </Container>

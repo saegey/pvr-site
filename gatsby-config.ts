@@ -41,6 +41,9 @@ const config: GatsbyConfig = {
       resolve: `gatsby-plugin-mdx`,
       options: {
         extensions: [`.mdx`, `.md`], // Ensure Gatsby processes both .mdx and .md files
+        mdxOptions: {
+          useDynamicImport: true,
+        },
       },
     },
     `gatsby-plugin-react-helmet`,

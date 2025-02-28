@@ -17,6 +17,34 @@ import { GatsbyImage, getImage, IGatsbyImageData } from 'gatsby-plugin-image';
 import { format } from 'date-fns';
 import SEO from '../components/seo';
 
+const ResponsiveYouTube = ({ videoId }: { videoId: string }) => (
+  <Box
+    sx={{
+      position: 'relative',
+      width: '100%',
+      paddingBottom: '56.25%', // 16:9 aspect ratio
+      height: 0,
+      overflow: 'hidden',
+    }}
+  >
+    <iframe
+      src={`https://www.youtube.com/embed/${videoId}?si=EaheM0eWWNF_J6-x`}
+      title='YouTube video player'
+      frameBorder='0'
+      allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share'
+      referrerPolicy='strict-origin-when-cross-origin'
+      allowFullScreen
+      style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+      }}
+    ></iframe>
+  </Box>
+);
+
 const formatDate = (dateString: string) =>
   format(new Date(dateString), 'MM.dd.yyyy');
 
@@ -29,9 +57,10 @@ const isIOS = () => {
 };
 
 const components = {
-  Box,
-  Text,
-  Button,
+  // Box,
+  // Text,
+  // Button,
+  ResponsiveYouTube,
   // Add any other Theme UI components you need here
 };
 
@@ -151,7 +180,8 @@ const ShowTemplate = ({ pageContext }: { pageContext: PageContext }) => {
       try {
         const compiled = await compile(content, {
           outputFormat: 'function-body',
-          useDynamicImport: true,
+          useDynamicImport: true, // ✅ Fix: Allows imports in MDX
+          baseUrl: '/', // ✅ Fix: Required to resolve imports
         });
 
         const result = await run(compiled, runtime);
@@ -163,6 +193,8 @@ const ShowTemplate = ({ pageContext }: { pageContext: PageContext }) => {
 
     doCompile();
   }, [content]);
+
+  console.log('MDX Components:', components); // Debugging log
 
   const memoizedIframeSrc = useMemo(() => iframeSrc, [iframeSrc]);
 
@@ -186,7 +218,7 @@ const ShowTemplate = ({ pageContext }: { pageContext: PageContext }) => {
               <Flex sx={{ flexDirection: 'column', gap: '10px' }}>
                 <Text as='h3'>{formatDate(date) || 'Unknown Date'}</Text>
                 <Box sx={{ marginTop: ['0px', '0px', '80px'] }}>
-                  <Flex sx={{ gap: '5px' }}>
+                  <Flex sx={{ gap: '5px', flexWrap: 'wrap' }}>
                     {(host || []).map((h: string, index: number) => (
                       <Badge
                         key={index}
@@ -206,7 +238,9 @@ const ShowTemplate = ({ pageContext }: { pageContext: PageContext }) => {
                   </Flex>
                 </Box>
                 <Text as='h2'>{title}</Text>
-                <Text as='h4'>{description}</Text>
+                <Text as='h4' style={{ wordWrap: 'break-word' }}>
+                  {description}
+                </Text>
                 <Flex sx={{ gap: '5px', marginTop: '10px' }}>
                   {tags.map((tag, index) => (
                     <Badge key={index} variant='primary'>
@@ -253,9 +287,7 @@ const ShowTemplate = ({ pageContext }: { pageContext: PageContext }) => {
           </Flex>
         </Grid>
 
-        <Container
-          sx={{ maxWidth: '800px', mx: 'auto', p: 3, marginTop: '20px' }}
-        >
+        <Container sx={{ maxWidth: '800px', mx: 'auto', marginTop: '20px' }}>
           {tracklist && (
             <Box>
               <Text as='h3'>Tracklist</Text>
@@ -270,9 +302,11 @@ const ShowTemplate = ({ pageContext }: { pageContext: PageContext }) => {
               </Flex>
             </Box>
           )}
-          <MDXProvider components={components}>
-            {MDXComponent ? <MDXComponent /> : <Text>Loading content...</Text>}
-          </MDXProvider>
+          {MDXComponent ? (
+            <MDXComponent components={components} />
+          ) : (
+            <Text>Loading content...</Text>
+          )}
         </Container>
       </Container>
 

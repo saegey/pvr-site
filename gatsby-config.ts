@@ -49,9 +49,11 @@ const config: GatsbyConfig = {
     {
       resolve: `gatsby-plugin-mdx`,
       options: {
-        extensions: [`.mdx`, `.md`], // Ensure Gatsby processes both .mdx and .md files
+        extensions: [`.mdx`, `.md`],
+        gatsbyRemarkPlugins: [], // ✅ Required for proper rendering
         mdxOptions: {
-          useDynamicImport: true,
+          useDynamicImport: true, // ✅ Allows dynamic components like ResponsiveYouTube
+          rehypePlugins: [], // ✅ Avoids unwanted transformations
         },
       },
     },

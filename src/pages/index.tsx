@@ -125,11 +125,11 @@ const ShowsPage: React.FC<PageProps<DataProps>> = ({ data }) => {
                     <Text>{show.frontmatter.date || 'Unknown Date'}</Text>
                   </Flex>
                   <Text>{show.frontmatter.title || 'Untitled Show'}</Text>
-                  <Text sx={{ fontSize: '13px', height: '40px' }}>
+                  <Text sx={{ fontSize: '13px', wordWrap: 'break-word' }}>
                     {show.frontmatter.description ||
                       'No description available.'}
                   </Text>
-                  <Flex sx={{ gap: '5px' }}>
+                  <Flex sx={{ gap: '5px', flexWrap: 'wrap' }}>
                     {(show.frontmatter.tags || []).map((tag, index) => (
                       <Badge key={index} variant='primary'>
                         #{tag}

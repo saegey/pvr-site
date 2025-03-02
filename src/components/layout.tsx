@@ -116,6 +116,18 @@ const Layout = ({ children }: { children: ReactNode }) => {
             </Link>
             <Link
               as={GatsbyLink}
+              href='/blog'
+              sx={{
+                color: 'white',
+                fontSize: 100,
+                textDecoration: 'none',
+                textTransform: 'uppercase',
+              }}
+            >
+              Blog
+            </Link>
+            <Link
+              as={GatsbyLink}
               href='/about'
               sx={{
                 color: 'white',

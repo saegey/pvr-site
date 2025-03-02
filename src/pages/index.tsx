@@ -151,7 +151,12 @@ export default ShowsPage;
 // GraphQL Query
 export const query = graphql`
   query {
-    allMdx(sort: { frontmatter: { date: DESC } }) {
+    allMdx(
+      sort: { frontmatter: { date: DESC } }
+      filter: {
+        parent: { internal: { description: { regex: "/content/shows/" } } }
+      }
+    ) {
       nodes {
         id
         frontmatter {

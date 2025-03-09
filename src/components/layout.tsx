@@ -2,6 +2,7 @@ import { Box, Link, MenuButton, Flex, Text, Close } from 'theme-ui';
 import { ReactNode, useState } from 'react';
 import React from 'react';
 import { Link as GatsbyLink } from 'gatsby';
+import { FaYoutube, FaMixcloud, FaInstagram } from 'react-icons/fa';
 
 const Layout = ({ children }: { children: ReactNode }) => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -22,8 +23,8 @@ const Layout = ({ children }: { children: ReactNode }) => {
         as='header'
         sx={{
           bg: 'background',
-          borderBottomColor: 'text',
-          borderBottomWidth: '1px',
+          borderBottomColor: 'cardBorderColor',
+          borderBottomWidth: '2px',
           borderBottomStyle: 'solid',
           p: 1,
           textAlign: 'center',
@@ -34,6 +35,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
           sx={{
             alignItems: 'center',
             justifyContent: 'space-between',
+            padding: '10px',
           }}
         >
           {/* Left-aligned Menu Button */}
@@ -56,7 +58,16 @@ const Layout = ({ children }: { children: ReactNode }) => {
               textDecoration: 'none',
             }}
           >
-            <Text as='h1' sx={{ margin: 0, fontSize: 4, color: 'text' }}>
+            <Text
+              as='h1'
+              sx={{
+                margin: 0,
+                fontSize: 4,
+                fontWeight: 700,
+                color: 'text',
+                letterSpacing: '-0.02em',
+              }}
+            >
               PUBLIC VINYL RADIO
             </Text>
           </Link>
@@ -107,7 +118,8 @@ const Layout = ({ children }: { children: ReactNode }) => {
               href='/'
               sx={{
                 color: 'white',
-                fontSize: 100,
+                fontSize: [80, 100, 100],
+                fontWeight: 600,
                 textDecoration: 'none',
                 textTransform: 'uppercase',
               }}
@@ -116,10 +128,24 @@ const Layout = ({ children }: { children: ReactNode }) => {
             </Link>
             <Link
               as={GatsbyLink}
+              href='/blog'
+              sx={{
+                color: 'white',
+                fontSize: [80, 100, 100],
+                fontWeight: 600,
+                textDecoration: 'none',
+                textTransform: 'uppercase',
+              }}
+            >
+              Blog
+            </Link>
+            <Link
+              as={GatsbyLink}
               href='/about'
               sx={{
                 color: 'white',
-                fontSize: 100,
+                fontSize: [80, 100, 100],
+                fontWeight: 600,
                 textDecoration: 'none',
                 textTransform: 'uppercase',
               }}
@@ -131,7 +157,8 @@ const Layout = ({ children }: { children: ReactNode }) => {
               href='/join'
               sx={{
                 color: 'white',
-                fontSize: 100,
+                fontSize: [80, 100, 100],
+                fontWeight: 600,
                 textDecoration: 'none',
                 textTransform: 'uppercase',
               }}
@@ -145,18 +172,72 @@ const Layout = ({ children }: { children: ReactNode }) => {
       {children}
 
       {/* Footer */}
-      <Box
+      <Flex
         as='footer'
         sx={{
-          bg: 'background',
           p: 3,
-          textAlign: 'center',
+          borderTopColor: 'cardBorderColor',
+          borderTopWidth: '2px',
+          borderTopStyle: 'solid',
+          marginTop: '100px',
         }}
       >
-        <Text as='p' sx={{ color: 'text' }}>
-          &copy; {new Date().getFullYear()} Public Vinyl Radio
-        </Text>
-      </Box>
+        <Box>
+          <Text
+            as='p'
+            sx={{
+              color: 'text',
+              fontWeight: 600,
+              // mb: 2,
+              height: '100%',
+              alignContent: 'center',
+              textTransform: 'uppercase',
+              // backgroundColor: 'red',
+            }}
+          >
+            &copy; {new Date().getFullYear()} Public Vinyl Radio
+          </Text>
+        </Box>
+
+        {/* Social Media Links */}
+        <Flex
+          sx={{
+            justifyContent: 'right',
+            gap: 3,
+            flexGrow: 1,
+            height: '100%',
+            alignContent: 'center',
+            // mt: 2,
+            // marginLeft: 'auto',
+
+            // backgroundColor: 'red',
+          }}
+        >
+          <Link
+            href='https://www.youtube.com/@PublicVinylRadio'
+            target='_blank'
+            sx={{ color: 'text', '&:hover': { color: 'primary' } }}
+          >
+            <FaYoutube size={24} />
+          </Link>
+
+          <Link
+            href='https://www.mixcloud.com/public-vinyl-radio'
+            target='_blank'
+            sx={{ color: 'text', '&:hover': { color: 'primary' } }}
+          >
+            <FaMixcloud size={24} />
+          </Link>
+
+          <Link
+            href='https://www.instagram.com/PublicVinylRadio'
+            target='_blank'
+            sx={{ color: 'text', '&:hover': { color: 'primary' } }}
+          >
+            <FaInstagram size={24} />
+          </Link>
+        </Flex>
+      </Flex>
     </Box>
   );
 };

@@ -14,6 +14,9 @@ const theme = {
     badgeSecondaryText: 'white',
     badgeSecondaryBorder: 'black',
     primaryText: 'white',
+    cardBorderColor: '#e1e1e1',
+    cardBackgroundColor: '#f8f8f8',
+    showCardBackground: '#f5f5f5',
 
     modes: {
       dark: {
@@ -24,13 +27,17 @@ const theme = {
         badgeSecondaryBorder: 'white',
         primary: 'white',
         primaryText: 'black',
+        cardBorderColor: '#464646',
+        cardBackgroundColor: 'black',
+        showCardBackground: '#3b3b3b',
       },
     },
   },
   fonts: {
-    body: '"SF Mono", "SFMono-Regular", "Menlo", "Consolas", "Liberation Mono", "Courier New", monospace',
-    heading:
-      '"SF Mono", "SFMono-Regular", "Menlo", "Consolas", "Liberation Mono", "Courier New", monospace',
+    // body: '"SF Mono", "SFMono-Regular", "Menlo", "Consolas", "Liberation Mono", "Courier New", monospace',
+    // body: '"Helvetica Neue", sans-serif',
+    body: 'Work Sans, sans-serif',
+    heading: 'Work Sans, sans-serif',
     monospace: '"SF Mono", monospace',
   },
   fontSizes: [12, 14, 16, 20, 24, 32, 48, 64, 72],

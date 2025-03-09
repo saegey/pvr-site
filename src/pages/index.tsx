@@ -7,6 +7,7 @@ import { Link as GatsbyLink } from 'gatsby';
 import { PageProps } from 'gatsby';
 import { GatsbyImage, getImage, IGatsbyImageData } from 'gatsby-plugin-image';
 import SEO from '../components/seo';
+import { formatDate } from '../templates/show-template';
 
 interface Show {
   id: string;
@@ -35,7 +36,7 @@ const MyDynamicImage = ({ coverImage }: { coverImage: IGatsbyImageData }) => {
       image={image}
       alt='Example Image'
       layout='constrained'
-      style={{ borderRadius: '10px' }}
+      style={{ borderRadius: '0px' }}
     />
   );
 };
@@ -69,10 +70,11 @@ const ShowsPage: React.FC<PageProps<DataProps>> = ({ data }) => {
               key={show.id}
               sx={{
                 maxWidth: 600,
-                borderColor: 'text',
-                borderWidth: '1px',
+                borderColor: 'cardBorderColor',
+                borderWidth: '2px',
                 borderStyle: 'solid',
-                borderRadius: '5px',
+                borderRadius: '0px',
+                backgroundColor: 'cardBackgroundColor',
               }}
               p={2}
             >
@@ -94,45 +96,43 @@ const ShowsPage: React.FC<PageProps<DataProps>> = ({ data }) => {
                     gap: '10px',
                   }}
                 >
-                  <Flex
-                    sx={{
-                      flex: 1,
-                      justifyContent: 'space-between',
-                      // alignItems: 'center',
-                      width: '100%',
-                    }}
-                  >
-                    <Box>
-                      <Flex sx={{ gap: '5px' }}>
-                        {(show.frontmatter.host || []).map((host, index) => (
-                          <Badge
-                            key={index}
-                            variant='secondary'
-                            sx={{
-                              backgroundColor: 'badgeSecondaryBg',
-                              color: 'badgeSecondaryText',
-                              borderRadius: '20px',
-                              borderStyle: 'solid',
-                              borderWidth: '1px',
-                              borderColor: 'badgeSecondaryBorder',
-                            }}
-                          >
-                            {host}
-                          </Badge>
-                        ))}
-                      </Flex>
-                    </Box>
-                    <Text>{show.frontmatter.date || 'Unknown Date'}</Text>
+                  <Flex sx={{ flexDirection: 'column' }}>
+                    <Text sx={{ lineHeight: '20px', marginBottom: '10px' }}>
+                      {formatDate(show.frontmatter.date) || 'Unknown Date'}
+                    </Text>
+                    <Text
+                      as='h2'
+                      sx={{
+                        fontWeight: 600,
+                        fontSize: 18,
+                        fontFamily: 'heading',
+                        textTransform: 'uppercase',
+                        lineHeight: '20px',
+                      }}
+                    >
+                      {show.frontmatter.title || 'Untitled Show'}
+                    </Text>{' '}
+                    <Text>
+                      {' with '}{' '}
+                      {(show.frontmatter.host || []).join(', ') ||
+                        'Unknown Host'}
+                    </Text>
                   </Flex>
-                  <Text>{show.frontmatter.title || 'Untitled Show'}</Text>
-                  <Text sx={{ fontSize: '13px', wordWrap: 'break-word' }}>
+                  <Text sx={{ fontSize: '15px', wordWrap: 'break-word' }}>
                     {show.frontmatter.description ||
                       'No description available.'}
                   </Text>
                   <Flex sx={{ gap: '5px', flexWrap: 'wrap' }}>
                     {(show.frontmatter.tags || []).map((tag, index) => (
-                      <Badge key={index} variant='primary'>
-                        #{tag}
+                      <Badge
+                        key={index}
+                        sx={{
+                          borderRadius: '0px',
+                          fontSize: '13px',
+                          textTransform: 'uppercase',
+                        }}
+                      >
+                        {tag}
                       </Badge>
                     ))}
                   </Flex>
@@ -151,7 +151,12 @@ export default ShowsPage;
 // GraphQL Query
 export const query = graphql`
   query {
-    allMdx(sort: { frontmatter: { date: DESC } }) {
+    allMdx(
+      sort: { frontmatter: { date: DESC } }
+      filter: {
+        parent: { internal: { description: { regex: "/content/shows/" } } }
+      }
+    ) {
       nodes {
         id
         frontmatter {

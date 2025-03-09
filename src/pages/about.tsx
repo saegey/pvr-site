@@ -1,7 +1,7 @@
 import React from 'react';
-
 import Layout from '../components/layout';
 import { Text, Container, Box, Heading, Flex, Link } from 'theme-ui';
+import { FaYoutube, FaMixcloud, FaInstagram } from 'react-icons/fa';
 
 const AboutPage = () => {
   return (
@@ -9,13 +9,13 @@ const AboutPage = () => {
       <Container
         sx={{
           p: 3,
-          maxWidth: ['100%', '540px', '720px', '960px', '1140px'],
+          maxWidth: ['100%', '800px', '800px', '960px', '1140px'],
           mx: 'auto',
         }}
       >
-        <Box sx={{ maxWidth: '800px', mx: 'auto', px: 4, py: 5 }}>
+        <Box sx={{ maxWidth: '800px', mx: 'auto' }}>
           <Heading as='h1' sx={{ fontSize: 5, mb: 3, textAlign: 'center' }}>
-            A Journey Through Sound
+            About Us
           </Heading>
 
           <Text as='p' sx={{ fontSize: 2, lineHeight: '1.6', mb: 4 }}>
@@ -53,26 +53,42 @@ const AboutPage = () => {
             Stay Connected
           </Heading>
           <Text as='p' sx={{ fontSize: 2, lineHeight: '1.6', mb: 3 }}>
-            Follow us on{' '}
-            <Link
-              href='https://www.mixcloud.com/public-vinyl-radio/'
-              sx={{
-                color: 'primary',
-                textDecoration: 'none',
-                fontWeight: 'bold',
-              }}
-            >
-              Mixcloud
-            </Link>{' '}
-            for the latest mixes, behind-the-scenes vinyl finds, and special
-            live sets. If you love what we do, spread the word, and let’s grow
-            this community of music lovers together.
+            Follow us for the latest mixes, behind-the-scenes vinyl finds, and
+            special live sets. If you love what we do, spread the word, and
+            let’s grow this community of music lovers together.
           </Text>
 
-          <Flex sx={{ justifyContent: 'center', mt: 4 }}>
-            <Text as='p' sx={{ fontSize: 3, fontWeight: 'bold' }}>
-              Drop the needle and take off.
-            </Text>
+          {/* Social Media Links */}
+          <Flex
+            sx={{
+              justifyContent: 'center',
+              gap: 4,
+              mt: 3,
+            }}
+          >
+            <Link
+              href='https://www.youtube.com/@PublicVinylRadio'
+              target='_blank'
+              sx={{ color: 'text', '&:hover': { color: 'primary' } }}
+            >
+              <FaYoutube size={32} />
+            </Link>
+
+            <Link
+              href='https://www.mixcloud.com/public-vinyl-radio/'
+              target='_blank'
+              sx={{ color: 'text', '&:hover': { color: 'primary' } }}
+            >
+              <FaMixcloud size={32} />
+            </Link>
+
+            <Link
+              href='https://www.instagram.com/PublicVinylRadio'
+              target='_blank'
+              sx={{ color: 'text', '&:hover': { color: 'primary' } }}
+            >
+              <FaInstagram size={32} />
+            </Link>
           </Flex>
         </Box>
       </Container>

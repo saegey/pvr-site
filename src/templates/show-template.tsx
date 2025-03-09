@@ -10,6 +10,12 @@ import {
   Embed,
 } from 'theme-ui';
 import Layout from '../components/layout';
+import {
+  FaPlay,
+  FaPlayCircle,
+  FaPlayCircle as FaSolidPlay,
+} from 'react-icons/fa';
+
 import { MDXProvider } from '@mdx-js/react';
 import { compile, run } from '@mdx-js/mdx';
 import * as runtime from 'react/jsx-runtime';
@@ -45,7 +51,7 @@ const ResponsiveYouTube = ({ videoId }: { videoId: string }) => (
   </Box>
 );
 
-const formatDate = (dateString: string) =>
+export const formatDate = (dateString: string) =>
   format(new Date(dateString), 'MM.dd.yyyy');
 
 const isIOS = () => {
@@ -57,11 +63,7 @@ const isIOS = () => {
 };
 
 const components = {
-  // Box,
-  // Text,
-  // Button,
   ResponsiveYouTube,
-  // Add any other Theme UI components you need here
 };
 
 const MyDynamicImage = ({ coverImage }: { coverImage: IGatsbyImageData }) => {
@@ -72,7 +74,7 @@ const MyDynamicImage = ({ coverImage }: { coverImage: IGatsbyImageData }) => {
     <GatsbyImage
       image={image}
       alt='Cover Image'
-      style={{ borderRadius: '10px' }}
+      style={{ borderRadius: '0px' }}
     />
   );
 };
@@ -194,15 +196,29 @@ const ShowTemplate = ({ pageContext }: { pageContext: PageContext }) => {
     doCompile();
   }, [content]);
 
-  console.log('MDX Components:', components); // Debugging log
-
   const memoizedIframeSrc = useMemo(() => iframeSrc, [iframeSrc]);
 
   return (
     <Layout>
       <SEO title={`${title} | Public Vinyl Radio`} />
-      <Container sx={{ p: 3, mx: 'auto' }}>
-        <Grid gap='10px' columns={[1, 2]}>
+      <Container
+        sx={{
+          maxWidth: '960px',
+          mx: 'auto',
+          marginTop: [0, '20px', '20px'],
+        }}
+      >
+        <Grid
+          columns={[1, 2]}
+          sx={{
+            gap: '20px',
+            backgroundColor: [
+              'background',
+              'showCardBackground',
+              'showCardBackground',
+            ],
+          }}
+        >
           <Box>
             <MyDynamicImage coverImage={coverImage} />
           </Box>
@@ -212,39 +228,50 @@ const ShowTemplate = ({ pageContext }: { pageContext: PageContext }) => {
               gap: '10px',
               height: '100%',
               justifyContent: 'space-between',
+              paddingX: ['20px', 0, 0],
             }}
           >
             <Box>
-              <Flex sx={{ flexDirection: 'column', gap: '10px' }}>
-                <Text as='h3'>{formatDate(date) || 'Unknown Date'}</Text>
-                <Box sx={{ marginTop: ['0px', '0px', '80px'] }}>
-                  <Flex sx={{ gap: '5px', flexWrap: 'wrap' }}>
-                    {(host || []).map((h: string, index: number) => (
-                      <Badge
-                        key={index}
-                        variant='secondary'
-                        sx={{
-                          backgroundColor: 'badgeSecondaryBg',
-                          color: 'badgeSecondaryText',
-                          borderRadius: '20px',
-                          borderStyle: 'solid',
-                          borderWidth: '1px',
-                          borderColor: 'badgeSecondaryBorder',
-                        }}
-                      >
-                        {h}
-                      </Badge>
-                    ))}
-                  </Flex>
+              <Flex
+                sx={{ flexDirection: 'column', gap: '10px', paddingY: '20px' }}
+              >
+                <Box sx={{ flexDirection: 'column', gap: '10px' }}>
+                  <Text>{formatDate(date) || 'Unknown Date'}</Text>
+                  {' · '}
+                  <Text>Seattle</Text>
                 </Box>
-                <Text as='h2'>{title}</Text>
-                <Text as='h4' style={{ wordWrap: 'break-word' }}>
+                <Box>
+                  <Text as='h2' sx={{ marginBottom: 0 }}>
+                    {title}
+                  </Text>
+                  <Box>
+                    <Text>with</Text>{' '}
+                    {(host || []).map((h: string, index: number) => (
+                      <Text key={index} sx={{ fontWeight: 600 }}>
+                        {h}
+                      </Text>
+                    ))}
+                  </Box>
+                </Box>
+                <Text
+                  as='h4'
+                  style={{ wordWrap: 'break-word', fontWeight: 400 }}
+                >
                   {description}
                 </Text>
+
                 <Flex sx={{ gap: '5px', marginTop: '10px' }}>
                   {tags.map((tag, index) => (
-                    <Badge key={index} variant='primary'>
-                      #{tag}
+                    <Badge
+                      key={index}
+                      variant='primary'
+                      sx={{
+                        borderRadius: '0px',
+                        textTransform: 'uppercase',
+                        fontSize: '13px',
+                      }}
+                    >
+                      {tag}
                     </Badge>
                   ))}
                 </Flex>
@@ -252,7 +279,7 @@ const ShowTemplate = ({ pageContext }: { pageContext: PageContext }) => {
             </Box>
 
             {/* Play Mix Button */}
-            <Box sx={{ paddingTop: '20px' }}>
+            <Flex sx={{ paddingY: '20px' }}>
               <Box sx={{ paddingTop: '20px' }}>
                 <Button
                   onClick={() => {
@@ -269,7 +296,8 @@ const ShowTemplate = ({ pageContext }: { pageContext: PageContext }) => {
                     bg: 'primary',
                     color: 'background',
                     padding: '10px',
-                    borderRadius: '20px',
+                    // borderRadius: '20px',
+                    borderRadius: 0,
                     fontFamily: 'body',
                     paddingX: '20px',
                     fontSize: '16px',
@@ -280,14 +308,24 @@ const ShowTemplate = ({ pageContext }: { pageContext: PageContext }) => {
                     '&:hover': { bg: 'secondary' },
                   }}
                 >
-                  Listen to Mix
+                  <Flex sx={{ gap: '10px', alignItems: 'center' }}>
+                    <FaPlay />
+                    <Text>Listen to Mix</Text>
+                  </Flex>
                 </Button>
               </Box>
-            </Box>
+            </Flex>
           </Flex>
         </Grid>
 
-        <Container sx={{ maxWidth: '800px', mx: 'auto', marginTop: '20px' }}>
+        <Container
+          sx={{
+            maxWidth: '800px',
+            mx: 'auto',
+            marginTop: '20px',
+            paddingX: ['20px', 0, 0],
+          }}
+        >
           {tracklist && (
             <Box>
               <Text as='h3'>Tracklist</Text>

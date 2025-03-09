@@ -20,6 +20,15 @@ const config: GatsbyConfig = {
         },
       },
     },
+    {
+      resolve: `gatsby-plugin-google-fonts`,
+      options: {
+        fonts: [
+          `Work Sans\:300,400,500,600,700`, // Define the weights you need
+        ],
+        display: 'swap', // Improves performance
+      },
+    },
     'gatsby-plugin-theme-ui',
     `gatsby-plugin-image`,
     `gatsby-plugin-sharp`,
@@ -44,6 +53,20 @@ const config: GatsbyConfig = {
       options: {
         name: `content`, // Name of the source, useful for GraphQL queries
         path: `${__dirname}/src/content`, // Adjust the path to your MDX content directory
+      },
+    },
+    {
+      resolve: `gatsby-source-filesystem`,
+      options: {
+        name: `images`,
+        path: `${__dirname}/src/images`, // Adjust based on your image location
+      },
+    },
+    {
+      resolve: `gatsby-source-filesystem`,
+      options: {
+        name: `blog`,
+        path: `${__dirname}/src/blog`, // Path to your blog posts
       },
     },
     {

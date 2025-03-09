@@ -20,6 +20,15 @@ const config: GatsbyConfig = {
         },
       },
     },
+    {
+      resolve: `gatsby-plugin-google-fonts`,
+      options: {
+        fonts: [
+          `Work Sans\:300,400,500,600,700`, // Define the weights you need
+        ],
+        display: 'swap', // Improves performance
+      },
+    },
     'gatsby-plugin-theme-ui',
     `gatsby-plugin-image`,
     `gatsby-plugin-sharp`,

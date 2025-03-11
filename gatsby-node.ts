@@ -26,80 +26,6 @@ exports.createSchemaCustomization = ({ actions }: { actions: any }) => {
   `);
 };
 
-// exports.createPages = async ({
-//   actions,
-//   graphql,
-// }: {
-//   actions: any;
-//   graphql: any;
-// }) => {
-//   const { createPage } = actions;
-
-//   const result = await graphql(`
-//     {
-//       allMdx {
-//         edges {
-//           node {
-//             id
-//             frontmatter {
-//               title
-//               description
-//               episode
-//               date
-//               tags
-//               iframeSrc
-//               slug
-//               coverImage {
-//                 childImageSharp {
-//                   gatsbyImageData(
-//                     width: 700
-//                     layout: CONSTRAINED
-//                     formats: [AUTO, WEBP]
-//                   )
-//                 }
-//               }
-//               tracklist {
-//                 title
-//                 artist
-//               }
-//               host
-//             }
-//             body
-//           }
-//         }
-//       }
-//     }
-//   `);
-
-//   if (result.errors) {
-//     console.error(result.errors);
-//     throw new Error('There was a problem with the GraphQL query.');
-//   }
-
-//   const path = require('path');
-//   const showTemplate = path.resolve(`src/templates/show-template.tsx`);
-
-//   result.data.allMdx.edges.forEach(({ node }: { node: any }) => {
-//     createPage({
-//       path: `/shows/${node.frontmatter.slug}`,
-//       component: showTemplate,
-//       context: {
-//         title: node.frontmatter.title,
-//         description: node.frontmatter.description,
-//         episode: node.frontmatter.episode,
-//         date: node.frontmatter.date,
-//         tags: node.frontmatter.tags,
-//         iframeSrc: node.frontmatter.iframeSrc,
-//         content: node.body,
-//         coverImage:
-//           node.frontmatter.coverImage?.childImageSharp?.gatsbyImageData || null,
-//         tracklist: node.frontmatter.tracklist,
-//         host: node.frontmatter.host,
-//       },
-//     });
-//   });
-// };
-
 const path = require('path');
 
 exports.createPages = async ({ actions, graphql }) => {
@@ -121,6 +47,7 @@ exports.createPages = async ({ actions, graphql }) => {
               iframeSrc
               slug
               coverImage {
+                publicURL # ✅ Get direct URL for Open Graph images
                 childImageSharp {
                   gatsbyImageData(
                     width: 700
@@ -181,6 +108,8 @@ exports.createPages = async ({ actions, graphql }) => {
           coverImage:
             node.frontmatter.coverImage?.childImageSharp?.gatsbyImageData ||
             null,
+
+          publicURL: node.frontmatter.coverImage?.publicURL || null,
           tracklist: node.frontmatter.tracklist,
           host: node.frontmatter.host,
         },

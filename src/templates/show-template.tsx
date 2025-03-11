@@ -154,6 +154,7 @@ interface PageContext {
   iframeSrc: string;
   content: string;
   coverImage: IGatsbyImageData;
+  publicURL: string;
   tracklist: { title: string; artist: string }[];
   host: string[];
 }
@@ -168,6 +169,7 @@ const ShowTemplate = ({ pageContext }: { pageContext: PageContext }) => {
     iframeSrc,
     content,
     coverImage,
+    publicURL,
     tracklist,
     host,
   } = pageContext;
@@ -197,10 +199,15 @@ const ShowTemplate = ({ pageContext }: { pageContext: PageContext }) => {
   }, [content]);
 
   const memoizedIframeSrc = useMemo(() => iframeSrc, [iframeSrc]);
+  console.log(publicURL);
 
   return (
     <Layout>
-      <SEO title={`${title} | Public Vinyl Radio`} />
+      <SEO
+        title={`${title} | Public Vinyl Radio`}
+        description={description}
+        image={publicURL} // ✅ Pass OG image dynamically
+      />
       <Container
         sx={{
           maxWidth: '960px',

@@ -1,22 +1,13 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import {
-  Box,
-  Flex,
-  Grid,
-  Badge,
-  Text,
-  Container,
-  Button,
-  Embed,
-} from 'theme-ui';
+import { Box, Flex, Grid, Badge, Text, Container, Button } from 'theme-ui';
 import Layout from '../components/layout';
 import {
+  FaBookOpen,
   FaPlay,
   FaPlayCircle,
   FaPlayCircle as FaSolidPlay,
 } from 'react-icons/fa';
 
-import { MDXProvider } from '@mdx-js/react';
 import { compile, run } from '@mdx-js/mdx';
 import * as runtime from 'react/jsx-runtime';
 import { GatsbyImage, getImage, IGatsbyImageData } from 'gatsby-plugin-image';
@@ -64,6 +55,7 @@ const isIOS = () => {
 
 const components = {
   ResponsiveYouTube,
+  AppleMusicEmbed,
 };
 
 const MyDynamicImage = ({ coverImage }: { coverImage: IGatsbyImageData }) => {
@@ -80,6 +72,7 @@ const MyDynamicImage = ({ coverImage }: { coverImage: IGatsbyImageData }) => {
 };
 
 import { useColorMode } from 'theme-ui';
+import AppleMusicEmbed from '../components/applemusic';
 
 const BottomDrawer = ({
   isOpen,
@@ -152,10 +145,11 @@ interface PageContext {
   date: string;
   tags: string[];
   iframeSrc: string;
+  youtubeId: string;
   content: string;
   coverImage: IGatsbyImageData;
   publicURL: string;
-  tracklist: { title: string; artist: string }[];
+  tracklist: { title: string; artist: string; year: number }[];
   host: string[];
 }
 
@@ -167,6 +161,7 @@ const ShowTemplate = ({ pageContext }: { pageContext: PageContext }) => {
     date,
     tags,
     iframeSrc,
+    youtubeId,
     content,
     coverImage,
     publicURL,
@@ -178,6 +173,8 @@ const ShowTemplate = ({ pageContext }: { pageContext: PageContext }) => {
     null
   );
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  // Add this with your other useState imports
+  const [showTracklist, setShowTracklist] = useState(false);
 
   useEffect(() => {
     const doCompile = async () => {
@@ -286,42 +283,103 @@ const ShowTemplate = ({ pageContext }: { pageContext: PageContext }) => {
             </Box>
 
             {/* Play Mix Button */}
-            <Flex sx={{ paddingY: '20px' }}>
-              <Box sx={{ paddingTop: '20px' }}>
-                <Button
-                  onClick={() => {
-                    if (!iframeSrc) return; // Prevent opening if iframeSrc is missing
-                    const onIOS = isIOS();
-                    const mixcloudURL = iframeSrc;
-                    if (onIOS) {
-                      window.location.href = mixcloudURL;
-                    } else {
-                      setIsDrawerOpen(true);
-                    }
-                  }}
-                  sx={{
-                    bg: 'primary',
-                    color: 'background',
-                    padding: '10px',
-                    // borderRadius: '20px',
-                    borderRadius: 0,
-                    fontFamily: 'body',
-                    paddingX: '20px',
-                    fontSize: '16px',
-                    fontWeight: 'bold',
-                    cursor: 'pointer',
-                    textAlign: 'center',
-                    transition: 'background 0.3s',
-                    '&:hover': { bg: 'secondary' },
-                  }}
-                >
-                  <Flex sx={{ gap: '10px', alignItems: 'center' }}>
-                    <FaPlay />
-                    <Text>Listen to Mix</Text>
-                  </Flex>
-                </Button>
-              </Box>
-            </Flex>
+            {iframeSrc && (
+              <Flex sx={{ paddingY: '20px' }}>
+                <Box sx={{ paddingTop: '20px' }}>
+                  <Button
+                    onClick={() => {
+                      if (!iframeSrc) return; // Prevent opening if iframeSrc is missing
+                      const onIOS = isIOS();
+                      const mixcloudURL = iframeSrc;
+                      if (onIOS) {
+                        window.location.href = mixcloudURL;
+                      } else {
+                        setIsDrawerOpen(true);
+                      }
+                    }}
+                    sx={{
+                      bg: 'primary',
+                      color: 'background',
+                      padding: '10px',
+                      // borderRadius: '20px',
+                      borderRadius: 0,
+                      fontFamily: 'body',
+                      paddingX: '20px',
+                      fontSize: '16px',
+                      fontWeight: 'bold',
+                      cursor: 'pointer',
+                      textAlign: 'center',
+                      transition: 'background 0.3s',
+                      '&:hover': { bg: 'secondary' },
+                    }}
+                  >
+                    <Flex sx={{ gap: '10px', alignItems: 'center' }}>
+                      <FaPlay />
+                      <Text>Listen to Mix</Text>
+                    </Flex>
+                  </Button>
+                </Box>
+              </Flex>
+            )}
+            {youtubeId && (
+              <Flex sx={{ paddingY: '20px', gap: '10px', flexWrap: 'wrap' }}>
+                <Box sx={{ paddingTop: '20px' }}>
+                  <Button
+                    onClick={() => {
+                      if (!youtubeId) return;
+                      window.location.href = `https://www.youtube.com/watch?v=${youtubeId}`;
+                    }}
+                    sx={{
+                      bg: 'primary',
+                      color: 'background',
+                      padding: '10px',
+                      borderRadius: 0,
+                      fontFamily: 'body',
+                      paddingX: '20px',
+                      fontSize: '16px',
+                      fontWeight: 'bold',
+                      cursor: 'pointer',
+                      textAlign: 'center',
+                      transition: 'background 0.3s',
+                      '&:hover': { bg: 'secondary' },
+                    }}
+                  >
+                    <Flex sx={{ gap: '10px', alignItems: 'center' }}>
+                      <FaPlay />
+                      <Text>Watch on YouTube</Text>
+                    </Flex>
+                  </Button>
+                </Box>
+
+                <Box sx={{ paddingTop: '20px' }}>
+                  <Button
+                    onClick={() => setShowTracklist(!showTracklist)}
+                    sx={{
+                      bg: 'primary',
+                      color: 'background',
+                      // color: 'text',
+                      padding: '10px',
+                      borderRadius: 0,
+                      fontFamily: 'body',
+                      paddingX: '20px',
+                      fontSize: '16px',
+                      fontWeight: 'bold',
+                      cursor: 'pointer',
+                      textAlign: 'center',
+                      transition: 'background 0.3s',
+                      '&:hover': { bg: 'highlight' },
+                    }}
+                  >
+                    <Flex sx={{ gap: '10px', alignItems: 'center' }}>
+                      <FaBookOpen />
+                      <Text>
+                        {showTracklist ? 'Hide Tracklist' : 'Tracklist'}
+                      </Text>
+                    </Flex>
+                  </Button>
+                </Box>
+              </Flex>
+            )}
           </Flex>
         </Grid>
 
@@ -333,20 +391,22 @@ const ShowTemplate = ({ pageContext }: { pageContext: PageContext }) => {
             paddingX: ['20px', 0, 0],
           }}
         >
-          {tracklist && (
-            <Box>
+          {tracklist && showTracklist && (
+            <Box sx={{ marginTop: '20px' }}>
               <Text as='h3'>Tracklist</Text>
               <Flex sx={{ flexDirection: 'column', gap: '5px' }}>
-                {tracklist.map(({ artist, title }, index) => (
+                {tracklist.map(({ artist, title, year }, index) => (
                   <Box key={index}>
                     <Text>
-                      {artist} - {title}
+                      <Text style={{ fontWeight: 600 }}>{artist}</Text> -{' '}
+                      {title} ({year})
                     </Text>
                   </Box>
                 ))}
               </Flex>
             </Box>
           )}
+
           {MDXComponent ? (
             <MDXComponent components={components} />
           ) : (

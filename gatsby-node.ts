@@ -9,6 +9,7 @@ exports.createSchemaCustomization = ({ actions }: { actions: any }) => {
     type Track {
       title: String
       artist: String
+      year: Int
     }
 
     type Frontmatter {
@@ -18,6 +19,7 @@ exports.createSchemaCustomization = ({ actions }: { actions: any }) => {
       date: Date @dateformat
       tags: [String!]
       iframeSrc: String
+      youtubeId: String
       slug: String
       coverImage: File @fileByRelativePath
       tracklist: [Track]
@@ -28,7 +30,13 @@ exports.createSchemaCustomization = ({ actions }: { actions: any }) => {
 
 const path = require('path');
 
-exports.createPages = async ({ actions, graphql }) => {
+exports.createPages = async ({
+  actions,
+  graphql,
+}: {
+  actions: any;
+  graphql: any;
+}) => {
   const { createPage } = actions;
 
   const result = await graphql(`
@@ -45,6 +53,7 @@ exports.createPages = async ({ actions, graphql }) => {
               date
               tags
               iframeSrc
+              youtubeId
               slug
               coverImage {
                 publicURL # ✅ Get direct URL for Open Graph images
@@ -59,6 +68,7 @@ exports.createPages = async ({ actions, graphql }) => {
               tracklist {
                 title
                 artist
+                year
               }
               host
             }
@@ -104,6 +114,7 @@ exports.createPages = async ({ actions, graphql }) => {
           date: node.frontmatter.date,
           tags: node.frontmatter.tags,
           iframeSrc: node.frontmatter.iframeSrc,
+          youtubeId: node.frontmatter.youtubeId,
           content: node.body,
           coverImage:
             node.frontmatter.coverImage?.childImageSharp?.gatsbyImageData ||

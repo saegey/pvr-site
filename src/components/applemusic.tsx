@@ -21,7 +21,7 @@ const AppleMusicEmbed = ({ url }: { url: string }) => {
         height="450"
         style={{
           width: "100%",
-          maxWidth: "660px",
+          maxWidth: "100%",
           overflow: "hidden",
           borderRadius: "10px",
         }}

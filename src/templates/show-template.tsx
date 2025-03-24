@@ -56,6 +56,7 @@ const isIOS = () => {
 const components = {
   ResponsiveYouTube,
   AppleMusicEmbed,
+  SpotifyEmbed
 };
 
 const MyDynamicImage = ({ coverImage }: { coverImage: IGatsbyImageData }) => {
@@ -73,6 +74,7 @@ const MyDynamicImage = ({ coverImage }: { coverImage: IGatsbyImageData }) => {
 
 import { useColorMode } from 'theme-ui';
 import AppleMusicEmbed from '../components/applemusic';
+import SpotifyEmbed from '../components/spotify'; 
 
 const BottomDrawer = ({
   isOpen,

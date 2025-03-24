@@ -1,8 +1,12 @@
 import React from "react";
-import { Box, useColorMode } from "theme-ui";
+import { Box, useThemeUI } from "theme-ui";
 
-const SpotifyEmbed = ({ url }: { url: string }) => {
-  const [colorMode] = useColorMode();
+const SpotifyEmbed = () => {
+  const { colorMode } = useThemeUI();
+  const isDarkMode = colorMode === "dark";
+
+  const theme = isDarkMode ? "0" : "1";
+  const src = `https://open.spotify.com/embed/playlist/0TkqrAwu0XBc0Rii5I0FC4?utm_source=generator&theme=${theme}`;
 
   return (
     <Box
@@ -17,7 +21,7 @@ const SpotifyEmbed = ({ url }: { url: string }) => {
     >
       <iframe
         style={{ borderRadius: "10px" }}
-        src="https://open.spotify.com/embed/playlist/0TkqrAwu0XBc0Rii5I0FC4?utm_source=generator&theme=0"
+        src={src}
         width="100%"
         height="352"
         frameBorder="0"

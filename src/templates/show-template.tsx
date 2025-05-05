@@ -9,6 +9,7 @@ import {
   FaPlayCircle as FaSolidPlay,
   FaSpotify,
   FaYoutube,
+  FaWindowClose
 } from "react-icons/fa";
 
 import { compile, run } from "@mdx-js/mdx";
@@ -40,33 +41,46 @@ const EmbedModal = ({
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
+        p: 0,
       }}
       onClick={onClose}
     >
       <Box
         sx={{
+          position: "relative",
+          display: "flex",
+          flexDirection: "column",
+          // full-screen on mobile, then 90%/600px on larger screens
+          width: ["100vw", "90%", "600px"],
+          height: ["100vh", "auto", "auto"],
+          maxHeight: ["100vh", "90vh", "90vh"],
           bg: "background",
-          padding: "20px",
-          borderRadius: "10px",
-          maxWidth: "600px",
-          width: "90%",
+          borderRadius: ["0px", "10px", "10px"],
+          p: ["10px", "20px", "20px"],
         }}
         onClick={(e) => e.stopPropagation()}
       >
+        {/* Close button always top-right */}
         <Button
           onClick={onClose}
           sx={{
-            float: "right",
-            mb: 2,
+            position: "absolute",
+            top: ["10px", "20px", "20px"],
+            right: ["10px", "20px", "20px"],
+            zIndex: 2,
             bg: "transparent",
             color: "text",
-            fontSize: 3,
+            fontSize: 4,
             cursor: "pointer",
           }}
         >
-          ✕
+          <FaWindowClose/>
         </Button>
-        {children}
+
+        {/* Scrollable content area */}
+        <Box sx={{ flex: 1, overflowY: "auto" }}>
+          {children}
+        </Box>
       </Box>
     </Box>
   );

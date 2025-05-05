@@ -20,6 +20,8 @@ exports.createSchemaCustomization = ({ actions }: { actions: any }) => {
       tags: [String!]
       iframeSrc: String
       youtubeId: String
+      appleMusicUrl: String
+      spotifyId: String
       slug: String
       coverImage: File @fileByRelativePath
       tracklist: [Track]
@@ -54,6 +56,8 @@ exports.createPages = async ({
               tags
               iframeSrc
               youtubeId
+              appleMusicUrl
+              spotifyId
               slug
               coverImage {
                 publicURL # ✅ Get direct URL for Open Graph images
@@ -115,6 +119,8 @@ exports.createPages = async ({
           tags: node.frontmatter.tags,
           iframeSrc: node.frontmatter.iframeSrc,
           youtubeId: node.frontmatter.youtubeId,
+          appleMusicUrl: node.frontmatter.appleMusicUrl,
+          spotifyId: node.frontmatter.spotifyId,
           content: node.body,
           coverImage:
             node.frontmatter.coverImage?.childImageSharp?.gatsbyImageData ||

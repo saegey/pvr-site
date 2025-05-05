@@ -9,9 +9,9 @@ const AppleMusicEmbed = ({ url }: { url: string }) => {
       sx={{
         position: "relative",
         width: "100%",
-        paddingTop: "100px",
+        // paddingTop: "100px",
         paddingBottom: "56.25%", // 16:9 aspect ratio
-        height: 0,
+        height: 450,
         overflow: "hidden",
       }}
     >

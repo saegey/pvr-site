@@ -207,10 +207,6 @@ const Layout = ({ children }: { children: ReactNode }) => {
             flexGrow: 1,
             height: '100%',
             alignContent: 'center',
-            // mt: 2,
-            // marginLeft: 'auto',
-
-            // backgroundColor: 'red',
           }}
         >
           <Link

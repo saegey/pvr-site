@@ -27,6 +27,17 @@ exports.createSchemaCustomization = ({ actions }: { actions: any }) => {
       tracklist: [Track]
       host: [String]
     }
+
+    type DataYaml implements Node {
+      links: [Link!]!
+    }
+
+    type Link {
+      title: String!
+      url: String!
+      subtitle: String
+      linkImage: File @fileByRelativePath
+    }
   `);
 };
 
@@ -91,7 +102,37 @@ exports.createPages = async ({
   const showTemplate = path.resolve(`src/templates/show-template.tsx`);
   const blogTemplate = path.resolve(`src/templates/blog-template.tsx`);
 
-  result.data.allMdx.edges.forEach(({ node }) => {
+  interface MdxNode {
+    id: string;
+    frontmatter: {
+      template: string;
+      title: string;
+      description?: string;
+      episode?: number;
+      date?: string;
+      tags?: string[];
+      iframeSrc?: string;
+      youtubeId?: string;
+      appleMusicUrl?: string;
+      spotifyId?: string;
+      slug: string;
+      coverImage?: {
+        publicURL?: string;
+        childImageSharp?: {
+          gatsbyImageData?: any;
+        };
+      };
+      tracklist?: {
+        title?: string;
+        artist?: string;
+        year?: number;
+      }[];
+      host?: string[];
+    };
+    body: string;
+  }
+
+  (result.data.allMdx.edges as { node: MdxNode }[]).forEach(({ node }) => {
     const { template, slug } = node.frontmatter;
 
     if (template === 'blog') {

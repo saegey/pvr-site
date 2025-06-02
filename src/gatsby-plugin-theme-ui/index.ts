@@ -54,7 +54,7 @@ const theme = {
     root: {
       fontFamily: 'body',
       fontWeight: 'body',
-      lineHeight: 'body',
+      // lineHeight: 'body',
     },
     h1: {
       fontFamily: 'heading',
@@ -74,6 +74,9 @@ const theme = {
       lineHeight: 'body',
       fontSize: 2,
     },
+    span: {
+      lineHeight: 'unset'
+    }
   },
   badges: {
     primary: {
@@ -104,6 +107,22 @@ const theme = {
       px: 2,
       py: 1,
       fontSize: 1,
+    },
+  },
+  variants: {
+    linkCard: {
+      display: "flex",
+      textDecoration: "none",
+      alignItems: "center",
+      p: 3,
+      mb: 3,
+      border: "2px solid",
+      borderColor: "#000",
+      borderRadius: 0,
+      transition: "box-shadow 0.2s ease",
+      "&:hover": {
+        boxShadow: "card",
+      },
     },
   },
 };

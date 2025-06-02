@@ -1,0 +1,33 @@
+# src/data/links.yml
+links:
+  - title: "🎥 Tropical Sunsets 🌴🌅 | Cumbia, Afrobeat & World Bass "
+    url: "https://youtu.be/6hZ3E1-K9jw"
+    subtitle: "A sun-drenched blend of cumbia, Afrobeat, and world-fusion vibes spun 100% on vinyl—designed to transport you to coastal nights and golden horizons."
+    linkImage: "../content/shows/tropical_sunsets.png"
+  - title: "🎧 Funk Soul Fire"
+    url: "/shows/funk-soul-fire/"
+    subtitle: "A funky, soulful journey through vinyl records"
+    linkImage: "../content/shows/Funk-&-Soul-Fire_Thumb_1x1_v1.jpeg"
+  - title: "Ritmos Colombianos 🇨🇴"
+    url: "/shows/ritmos-colombianos/"
+    subtitle: "A celebration of Colombian rhythms and culture"
+    linkImage: "../content/shows/ritmos_colombianos.png"
+
+  # - title: "Instagram"
+  #   url: "https://instagram.com/publicvinylradio"
+  #   subtitle: "Behind-the-scenes reels"
+  #   # instead of linkImage, point to the SVG component by name:
+  #   svgIcon: "InstagramIcon"
+
+  - title: "YouTube"
+    url: "https://youtube.com/@PublicVinylRadio"
+    subtitle: "Full vinyl sets"
+    svgIcon: "YouTubeIcon"
+  - title: "Website"
+    url: "https://publicvinylradio.com"
+    subtitle: "Explore more about Public Vinyl Radio"
+    svgIcon: "WebsiteIcon"
+  - title: "Mixcloud"
+    url: "https://mixcloud.com/public-vinyl-radio"
+    subtitle: "Listen to our mixes"
+    svgIcon: "MixcloudIcon"

@@ -5,81 +5,44 @@ const config: GatsbyConfig = {
     title: 'Public Vinyl Radio',
     description:
       'A vinyl-focused internet radio station with curated mixtapes.',
-    siteUrl: 'https://publicvinylradio.com', // Update with your domain
-    image: '/default-social-image.jpg', // Default OG image (1200x630 recommended)
-    twitterUsername: '@your_twitter_handle', // Your Twitter handle
+    siteUrl: 'https://publicvinylradio.com',
+    image: '/default-social-image.jpg',
+    twitterUsername: '@your_twitter_handle',
   },
   graphqlTypegen: true,
   plugins: [
+    // analytics + fonts
     {
       resolve: 'gatsby-plugin-google-gtag',
       options: {
-        trackingIds: ['G-J46E6ZPHFF'], // Replace with your GA Measurement ID
-        pluginConfig: {
-          head: true, // Places the tracking script in <head>
-        },
+        trackingIds: ['G-J46E6ZPHFF'],
+        pluginConfig: { head: true },
       },
     },
     {
       resolve: `gatsby-plugin-google-fonts`,
       options: {
-        fonts: [
-          `Work Sans\:300,400,500,600,700`, // Define the weights you need
-        ],
-        display: 'swap', // Improves performance
+        fonts: [`Work Sans\:300,400,500,600,700`],
+        display: 'swap',
       },
     },
-    'gatsby-plugin-theme-ui',
+
+    // theming + images
+    `gatsby-plugin-theme-ui`,
     `gatsby-plugin-image`,
     `gatsby-plugin-sharp`,
     `gatsby-transformer-sharp`,
+
+    // netlify headers + sitemap
     {
       resolve: `gatsby-plugin-netlify`,
       options: {
-        headers: {
-          '/*': ['Cache-Control: public, max-age=31536000, immutable'],
-        },
+        headers: { '/*': ['Cache-Control: public, max-age=31536000, immutable'] },
       },
     },
-    'gatsby-plugin-sitemap',
-    {
-      resolve: 'gatsby-plugin-manifest',
-      options: {
-        icon: 'src/images/icon.png',
-      },
-    },
-    {
-      resolve: `gatsby-source-filesystem`,
-      options: {
-        name: `content`, // Name of the source, useful for GraphQL queries
-        path: `${__dirname}/src/content`, // Adjust the path to your MDX content directory
-      },
-    },
-    {
-      resolve: `gatsby-source-filesystem`,
-      options: {
-        name: `images`,
-        path: `${__dirname}/src/images`, // Adjust based on your image location
-      },
-    },
-    {
-      resolve: `gatsby-source-filesystem`,
-      options: {
-        name: `blog`,
-        path: `${__dirname}/src/blog`, // Path to your blog posts
-      },
-    },
-    {
-      resolve: `gatsby-plugin-mdx`,
-      options: {
-        extensions: [`.mdx`, `.md`],
-        gatsbyRemarkPlugins: [], // ✅ Required for proper rendering
-        mdxOptions: {
-          useDynamicImport: true, // ✅ Allows dynamic components like ResponsiveYouTube
-          rehypePlugins: [], // ✅ Avoids unwanted transformations
-        },
-      },
-    },
+    `gatsby-plugin-sitemap`,
+
+    // icons + manifest
     `gatsby-plugin-react-helmet`,
     {
       resolve: `gatsby-plugin-manifest`,
@@ -90,25 +53,65 @@ const config: GatsbyConfig = {
         background_color: `#ffffff`,
         theme_color: `#000000`,
         display: `standalone`,
-        icon: `src/images/favicon.png`, // Path to your updated favicon
+        icon: `src/images/favicon.png`,
       },
     },
-    // {
-    // 	resolve: `gatsby-omni-font-loader`,
-    // 	options: {
-    // 		enableListener: true,
-    // 		preconnect: [
-    // 			`https://fonts.googleapis.com`,
-    // 			`https://fonts.gstatic.com`,
-    // 		],
-    // 		web: [
-    // 			{
-    // 				name: `Open Sans`,
-    // 				file: `https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap`,
-    // 			},
-    // 		],
-    // 	},
-    // },
+
+    // content sources
+    {
+      resolve: `gatsby-source-filesystem`,
+      options: {
+        name: `content`,
+        path: `${__dirname}/src/content`,
+      },
+    },
+    {
+      resolve: `gatsby-source-filesystem`,
+      options: {
+        name: `images`,
+        path: `${__dirname}/src/images`,
+      },
+    },
+    {
+      resolve: `gatsby-source-filesystem`,
+      options: {
+        name: `links`,
+        path: `${__dirname}/src/data/`,
+      },
+    },
+    {
+      resolve: `gatsby-source-filesystem`,
+      options: {
+        name: `blog`,
+        path: `${__dirname}/src/blog`,
+      },
+    },
+
+    // → transformer-yaml must come after the filesystem that points at your .yml files
+    `gatsby-transformer-yaml`,
+
+    // MDX for your posts
+    {
+      resolve: `gatsby-plugin-mdx`,
+      options: {
+        extensions: [`.mdx`, `.md`],
+        gatsbyRemarkPlugins: [],
+        mdxOptions: {
+          useDynamicImport: true,
+          rehypePlugins: [],
+        },
+      },
+    },
+
+     {
+      resolve: `gatsby-plugin-react-svg`,
+      options: {
+        rule: {
+          // <-- adjust this regex to match wherever you keep your SVGs
+          include: /src\/icons/,
+        },
+      },
+    },
   ],
 };
 

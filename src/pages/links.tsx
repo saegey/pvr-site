@@ -80,10 +80,9 @@ export default function LinkTreePage({ data }: Props) {
           alignItems: "center",
           textDecoration: "none",
           mb: 2,
-          color: "black",
-          // add a border or shadow to make it stand out
+          color: "primary",
           border: "2px solid",
-          borderColor: "#000",
+          borderColor: "primary",
           borderRadius: 0,
           overflow: "hidden",
         }}
@@ -102,10 +101,11 @@ export default function LinkTreePage({ data }: Props) {
             {/**  
               If you prefer a big background color behind SVG, adjust sx above  
             **/}
-            {React.createElement(iconMap[featuredLink.svgIcon], {
-              "aria-label": featuredLink.title,
-              style: { width: 200, height: 200 },
-            })}
+            <Box
+              as={iconMap[featuredLink.svgIcon]!}
+              aria-label={featuredLink.title}
+              sx={{ width: 200, height: 200, fill: "red" }}
+            />
           </Box>
         )}
 
@@ -127,14 +127,13 @@ export default function LinkTreePage({ data }: Props) {
             display: "flex",
             width: "100%",
             flexDirection: "column",
-            // p: 3,
           }}
         >
-          <Heading as="h2" sx={{ fontSize: 4, mb: 1, color: "black" }}>
+          <Heading as="h2" sx={{ fontSize: 4, mb: 1, color: "primary" }}>
             {featuredLink.title}
           </Heading>
           {featuredLink.subtitle && (
-            <Text sx={{ fontSize: 2, color: "black" }}>
+            <Text sx={{ fontSize: 2, color: "primary" }}>
               {featuredLink.subtitle}
             </Text>
           )}
@@ -145,7 +144,8 @@ export default function LinkTreePage({ data }: Props) {
       {otherLinks.map((link, i) => {
         // If yaml provided “svgIcon”, pick that component:
         if (link.svgIcon && iconMap[link.svgIcon]) {
-          const SvgComponent = iconMap[link.svgIcon];
+          const SvgComponent = iconMap[link.svgIcon]!;
+
           return (
             <Box
               as="a"
@@ -159,16 +159,22 @@ export default function LinkTreePage({ data }: Props) {
                 mb: 2,
               }}
             >
-              <SvgComponent
+              <Box
+                as={SvgComponent}
                 aria-label={link.title}
-                style={{ width: 48, height: 48, marginRight: 12 }}
+                sx={{
+                  width: 48,
+                  height: 48,
+                  mr: "12px",
+                  color: "primary",
+                }}
               />
               <Box>
-                <Heading as="h3" sx={{ fontSize: 15, mb: 1, color: "black" }}>
+                <Heading as="h3" sx={{ fontSize: 15, mb: 1, color: "primary" }}>
                   {link.title}
                 </Heading>
                 {link.subtitle && (
-                  <Text sx={{ fontSize: 1, color: "black", lineHeight: '12px' }}>
+                  <Text sx={{ fontSize: 1, color: "primary", lineHeight: "12px" }}>
                     {link.subtitle}
                   </Text>
                 )}
@@ -203,7 +209,7 @@ export default function LinkTreePage({ data }: Props) {
                   {link.title}
                 </Heading>
                 {link.subtitle && (
-                  <Text sx={{ fontSize: 1, color: "black", lineHeight: '12px'}}>
+                  <Text sx={{ fontSize: 1, color: "primary", lineHeight: "12px" }}>
                     {link.subtitle}
                   </Text>
                 )}
@@ -223,14 +229,14 @@ export default function LinkTreePage({ data }: Props) {
               mb: 4,
               textDecoration: "none",
               border: "1px solid",
-              borderColor: "black",
+              borderColor: "primary",
             }}
           >
             <Heading as="h3" sx={{ fontSize: 3, mb: 1 }}>
               {link.title}
             </Heading>
             {link.subtitle && (
-              <Text sx={{ fontSize: 1, color: "black", lineHeight: '12px' }}>
+              <Text sx={{ fontSize: 1, color: "primary", lineHeight: "12px" }}>
                 {link.subtitle}
               </Text>
             )}

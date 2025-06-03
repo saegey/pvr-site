@@ -117,7 +117,7 @@ const theme = {
       p: 3,
       mb: 3,
       border: "2px solid",
-      borderColor: "#000",
+      borderColor: "primary",
       borderRadius: 0,
       transition: "box-shadow 0.2s ease",
       "&:hover": {

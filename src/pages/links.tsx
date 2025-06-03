@@ -5,7 +5,7 @@ import {
   IGatsbyImageData,
   StaticImage,
 } from "gatsby-plugin-image";
-import { Box, Container, Heading, Text } from "theme-ui";
+import { Box, Container, Heading, Text, useColorMode } from "theme-ui";
 
 // 1) Import each SVG from /src/icons
 import InstagramIcon from "../icons/instagram.svg";
@@ -52,11 +52,18 @@ export default function LinkTreePage({ data }: Props) {
 
   // 3) Separate out the first item to render as “featured”
   const [featuredLink, ...otherLinks] = items;
+  const [colorMode] = useColorMode();
 
   return (
     <Container sx={{ maxWidth: 640, mx: "auto", px: 3, py: 4 }}>
       {/* ─── Static Logo + Heading ─── */}
-      <Box sx={{ textAlign: "center", mb: 2 }}>
+      <Box
+        sx={{
+          textAlign: "center",
+          mb: 2, // apply `invert(1)` in dark mode to turn a black logo into white
+          filter: colorMode === "dark" ? "invert(1)" : "none",
+        }}
+      >
         <StaticImage
           src="../images/logo-black.png"
           alt="My Static Avatar"
@@ -157,6 +164,7 @@ export default function LinkTreePage({ data }: Props) {
                 alignItems: "center",
                 textDecoration: "none",
                 mb: 2,
+                color: "primary",
               }}
             >
               <Box
@@ -174,7 +182,9 @@ export default function LinkTreePage({ data }: Props) {
                   {link.title}
                 </Heading>
                 {link.subtitle && (
-                  <Text sx={{ fontSize: 1, color: "primary", lineHeight: "12px" }}>
+                  <Text
+                    sx={{ fontSize: 1, color: "primary", lineHeight: "12px" }}
+                  >
                     {link.subtitle}
                   </Text>
                 )}
@@ -205,11 +215,13 @@ export default function LinkTreePage({ data }: Props) {
                 style={{ borderRadius: 2, width: 60 }}
               />
               <Box>
-                <Heading as="h3" sx={{ fontSize: 2, mb: 1 }}>
+                <Heading as="h3" sx={{ fontSize: 2, mb: 1, color: "primary" }}>
                   {link.title}
                 </Heading>
                 {link.subtitle && (
-                  <Text sx={{ fontSize: 1, color: "primary", lineHeight: "12px" }}>
+                  <Text
+                    sx={{ fontSize: 1, color: "primary", lineHeight: "12px" }}
+                  >
                     {link.subtitle}
                   </Text>
                 )}
@@ -232,7 +244,7 @@ export default function LinkTreePage({ data }: Props) {
               borderColor: "primary",
             }}
           >
-            <Heading as="h3" sx={{ fontSize: 3, mb: 1 }}>
+            <Heading as="h3" sx={{ fontSize: 3, mb: 1, color: "primary" }}>
               {link.title}
             </Heading>
             {link.subtitle && (

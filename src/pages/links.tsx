@@ -61,7 +61,6 @@ export default function LinkTreePage({ data }: Props) {
         sx={{
           textAlign: "center",
           mb: 2, // apply `invert(1)` in dark mode to turn a black logo into white
-          filter: colorMode === "dark" ? "invert(1)" : "none",
         }}
       >
         <StaticImage
@@ -69,6 +68,10 @@ export default function LinkTreePage({ data }: Props) {
           alt="My Static Avatar"
           width={60}
           placeholder="none"
+          style={{ margin: "0 auto", display: "block" }}
+          imgStyle={{
+            filter: colorMode === "dark" ? "invert(1)" : "none",
+          }}
         />
       </Box>
       <Heading as="h1" sx={{ fontSize: 4, mb: 3, textAlign: "center" }}>

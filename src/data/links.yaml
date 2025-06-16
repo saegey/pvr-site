@@ -1,8 +1,12 @@
 # src/data/links.yml
 links:
-  - title: "🎥 Tropical Sunsets 🌴🌅 | Cumbia, Afrobeat & World Bass "
+  - title: "🎥 Peruvian Psychtrópica 🌴😵‍💫 | Psychedelic Cumbia & Rock"
+    url: "https://youtu.be/nM9FlrSQVOg?si=VRReKj8Fh-OSFBEu"
+    subtitle: "Embark on a hypnotic voyage through Peru’s golden era of cumbia and psychedelic-infused tropic rhythms. Spun 100% on vinyl, this set weaves heartfelt ballads from Trujillo with Amazonian instrumental odysseys."
+    linkImage: "../content/shows/peru-sico.png"
+  - title: "Tropical Sunsets 🌴🌅"
     url: "https://youtu.be/6hZ3E1-K9jw"
-    subtitle: "A sun-drenched blend of cumbia, Afrobeat, and world-fusion vibes spun 100% on vinyl—designed to transport you to coastal nights and golden horizons."
+    subtitle: "A sun-drenched blend of cumbia, Afrobeat, and world-fusion vibes."
     linkImage: "../content/shows/tropical_sunsets.png"
   - title: "🎧 Funk Soul Fire"
     url: "/shows/funk-soul-fire/"

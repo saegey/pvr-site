@@ -63,7 +63,7 @@ export default function LinkTreePage({ data }: Props) {
           mb: 2, // apply `invert(1)` in dark mode to turn a black logo into white
         }}
       >
-        <StaticImage
+        {/* <StaticImage
           src="../images/logo-black.png"
           alt="My Static Avatar"
           width={60}
@@ -72,7 +72,7 @@ export default function LinkTreePage({ data }: Props) {
           imgStyle={{
             filter: colorMode === "dark" ? "invert(1)" : "none",
           }}
-        />
+        /> */}
       </Box>
       <Heading as="h1" sx={{ fontSize: 4, mb: 3, textAlign: "center" }}>
         PUBLIC VINYL RADIO
@@ -114,7 +114,7 @@ export default function LinkTreePage({ data }: Props) {
             <Box
               as={iconMap[featuredLink.svgIcon]!}
               aria-label={featuredLink.title}
-              sx={{ width: 200, height: 200, fill: "red" }}
+              sx={{ width: 200, height: 200 }}
             />
           </Box>
         )}
@@ -139,7 +139,10 @@ export default function LinkTreePage({ data }: Props) {
             flexDirection: "column",
           }}
         >
-          <Heading as="h2" sx={{ fontSize: 4, mb: 1, color: "primary" }}>
+          <Heading
+            as="h2"
+            sx={{ fontSize: 4, mb: 1, paddingTop: "10px", color: "primary" }}
+          >
             {featuredLink.title}
           </Heading>
           {featuredLink.subtitle && (
@@ -152,88 +155,9 @@ export default function LinkTreePage({ data }: Props) {
 
       {/* ─── ALL OTHER ITEMS ─── */}
       {otherLinks.map((link, i) => {
-        // If yaml provided “svgIcon”, pick that component:
-        if (link.svgIcon && iconMap[link.svgIcon]) {
-          const SvgComponent = iconMap[link.svgIcon]!;
+        const imageData = link.linkImage?.childImageSharp?.gatsbyImageData;
+        const SvgComponent = link.svgIcon && iconMap[link.svgIcon];
 
-          return (
-            <Box
-              as="a"
-              href={link.url}
-              key={i}
-              variant="linkCard"
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                textDecoration: "none",
-                mb: 2,
-                color: "primary",
-              }}
-            >
-              <Box
-                as={SvgComponent}
-                aria-label={link.title}
-                sx={{
-                  width: 48,
-                  height: 48,
-                  mr: "12px",
-                  color: "primary",
-                }}
-              />
-              <Box>
-                <Heading as="h3" sx={{ fontSize: 15, mb: 1, color: "primary" }}>
-                  {link.title}
-                </Heading>
-                {link.subtitle && (
-                  <Text
-                    sx={{ fontSize: 1, color: "primary", lineHeight: "12px" }}
-                  >
-                    {link.subtitle}
-                  </Text>
-                )}
-              </Box>
-            </Box>
-          );
-        }
-
-        // Otherwise fall back to rendering a regular image:
-        if (link.linkImage?.childImageSharp?.gatsbyImageData) {
-          return (
-            <Box
-              as="a"
-              href={link.url}
-              key={i}
-              variant="linkCard"
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                textDecoration: "none",
-                mb: 2,
-                "& .gatsby-image-wrapper": { mr: 3 },
-              }}
-            >
-              <GatsbyImage
-                image={link.linkImage.childImageSharp.gatsbyImageData}
-                alt={link.title}
-                style={{ borderRadius: 2, width: 60 }}
-              />
-              <Box>
-                <Heading as="h3" sx={{ fontSize: 2, mb: 1, color: "primary" }}>
-                  {link.title}
-                </Heading>
-                {link.subtitle && (
-                  <Text
-                    sx={{ fontSize: 1, color: "primary", lineHeight: "12px" }}
-                  >
-                    {link.subtitle}
-                  </Text>
-                )}
-              </Box>
-            </Box>
-          );
-        }
-
-        // If neither field exists, just render the title+URL with no icon
         return (
           <Box
             as="a"
@@ -241,20 +165,48 @@ export default function LinkTreePage({ data }: Props) {
             key={i}
             variant="linkCard"
             sx={{
-              mb: 4,
+              display: "flex",
+              alignItems: "center",
               textDecoration: "none",
-              border: "1px solid",
-              borderColor: "primary",
+              mb: 2,
             }}
           >
-            <Heading as="h3" sx={{ fontSize: 3, mb: 1, color: "primary" }}>
-              {link.title}
-            </Heading>
-            {link.subtitle && (
-              <Text sx={{ fontSize: 1, color: "primary", lineHeight: "12px" }}>
-                {link.subtitle}
-              </Text>
-            )}
+            {imageData ? (
+              // fixed 72×72 container, never shrinks, same margin as below
+              <Box sx={{ flexShrink: 0, width: 72, height: 72, mr: 3 }}>
+                <GatsbyImage
+                  image={imageData}
+                  alt={link.title}
+                  style={{ width: "100%", height: "100%" }}
+                  imgStyle={{ objectFit: "cover" }}
+                />
+              </Box>
+            ) : SvgComponent ? (
+              <Box
+                as={SvgComponent}
+                aria-label={link.title}
+                sx={{
+                  flexShrink: 0,
+                  width: 72,
+                  height: 72,
+                  mr: 3,
+                  color: "primary",
+                }}
+              />
+            ) : null}
+
+            <Box>
+              <Heading as="h3" sx={{ fontSize: 2, mb: 1, color: "primary" }}>
+                {link.title}
+              </Heading>
+              {link.subtitle && (
+                <Text
+                  sx={{ fontSize: 1, color: "primary", lineHeight: "12px" }}
+                >
+                  {link.subtitle}
+                </Text>
+              )}
+            </Box>
           </Box>
         );
       })}

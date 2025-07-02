@@ -1,5 +1,9 @@
 # src/data/links.yml
 links:
+  - title: "🎥 LATE NIGHT DISCO [YOUTUBE]"
+    url: "https://youtu.be/0KcMioHaT9Q"
+    subtitle: "Another late night set with DJs cdsmooth and topyen to keep the party going. Turn up the volume on this vibrant, dancefloor-ready set blending classic disco, boogie, and modern house with soulful vocals, funky basslines, and uplifting grooves.'"
+    linkImage: "../content/shows/late-night-disco.png"
   - title: "🎥 TROPICAL VIBES @ Rapha Seattle"
     url: "https://youtu.be/6F31lecKpfQ"
     subtitle: "Join selectors Topyen and Saegey for an al fresco odyssey through cumbia, salsa, Afrobeat, Brazilian jazz, and more—brought to you live from the Rapha Seattle clubhouse on the longest day of the year, June 20th, 6–9 PM."

@@ -1,5 +1,9 @@
 # src/data/links.yml
 links:
+  - title: "🎥 SOUL SESSIONS [YOUTUBE]"
+    url: "https://youtu.be/0xtYP_VUVD8"
+    subtitle: "A soulful journey through classic and rare grooves, featuring deep funk, uplifting soul, and timeless R&B. Let these tracks move your heart and feet alike."
+    linkImage: "../content/shows/soulsessions.png"
   - title: "🎥 LATE NIGHT DISCO [YOUTUBE]"
     url: "https://youtu.be/0KcMioHaT9Q"
     subtitle: "Another late night set with DJs cdsmooth and topyen to keep the party going. Turn up the volume on this vibrant, dancefloor-ready set blending classic disco, boogie, and modern house with soulful vocals, funky basslines, and uplifting grooves.'"

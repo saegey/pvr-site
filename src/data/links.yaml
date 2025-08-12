@@ -1,5 +1,9 @@
 # src/data/links.yml
 links:
+  - title: "🎥 Jazz on Sazón [YOUTUBE]"
+    url: "https://youtu.be/dww-6cKnfYs"
+    subtitle: "A journey through Latin music’s deep conversation with jazz."
+    linkImage: "../content/shows/DSC_0950.png"
   - title: "🎥 SOUL SESSIONS [YOUTUBE]"
     url: "https://youtu.be/0xtYP_VUVD8"
     subtitle: "A soulful journey through classic and rare grooves, featuring deep funk, uplifting soul, and timeless R&B. Let these tracks move your heart and feet alike."

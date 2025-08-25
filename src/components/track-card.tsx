@@ -71,6 +71,7 @@ const TrackCard: React.FC<Props> = ({ track: t, index: idx }) => {
                     whiteSpace: "nowrap",
                     textOverflow: "ellipsis",
                     overflow: "hidden",
+                    fontSize: [1, 2, 2],
                   }}
                 >
                   {t.title || "Untitled"}{" "}
@@ -81,6 +82,7 @@ const TrackCard: React.FC<Props> = ({ track: t, index: idx }) => {
                     fontSize: 1,
                     flexShrink: 0,
                     color: "muted",
+                    display: ["none", "block"],
                   }}
                 >
                   {formatDuration(t.duration_seconds)}
@@ -91,8 +93,9 @@ const TrackCard: React.FC<Props> = ({ track: t, index: idx }) => {
                   fontWeight: 600,
                   whiteSpace: "nowrap",
                   textOverflow: "ellipsis",
-                  maxWidth: ["300px", "500px"],
+                  maxWidth: ["250px", "500px"],
                   overflow: "hidden",
+                  fontSize: [1, 2, 2],
                 }}
               >
                 {t.artist || "Unknown Artist"}
@@ -107,7 +110,7 @@ const TrackCard: React.FC<Props> = ({ track: t, index: idx }) => {
                       textOverflow: "ellipsis",
                       overflow: "hidden",
                       flex: 1,
-                      maxWidth: ["300px", "500px"],
+                      maxWidth: ["250px", "500px"],
                       minWidth: 0,
                     }}
                     title={`${t.album}${t.year ? ` (${t.year})` : ""}`}

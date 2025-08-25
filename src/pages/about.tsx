@@ -5,7 +5,6 @@ import { FaYoutube, FaMixcloud, FaInstagram } from 'react-icons/fa';
 
 const AboutPage = () => {
   return (
-    <Layout>
       <Container
         sx={{
           p: 3,
@@ -92,7 +91,6 @@ const AboutPage = () => {
           </Flex>
         </Box>
       </Container>
-    </Layout>
   );
 };
 

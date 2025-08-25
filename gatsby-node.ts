@@ -1,5 +1,3 @@
-import type { MdxNode } from "./src/types/content";
-
 exports.createSchemaCustomization = ({ actions }: { actions: any }) => {
   const { createTypes } = actions;
 
@@ -12,6 +10,13 @@ exports.createSchemaCustomization = ({ actions }: { actions: any }) => {
       title: String
       artist: String
       year: Int
+  album: String
+  discogs_url: String
+  album_thumbnail: String
+  duration_seconds: Int
+  apple_music_url: String
+  spotify_url: String
+  soundcloud_url: String
     }
 
     type Frontmatter {
@@ -70,7 +75,7 @@ exports.createPages = async ({
   const { createPage } = actions;
 
   const result = await graphql(`
-    {
+    query CreatePagesAllMdxQuery {
       allMdx(sort: { frontmatter: { date: DESC } }) {
         nodes {
           id
@@ -101,7 +106,7 @@ exports.createPages = async ({
       .map(post => {
         console.log(`Creating page for ${post.frontmatter.slug}`)
         createPage({
-          path: `${post.frontmatter.slug}`,
+          path: `/shows/${post.frontmatter.slug}`,
           component: `${showTemplate}?__contentFilePath=${post.internal.contentFilePath}`,
           context: { id: post.id, slug: post.frontmatter.slug },
         })

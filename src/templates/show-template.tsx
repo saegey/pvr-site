@@ -1,5 +1,15 @@
 import React, { useState } from "react";
-import { Box, Flex, Grid, Badge, Text, Container, Button } from "theme-ui";
+import {
+  Box,
+  Flex,
+  Grid,
+  Badge,
+  Text,
+  Container,
+  Button,
+  Card,
+  Link,
+} from "theme-ui";
 import { MDXProvider } from "@mdx-js/react";
 
 import {
@@ -12,10 +22,8 @@ import {
   FaYoutube,
   FaWindowClose,
 } from "react-icons/fa";
+import { SiDiscogs } from "react-icons/si";
 
-import { compile, run } from "@mdx-js/mdx";
-import * as runtime from "react/jsx-runtime";
-import { GatsbyImage, getImage, IGatsbyImageData } from "gatsby-plugin-image";
 import { format } from "date-fns";
 import SEO from "../components/seo";
 
@@ -132,6 +140,8 @@ const components = {
 
 import AppleMusicEmbed from "../components/applemusic";
 import SpotifyEmbed from "../components/spotify";
+import StreamingLinks from "../components/streaming-links";
+import TrackCard from "../components/track-card";
 import { graphql, PageProps } from "gatsby";
 import { MdxNode } from "../types/content";
 
@@ -140,27 +150,10 @@ type DataProps = {
 };
 
 const ShowTemplate: React.FC<PageProps<DataProps>> = ({ data, children }) => {
-  const {
-    title,
-    description,
-    episode,
-    date,
-    tags,
-    iframeSrc,
-    youtubeId,
-    coverImage,
-    tracklist,
-    host,
-    appleMusicUrl,
-    spotifyId,
-  } = data.mdx.frontmatter;
+  const { title, description, date, tags, youtubeId, tracklist, host } =
+    data.mdx.frontmatter;
 
-  console.log(data, children);
-
-  // Add this with your other useState imports
-  const [showTracklist, setShowTracklist] = useState(false);
-  const [showAppleModal, setShowAppleModal] = useState(false);
-  const [showSpotifyModal, setShowSpotifyModal] = useState(false);
+  console.log(tracklist);
 
   return (
     <>
@@ -176,11 +169,6 @@ const ShowTemplate: React.FC<PageProps<DataProps>> = ({ data, children }) => {
           columns={[1, 1]}
           sx={{
             gap: "20px",
-            backgroundColor: [
-              "background",
-              "showCardBackground",
-              "showCardBackground",
-            ],
           }}
         >
           <Flex
@@ -193,192 +181,54 @@ const ShowTemplate: React.FC<PageProps<DataProps>> = ({ data, children }) => {
             }}
           >
             <Box>
-              <Flex
-                sx={{ flexDirection: "column", gap: "10px", paddingY: "20px" }}
-              >
-                <Box sx={{ flexDirection: "column", gap: "10px" }}>
-                  <Text>{formatDate(date || "") || "Unknown Date"}</Text>
-                  {" · "}
-                  <Text>Seattle</Text>
-                </Box>
-                <Box>
-                  <Text as="h2" sx={{ marginBottom: 0 }}>
-                    {title}
-                  </Text>
-                  <Box>
-                    <Text>with</Text>{" "}
-                    {(host || []).map((h: string, index: number) => (
-                      <Text key={index} sx={{ fontWeight: 600 }}>
-                        {h}
-                      </Text>
-                    ))}
+              <Flex sx={{ flexDirection: "column", paddingY: "20px" }}>
+                {youtubeId && <ResponsiveYouTube videoId={youtubeId} />}
+                <Box p={2} backgroundColor="cardBackgroundColor">
+                  <Box sx={{ flexDirection: "column", gap: "10px" }}>
+                    <Text>{formatDate(date || "") || "Unknown Date"}</Text>
+                    {" · "}
+                    <Text>Seattle</Text>
                   </Box>
-                </Box>
-                <Text
-                  as="h4"
-                  style={{ wordWrap: "break-word", fontWeight: 400 }}
-                >
-                  {description}
-                </Text>
+                  <Box>
+                    <Text as="h2" sx={{ marginBottom: 0 }}>
+                      {title}
+                    </Text>
+                    <Box>
+                      <Text>with</Text>{" "}
+                      {(host || []).map((h: string, index: number) => (
+                        <Text key={index} sx={{ fontWeight: 600 }}>
+                          {h}
+                        </Text>
+                      ))}
+                    </Box>
+                  </Box>
+                  <Text
+                    as="h4"
+                    style={{ wordWrap: "break-word", fontWeight: 400 }}
+                  >
+                    {description}
+                  </Text>
 
-                <Flex sx={{ gap: "5px", marginTop: "10px", flexWrap: "wrap" }}>
-                  {tags.map((tag, index) => (
-                    <Badge
-                      key={index}
-                      variant="primary"
-                      sx={{
-                        borderRadius: "0px",
-                        textTransform: "uppercase",
-                        fontSize: "13px",
-                      }}
-                    >
-                      {tag}
-                    </Badge>
-                  ))}
-                </Flex>
+                  <Flex
+                    sx={{ gap: "5px", marginTop: "10px", flexWrap: "wrap" }}
+                  >
+                    {(tags || []).map((tag, index) => (
+                      <Badge
+                        key={index}
+                        variant="primary"
+                        sx={{
+                          borderRadius: "0px",
+                          textTransform: "uppercase",
+                          fontSize: "13px",
+                        }}
+                      >
+                        {tag}
+                      </Badge>
+                    ))}
+                  </Flex>
+                </Box>
               </Flex>
             </Box>
-
-            {/* Buttons Grouped */}
-            <Flex
-              sx={{ flexDirection: "column", gap: "10px", paddingY: "20px" }}
-            >
-              <Flex sx={{ flexWrap: "wrap", gap: "10px" }}>
-                {youtubeId && (
-                  <Button
-                    onClick={() => {
-                      window.open(
-                        `https://www.youtube.com/watch?v=${youtubeId}`,
-                        "_blank",
-                        "noopener,noreferrer"
-                      );
-                    }}
-                    sx={{
-                      bg: "primary",
-                      color: "background",
-                      padding: "10px",
-                      borderRadius: 0,
-                      fontFamily: "body",
-                      paddingX: "20px",
-                      fontSize: "16px",
-                      fontWeight: "bold",
-                      cursor: "pointer",
-                      textAlign: "center",
-                      transition: "background 0.3s",
-                      "&:hover": { bg: "secondary" },
-                    }}
-                  >
-                    <Flex sx={{ gap: "10px", alignItems: "center" }}>
-                      <FaYoutube />
-                      <Text>YouTube</Text>
-                    </Flex>
-                  </Button>
-                )}
-
-                {iframeSrc && (
-                  <Button
-                    onClick={() => {
-                      window.open(iframeSrc, "_blank", "noopener,noreferrer");
-                    }}
-                    sx={{
-                      bg: "primary",
-                      color: "background",
-                      padding: "10px",
-                      borderRadius: 0,
-                      fontFamily: "body",
-                      paddingX: "20px",
-                      fontSize: "16px",
-                      fontWeight: "bold",
-                      cursor: "pointer",
-                      textAlign: "center",
-                      transition: "background 0.3s",
-                      "&:hover": { bg: "secondary" },
-                    }}
-                  >
-                    <Flex sx={{ gap: "10px", alignItems: "center" }}>
-                      <FaPlay />
-                      <Text>Mixcloud</Text>
-                    </Flex>
-                  </Button>
-                )}
-
-                {appleMusicUrl && (
-                  <Button
-                    onClick={() => setShowAppleModal(true)}
-                    sx={{
-                      bg: "primary",
-                      color: "background",
-                      padding: "10px",
-                      borderRadius: 0,
-                      fontFamily: "body",
-                      paddingX: "20px",
-                      fontSize: "16px",
-                      fontWeight: "bold",
-                      cursor: "pointer",
-                      textAlign: "center",
-                      transition: "background 0.3s",
-                      "&:hover": { bg: "secondary" },
-                    }}
-                  >
-                    <Flex sx={{ gap: "10px", alignItems: "center" }}>
-                      <FaApple />
-                      <Text>Apple Music</Text>
-                    </Flex>
-                  </Button>
-                )}
-
-                {spotifyId && (
-                  <Button
-                    onClick={() => setShowSpotifyModal(true)}
-                    sx={{
-                      bg: "primary",
-                      color: "background",
-                      padding: "10px",
-                      borderRadius: 0,
-                      fontFamily: "body",
-                      paddingX: "20px",
-                      fontSize: "16px",
-                      fontWeight: "bold",
-                      cursor: "pointer",
-                      textAlign: "center",
-                      transition: "background 0.3s",
-                      "&:hover": { bg: "secondary" },
-                    }}
-                  >
-                    <Flex sx={{ gap: "10px", alignItems: "center" }}>
-                      <FaSpotify />
-                      <Text>Spotify</Text>
-                    </Flex>
-                  </Button>
-                )}
-              </Flex>
-              <Flex>
-                <Button
-                  onClick={() => setShowTracklist(!showTracklist)}
-                  sx={{
-                    bg: "primary",
-                    color: "background",
-                    padding: "10px",
-                    borderRadius: 0,
-                    fontFamily: "body",
-                    paddingX: "20px",
-                    fontSize: "16px",
-                    fontWeight: "bold",
-                    cursor: "pointer",
-                    textAlign: "center",
-                    transition: "background 0.3s",
-                    "&:hover": { bg: "highlight" },
-                  }}
-                >
-                  <Flex sx={{ gap: "10px", alignItems: "center" }}>
-                    <FaBookOpen />
-                    <Text>
-                      {showTracklist ? "Hide Tracklist" : "Tracklist"}
-                    </Text>
-                  </Flex>
-                </Button>
-              </Flex>
-            </Flex>
           </Flex>
         </Grid>
 
@@ -390,48 +240,19 @@ const ShowTemplate: React.FC<PageProps<DataProps>> = ({ data, children }) => {
             paddingX: ["20px", 0, 0],
           }}
         >
-          {tracklist && showTracklist && (
-            <EmbedModal
-              isOpen={showTracklist}
-              onClose={() => setShowTracklist(false)}
-            >
-              <Box sx={{ marginTop: "20px" }}>
-                <Text as="h3">Tracklist</Text>
-                <Flex sx={{ flexDirection: "column", gap: "5px" }}>
-                  {tracklist.map(({ artist, title, year }, index) => (
-                    <Box key={index}>
-                      <Text>
-                        <Text style={{ fontWeight: 600 }}>{artist}</Text> -{" "}
-                        {title} {year && <>({year})</>}
-                      </Text>
-                    </Box>
-                  ))}
-                </Flex>
-              </Box>
-            </EmbedModal>
+          <MDXProvider components={components}>{children}</MDXProvider>
+          {tracklist && tracklist.length > 0 && (
+            <Box sx={{ mt: 3 }}>
+              <Text as="h3" sx={{ mb: 2 }}>
+                Tracklist
+              </Text>
+              <Grid columns={[1]} gap={2}>
+                {tracklist.map((t, idx) => (
+                  <TrackCard key={`${t.artist || "artist"}-${t.title || "title"}-${idx}`} track={t as any} index={idx} />
+                ))}
+              </Grid>
+            </Box>
           )}
-
-          {showAppleModal && (
-            <EmbedModal
-              isOpen={showAppleModal}
-              onClose={() => setShowAppleModal(false)}
-            >
-              {appleMusicUrl && <AppleMusicEmbed url={appleMusicUrl} />}
-            </EmbedModal>
-          )}
-
-          {showSpotifyModal && (
-            <EmbedModal
-              isOpen={showSpotifyModal}
-              onClose={() => setShowSpotifyModal(false)}
-            >
-              {spotifyId && <SpotifyEmbed id={spotifyId} />}
-            </EmbedModal>
-          )}
-
-          <Container>
-            <MDXProvider components={components}>{data.mdx.body}</MDXProvider>
-          </Container>
         </Container>
       </Container>
     </>
@@ -470,10 +291,16 @@ export const query = graphql`
           title
           artist
           year
+          album
+          discogs_url
+          album_thumbnail
+          duration_seconds
+          apple_music_url
+          spotify_url
+          soundcloud_url
         }
         host
       }
-      body
     }
   }
 `;

@@ -47,13 +47,14 @@ const ShowsPage: React.FC<PageProps<DataProps>> = ({ data }) => {
       <Container
         sx={{
           p: 3,
-          maxWidth: ["100%", "540px", "720px", "960px", "1140px"],
+          maxWidth: ["100%", "540px", "720px"],
           mx: "auto",
         }}
       >
         <Grid
-          gap={2}
-          columns={[1, 1, 2]}
+          gap={[3, 4, 4]}
+          mt={3}
+          columns={[1, 1, 1]}
           sx={{
             gridAutoFlow: "row", // Ensures left-to-right ordering
           }}
@@ -65,7 +66,7 @@ const ShowsPage: React.FC<PageProps<DataProps>> = ({ data }) => {
                 borderColor: "cardBorderColor",
                 borderWidth: "2px",
                 borderStyle: "solid",
-                borderRadius: "0px",
+                borderRadius: 5,
                 backgroundColor: "cardBackgroundColor",
               }}
               p={2}
@@ -186,7 +187,7 @@ export default ShowsPage;
 
 // GraphQL Query
 export const query = graphql`
-  query {
+  query IndexPageQuery {
     allMdx(
       sort: { frontmatter: { date: DESC } }
       filter: {

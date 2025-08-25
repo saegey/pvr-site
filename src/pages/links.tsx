@@ -215,7 +215,7 @@ export default function LinkTreePage({ data }: Props) {
 }
 
 export const query = graphql`
-  query {
+  query LinksPageQuery {
     allDataYaml {
       nodes {
         links {

@@ -1,6 +1,4 @@
-import React from 'react';
-
-import Layout from '../components/layout';
+import React from "react";
 
 interface BlogData {
   allMdx: {
@@ -22,8 +20,8 @@ interface BlogData {
     }[];
   };
 }
-import { Text, Container, Box, Heading, Flex, Link } from 'theme-ui';
-import { graphql } from 'gatsby';
+import { Text, Container, Box, Heading, Flex, Link } from "theme-ui";
+import { graphql } from "gatsby";
 
 const BlogPage = ({ data }: { data: BlogData }) => {
   const shows = [...data.allMdx.nodes].sort(
@@ -34,35 +32,33 @@ const BlogPage = ({ data }: { data: BlogData }) => {
   console.log(shows);
 
   return (
-    <Layout>
-      <Container
-        sx={{
-          p: 3,
-          maxWidth: ['100%', '540px', '720px', '960px', '1140px'],
-          mx: 'auto',
-        }}
-      >
-        <Box sx={{ maxWidth: '800px', mx: 'auto', px: 4, py: 5 }}>
-          <Heading as='h1' sx={{ fontSize: 5, mb: 3, lineHeight: 5 }}>
-            Behind the Music
-          </Heading>
-          {shows.map((node) => (
-            <Box key={node.id} sx={{ mb: 4 }}>
-              <Heading as='h2' sx={{ fontSize: 3, mb: 2 }}>
-                {node.frontmatter.title}
-              </Heading>
-              <Text sx={{ color: 'text', fontSize: 1, mb: 2 }}>
-                {node.frontmatter.date}
-              </Text>
-              <Text sx={{ mb: 2 }}>{node.frontmatter.description}</Text>
-              <Flex>
-                <Link href={`/blog/${node.frontmatter.slug}`}>Read More</Link>
-              </Flex>
-            </Box>
-          ))}
-        </Box>
-      </Container>
-    </Layout>
+    <Container
+      sx={{
+        p: 3,
+        maxWidth: ["100%", "540px", "720px", "960px", "1140px"],
+        mx: "auto",
+      }}
+    >
+      <Box sx={{ maxWidth: "800px", mx: "auto", px: 4, py: 5 }}>
+        <Heading as="h1" sx={{ fontSize: 5, mb: 3, lineHeight: 5 }}>
+          Behind the Music
+        </Heading>
+        {shows.map((node) => (
+          <Box key={node.id} sx={{ mb: 4 }}>
+            <Heading as="h2" sx={{ fontSize: 3, mb: 2 }}>
+              {node.frontmatter.title}
+            </Heading>
+            <Text sx={{ color: "text", fontSize: 1, mb: 2 }}>
+              {node.frontmatter.date}
+            </Text>
+            <Text sx={{ mb: 2 }}>{node.frontmatter.description}</Text>
+            <Flex>
+              <Link href={`/blog/${node.frontmatter.slug}`}>Read More</Link>
+            </Flex>
+          </Box>
+        ))}
+      </Box>
+    </Container>
   );
 };
 
@@ -70,7 +66,7 @@ export default BlogPage;
 
 // GraphQL Query
 export const query = graphql`
-  query {
+  query BlogPageQuery {
     allMdx(
       sort: { frontmatter: { date: DESC } }
       filter: { frontmatter: { template: { eq: "blog" } } }

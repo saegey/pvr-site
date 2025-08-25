@@ -2,7 +2,7 @@ import { Box, Link, MenuButton, Flex, Text, Close } from 'theme-ui';
 import { ReactNode, useState } from 'react';
 import React from 'react';
 import { Link as GatsbyLink } from 'gatsby';
-import { FaYoutube, FaMixcloud, FaInstagram } from 'react-icons/fa';
+import { FaYoutube, FaInstagram } from 'react-icons/fa';
 
 const Layout = ({ children }: { children: ReactNode }) => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -182,7 +182,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
               // backgroundColor: 'red',
             }}
           >
-            &copy; {new Date().getFullYear()} Public Vinyl Radio
+            &copy; {new Date().getFullYear()} Public Vinyl Radio1
           </Text>
         </Box>
 
@@ -202,14 +202,6 @@ const Layout = ({ children }: { children: ReactNode }) => {
             sx={{ color: 'text', '&:hover': { color: 'primary' } }}
           >
             <FaYoutube size={24} />
-          </Link>
-
-          <Link
-            href='https://www.mixcloud.com/public-vinyl-radio'
-            target='_blank'
-            sx={{ color: 'text', '&:hover': { color: 'primary' } }}
-          >
-            <FaMixcloud size={24} />
           </Link>
 
           <Link

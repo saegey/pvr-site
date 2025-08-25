@@ -280,7 +280,7 @@ const ShowTemplate = ({ pageContext }: { pageContext: PageContext }) => {
   console.log(publicURL);
 
   return (
-    <Layout>
+    <>
       <SEO
         title={`${title} | Public Vinyl Radio`}
         description={description}
@@ -571,7 +571,7 @@ const ShowTemplate = ({ pageContext }: { pageContext: PageContext }) => {
           iframeSrc={memoizedIframeSrc}
         />
       )}
-    </Layout>
+    </>
   );
 };
 

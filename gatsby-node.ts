@@ -99,18 +99,24 @@ exports.createPages = async ({
   }
 
   const showTemplate = path.resolve(`src/templates/show-template.tsx`);
-  const blogTemplate = path.resolve(`src/templates/blog-template.tsx`);
+  // const blogTemplate = path.resolve(`src/templates/blog-template.tsx`);
 
   result.data.allMdx.nodes
-      // .filter(post => post.internal.contentFilePath.includes(dir))
-      .map(post => {
-        console.log(`Creating page for ${post.frontmatter.slug}`)
+    // .filter(post => post.internal.contentFilePath.includes(dir))
+    .map(
+      (post: {
+        frontmatter: { slug: string };
+        internal: { contentFilePath: string };
+        id: string;
+      }) => {
+        console.log(`Creating page for ${post.frontmatter.slug}`);
         createPage({
           path: `/shows/${post.frontmatter.slug}`,
           component: `${showTemplate}?__contentFilePath=${post.internal.contentFilePath}`,
           context: { id: post.id, slug: post.frontmatter.slug },
-        })
-      })
+        });
+      }
+    );
 
   // (result.data.allMdx.nodes as MdxNode[]).forEach((node) => {
   //   const { template, slug } = node.frontmatter;

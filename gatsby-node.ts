@@ -1,3 +1,5 @@
+import type { MdxNode } from "./src/types/content";
+
 exports.createSchemaCustomization = ({ actions }: { actions: any }) => {
   const { createTypes } = actions;
 
@@ -26,6 +28,7 @@ exports.createSchemaCustomization = ({ actions }: { actions: any }) => {
       coverImage: File @fileByRelativePath
       tracklist: [Track]
       host: [String]
+      isActive: Boolean
     }
 
     type DataYaml implements Node {
@@ -41,7 +44,21 @@ exports.createSchemaCustomization = ({ actions }: { actions: any }) => {
   `);
 };
 
-const path = require('path');
+exports.createResolvers = ({ createResolvers }: { createResolvers: any }) => {
+  createResolvers({
+    Frontmatter: {
+      isActive: {
+        type: "Boolean",
+        resolve(source: any) {
+          // Default to true when not set
+          return typeof source.isActive === "boolean" ? source.isActive : true;
+        },
+      },
+    },
+  });
+};
+
+const path = require("path");
 
 exports.createPages = async ({
   actions,
@@ -54,40 +71,14 @@ exports.createPages = async ({
 
   const result = await graphql(`
     {
-      allMdx {
-        edges {
-          node {
-            id
-            frontmatter {
-              template
-              title
-              description
-              episode
-              date
-              tags
-              iframeSrc
-              youtubeId
-              appleMusicUrl
-              spotifyId
-              slug
-              coverImage {
-                publicURL # ✅ Get direct URL for Open Graph images
-                childImageSharp {
-                  gatsbyImageData(
-                    width: 700
-                    layout: CONSTRAINED
-                    formats: [AUTO, WEBP]
-                  )
-                }
-              }
-              tracklist {
-                title
-                artist
-                year
-              }
-              host
-            }
-            body
+      allMdx(sort: { frontmatter: { date: DESC } }) {
+        nodes {
+          id
+          frontmatter {
+            slug
+          }
+          internal {
+            contentFilePath
           }
         }
       }
@@ -96,82 +87,51 @@ exports.createPages = async ({
 
   if (result.errors) {
     console.error(result.errors);
-    throw new Error('There was a problem with the GraphQL query.');
+    throw new Error(
+      "There was a problem with the GraphQL query.",
+      result.errors
+    );
   }
 
   const showTemplate = path.resolve(`src/templates/show-template.tsx`);
   const blogTemplate = path.resolve(`src/templates/blog-template.tsx`);
 
-  interface MdxNode {
-    id: string;
-    frontmatter: {
-      template: string;
-      title: string;
-      description?: string;
-      episode?: number;
-      date?: string;
-      tags?: string[];
-      iframeSrc?: string;
-      youtubeId?: string;
-      appleMusicUrl?: string;
-      spotifyId?: string;
-      slug: string;
-      coverImage?: {
-        publicURL?: string;
-        childImageSharp?: {
-          gatsbyImageData?: any;
-        };
-      };
-      tracklist?: {
-        title?: string;
-        artist?: string;
-        year?: number;
-      }[];
-      host?: string[];
-    };
-    body: string;
-  }
+  result.data.allMdx.nodes
+      // .filter(post => post.internal.contentFilePath.includes(dir))
+      .map(post => {
+        console.log(`Creating page for ${post.frontmatter.slug}`)
+        createPage({
+          path: `${post.frontmatter.slug}`,
+          component: `${showTemplate}?__contentFilePath=${post.internal.contentFilePath}`,
+          context: { id: post.id, slug: post.frontmatter.slug },
+        })
+      })
 
-  (result.data.allMdx.edges as { node: MdxNode }[]).forEach(({ node }) => {
-    const { template, slug } = node.frontmatter;
+  // (result.data.allMdx.nodes as MdxNode[]).forEach((node) => {
+  //   const { template, slug } = node.frontmatter;
 
-    if (template === 'blog') {
-      createPage({
-        path: `/blog/${slug}`,
-        component: blogTemplate,
-        context: {
-          title: node.frontmatter.title,
-          description: node.frontmatter.description,
-          date: node.frontmatter.date,
-          tags: node.frontmatter.tags,
-          content: node.body,
-          // pass additional blog-specific fields if needed
-        },
-      });
-    } else if (template === 'show') {
-      createPage({
-        path: `/shows/${slug}`,
-        component: showTemplate,
-        context: {
-          title: node.frontmatter.title,
-          description: node.frontmatter.description,
-          episode: node.frontmatter.episode,
-          date: node.frontmatter.date,
-          tags: node.frontmatter.tags,
-          iframeSrc: node.frontmatter.iframeSrc,
-          youtubeId: node.frontmatter.youtubeId,
-          appleMusicUrl: node.frontmatter.appleMusicUrl,
-          spotifyId: node.frontmatter.spotifyId,
-          content: node.body,
-          coverImage:
-            node.frontmatter.coverImage?.childImageSharp?.gatsbyImageData ||
-            null,
-
-          publicURL: node.frontmatter.coverImage?.publicURL || null,
-          tracklist: node.frontmatter.tracklist,
-          host: node.frontmatter.host,
-        },
-      });
-    }
-  });
+  //   if (template === "blog") {
+  //     createPage({
+  //       path: `/blog/${slug}`,
+  //       component: blogTemplate,
+  //       context: {
+  //         title: node.frontmatter.title,
+  //         description: node.frontmatter.description,
+  //         date: node.frontmatter.date,
+  //         tags: node.frontmatter.tags,
+  //         content: node.body,
+  //         // pass additional blog-specific fields if needed
+  //       },
+  //     });
+  //   } else if (template === "show") {
+  //     createPage({
+  //       path: `/shows/${slug}`,
+  //       component: `${showTemplate}?__contentFilePath=${node.internal.contentFilePath}`,
+  //       context: {
+  //         id: node.id,
+  //         slug: node.frontmatter.slug,
+  //       },
+  //     });
+  //   }
+  // });
 };

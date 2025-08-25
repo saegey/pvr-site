@@ -1,125 +1,15 @@
-import React, { useState } from "react";
-import {
-  Box,
-  Flex,
-  Grid,
-  Badge,
-  Text,
-  Container,
-  Button,
-  Card,
-  Link,
-} from "theme-ui";
+import React from "react";
+import { Box, Flex, Grid, Badge, Text, Container, Button } from "theme-ui";
 import { MDXProvider } from "@mdx-js/react";
-
-import {
-  FaApple,
-  FaBookOpen,
-  FaPlay,
-  FaPlayCircle,
-  FaPlayCircle as FaSolidPlay,
-  FaSpotify,
-  FaYoutube,
-  FaWindowClose,
-} from "react-icons/fa";
-import { SiDiscogs } from "react-icons/si";
-
 import { format } from "date-fns";
 import SEO from "../components/seo";
+import { graphql, PageProps } from "gatsby";
 
-const EmbedModal = ({
-  isOpen,
-  onClose,
-  children,
-}: {
-  isOpen: boolean;
-  onClose: () => void;
-  children: React.ReactNode;
-}) => {
-  if (!isOpen) return null;
-  return (
-    <Box
-      sx={{
-        position: "fixed",
-        top: 0,
-        left: 0,
-        width: "100vw",
-        height: "100vh",
-        bg: "rgba(0,0,0,0.7)",
-        zIndex: 1000,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        p: 0,
-      }}
-      onClick={onClose}
-    >
-      <Box
-        sx={{
-          position: "relative",
-          display: "flex",
-          flexDirection: "column",
-          // full-screen on mobile, then 90%/600px on larger screens
-          width: ["100vw", "90%", "600px"],
-          height: ["100vh", "auto", "auto"],
-          maxHeight: ["100vh", "90vh", "90vh"],
-          bg: "background",
-          borderRadius: ["0px", "10px", "10px"],
-          p: ["10px", "20px", "20px"],
-        }}
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* Close button always top-right */}
-        <Button
-          onClick={onClose}
-          sx={{
-            position: "absolute",
-            top: ["10px", "20px", "20px"],
-            right: ["10px", "20px", "20px"],
-            zIndex: 2,
-            bg: "transparent",
-            color: "text",
-            fontSize: 4,
-            cursor: "pointer",
-          }}
-        >
-          <FaWindowClose />
-        </Button>
-
-        {/* Scrollable content area */}
-        <Box sx={{ flex: 1, overflowY: "auto" }}>{children}</Box>
-      </Box>
-    </Box>
-  );
-};
-
-const ResponsiveYouTube = ({ videoId }: { videoId: string }) => (
-  <Box
-    sx={{
-      position: "relative",
-      width: "100%",
-      paddingBottom: "56.25%", // 16:9 aspect ratio
-      height: 0,
-      overflow: "hidden",
-    }}
-  >
-    <iframe
-      src={`https://www.youtube.com/embed/${videoId}?si=EaheM0eWWNF_J6-x`}
-      title="YouTube video player"
-      frameBorder="0"
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-      referrerPolicy="strict-origin-when-cross-origin"
-      allowFullScreen
-      style={{
-        position: "absolute",
-        top: 0,
-        left: 0,
-        width: "100%",
-        height: "100%",
-      }}
-    ></iframe>
-  </Box>
-);
+import AppleMusicEmbed from "../components/applemusic";
+import SpotifyEmbed from "../components/spotify";
+import TrackCard from "../components/track-card";
+import { MdxNode } from "../types/content";
+import ResponsiveYouTube from "../components/responsive-youtube";
 
 export const formatDate = (dateString: string) =>
   format(new Date(dateString), "MM.dd.yyyy");
@@ -131,19 +21,6 @@ const isIOS = () => {
       (navigator.userAgent.includes("Mac") && navigator.maxTouchPoints > 1))
   );
 };
-
-const components = {
-  ResponsiveYouTube,
-  AppleMusicEmbed,
-  SpotifyEmbed,
-};
-
-import AppleMusicEmbed from "../components/applemusic";
-import SpotifyEmbed from "../components/spotify";
-import StreamingLinks from "../components/streaming-links";
-import TrackCard from "../components/track-card";
-import { graphql, PageProps } from "gatsby";
-import { MdxNode } from "../types/content";
 
 type DataProps = {
   mdx: MdxNode;
@@ -165,25 +42,18 @@ const ShowTemplate: React.FC<PageProps<DataProps>> = ({ data, children }) => {
           marginTop: [0, "20px", "20px"],
         }}
       >
-        <Grid
-          columns={[1, 1]}
-          sx={{
-            gap: "20px",
-          }}
-        >
           <Flex
             sx={{
               flexDirection: "column",
               gap: "10px",
               justifyContent: "space-between",
-              paddingX: ["20px", 0, 0],
               height: "100%",
             }}
           >
             <Box>
-              <Flex sx={{ flexDirection: "column", paddingY: "20px" }}>
+              <Flex sx={{ flexDirection: "column", paddingY: [0, "20px"] }}>
                 {youtubeId && <ResponsiveYouTube videoId={youtubeId} />}
-                <Box p={2} backgroundColor="cardBackgroundColor">
+                <Box p={"20px"} backgroundColor="cardBackgroundColor">
                   <Box sx={{ flexDirection: "column", gap: "10px" }}>
                     <Text>{formatDate(date || "") || "Unknown Date"}</Text>
                     {" · "}
@@ -230,7 +100,6 @@ const ShowTemplate: React.FC<PageProps<DataProps>> = ({ data, children }) => {
               </Flex>
             </Box>
           </Flex>
-        </Grid>
 
         <Container
           sx={{
@@ -240,7 +109,7 @@ const ShowTemplate: React.FC<PageProps<DataProps>> = ({ data, children }) => {
             paddingX: ["20px", 0, 0],
           }}
         >
-          <MDXProvider components={components}>{children}</MDXProvider>
+          <MDXProvider>{children}</MDXProvider>
           {tracklist && tracklist.length > 0 && (
             <Box sx={{ mt: 3 }}>
               <Text as="h3" sx={{ mb: 2 }}>
@@ -248,7 +117,11 @@ const ShowTemplate: React.FC<PageProps<DataProps>> = ({ data, children }) => {
               </Text>
               <Grid columns={[1]} gap={2}>
                 {tracklist.map((t, idx) => (
-                  <TrackCard key={`${t.artist || "artist"}-${t.title || "title"}-${idx}`} track={t as any} index={idx} />
+                  <TrackCard
+                    key={`${t.artist || "artist"}-${t.title || "title"}-${idx}`}
+                    track={t as any}
+                    index={idx}
+                  />
                 ))}
               </Grid>
             </Box>

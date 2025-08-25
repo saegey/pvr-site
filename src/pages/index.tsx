@@ -1,12 +1,12 @@
 import React from "react";
 import { graphql } from "gatsby";
-import { Badge, Flex, Card, Text, Link, Grid, Container, Box } from "theme-ui";
+import { Badge, Flex, Card, Text, Grid, Container, Box } from "theme-ui";
 import { Link as GatsbyLink } from "gatsby";
 
 import { PageProps } from "gatsby";
 import { IGatsbyImageData } from "gatsby-plugin-image";
 import SEO from "../components/seo";
-import { formatDate } from "../templates/show-template";
+import { formatDate } from "../utils/date";
 
 interface Show {
   id: string;
@@ -71,13 +71,9 @@ const ShowsPage: React.FC<PageProps<DataProps>> = ({ data }) => {
               }}
               p={2}
             >
-              <Link
-                as={GatsbyLink}
-                href={`/shows/${show.frontmatter.slug || "#"}`}
-                sx={{
-                  textDecoration: "none",
-                  color: "inherit",
-                }}
+              <GatsbyLink
+                to={`/shows/${show.frontmatter.slug || "#"}`}
+                style={{ textDecoration: "none", color: "inherit" }}
               >
                 {show.frontmatter.coverImage && (
                   <Box
@@ -174,7 +170,7 @@ const ShowsPage: React.FC<PageProps<DataProps>> = ({ data }) => {
                     ))}
                   </Flex>
                 </Flex>
-              </Link>
+              </GatsbyLink>
             </Card>
           ))}
         </Grid>

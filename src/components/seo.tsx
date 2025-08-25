@@ -11,7 +11,7 @@ interface SEOProps {
 
 const SEO: React.FC<SEOProps> = ({ title, description, image, url }) => {
   const { site } = useStaticQuery(graphql`
-    query {
+    query SiteMetadataQuery {
       site {
         siteMetadata {
           title

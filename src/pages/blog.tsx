@@ -66,7 +66,7 @@ export default BlogPage;
 
 // GraphQL Query
 export const query = graphql`
-  query {
+  query BlogPageQuery {
     allMdx(
       sort: { frontmatter: { date: DESC } }
       filter: { frontmatter: { template: { eq: "blog" } } }

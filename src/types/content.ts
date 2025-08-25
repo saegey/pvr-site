@@ -11,6 +11,13 @@ export interface TrackItem {
   title?: string;
   artist?: string;
   year?: number;
+  album?: string;
+  discogs_url?: string;
+  album_thumbnail?: string;
+  duration_seconds?: number;
+  apple_music_url?: string;
+  spotify_url?: string;
+  soundcloud_url?: string;
 }
 
 export interface Frontmatter {

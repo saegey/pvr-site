@@ -1,6 +1,7 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState } from "react";
 import { Box, Flex, Grid, Badge, Text, Container, Button } from "theme-ui";
-import Layout from "../components/layout";
+import { MDXProvider } from "@mdx-js/react";
+
 import {
   FaApple,
   FaBookOpen,
@@ -9,7 +10,7 @@ import {
   FaPlayCircle as FaSolidPlay,
   FaSpotify,
   FaYoutube,
-  FaWindowClose
+  FaWindowClose,
 } from "react-icons/fa";
 
 import { compile, run } from "@mdx-js/mdx";
@@ -74,13 +75,11 @@ const EmbedModal = ({
             cursor: "pointer",
           }}
         >
-          <FaWindowClose/>
+          <FaWindowClose />
         </Button>
 
         {/* Scrollable content area */}
-        <Box sx={{ flex: 1, overflowY: "auto" }}>
-          {children}
-        </Box>
+        <Box sx={{ flex: 1, overflowY: "auto" }}>{children}</Box>
       </Box>
     </Box>
   );
@@ -131,105 +130,16 @@ const components = {
   SpotifyEmbed,
 };
 
-const MyDynamicImage = ({ coverImage }: { coverImage: IGatsbyImageData }) => {
-  const image = getImage(coverImage);
-  if (!image) return null;
-
-  return (
-    <GatsbyImage
-      image={image}
-      alt="Cover Image"
-      style={{ borderRadius: "0px" }}
-    />
-  );
-};
-
-import { useColorMode } from "theme-ui";
 import AppleMusicEmbed from "../components/applemusic";
 import SpotifyEmbed from "../components/spotify";
+import { graphql, PageProps } from "gatsby";
+import { MdxNode } from "../types/content";
 
-const BottomDrawer = ({
-  isOpen,
-  onClose,
-  iframeSrc,
-}: {
-  isOpen: boolean;
-  onClose: () => void;
-  iframeSrc: string;
-}) => {
-  const [colorMode] = useColorMode();
-
-  // Ensure iframeSrc is valid before parsing
-  if (!isOpen || !iframeSrc) return null;
-
-  try {
-    const urlObject = new URL(iframeSrc);
-    const path = urlObject.pathname.replace(/\/$/, ""); // Remove trailing slash
-    const encodedPath = encodeURIComponent(path);
-
-    const url = `https://player-widget.mixcloud.com/widget/iframe/?hide_cover=1&mini=1&autoplay=1&feed=${encodedPath}%2F&light=${
-      colorMode === "dark" ? "0" : "1"
-    }`;
-
-    return (
-      <Box
-        sx={{
-          position: "fixed",
-          bottom: 0,
-          left: 0,
-          width: "100%",
-          bg: "background",
-          borderTopLeftRadius: "10px",
-          borderTopRightRadius: "10px",
-          transition: "transform 0.3s ease-in-out",
-          zIndex: 1000,
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <Button
-          onClick={onClose}
-          sx={{
-            position: "absolute",
-            top: 10,
-            right: 10,
-            bg: "transparent",
-            color: "text",
-            fontSize: 3,
-            cursor: "pointer",
-          }}
-        >
-          ✕
-        </Button>
-        <iframe width="100%" height="60px" src={url} frameBorder="0"></iframe>
-      </Box>
-    );
-  } catch (error) {
-    console.error("Invalid iframeSrc:", iframeSrc, error);
-    return null;
-  }
+type DataProps = {
+  mdx: MdxNode;
 };
 
-interface PageContext {
-  title: string;
-  description: string;
-  episode: number;
-  date: string;
-  tags: string[];
-  iframeSrc: string;
-  youtubeId: string;
-  content: string;
-  coverImage: IGatsbyImageData;
-  publicURL: string;
-  tracklist: { title: string; artist: string; year: number }[];
-  host: string[];
-  appleMusicUrl?: string;
-  spotifyId?: string;
-}
-
-const ShowTemplate = ({ pageContext }: { pageContext: PageContext }) => {
+const ShowTemplate: React.FC<PageProps<DataProps>> = ({ data, children }) => {
   const {
     title,
     description,
@@ -238,63 +148,32 @@ const ShowTemplate = ({ pageContext }: { pageContext: PageContext }) => {
     tags,
     iframeSrc,
     youtubeId,
-    content,
     coverImage,
-    publicURL,
     tracklist,
     host,
     appleMusicUrl,
     spotifyId,
-  } = pageContext;
-  console.log("Page Context:", pageContext);
+  } = data.mdx.frontmatter;
 
-  const [MDXComponent, setMDXComponent] = useState<React.ComponentType | null>(
-    null
-  );
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  console.log(data, children);
+
   // Add this with your other useState imports
   const [showTracklist, setShowTracklist] = useState(false);
   const [showAppleModal, setShowAppleModal] = useState(false);
   const [showSpotifyModal, setShowSpotifyModal] = useState(false);
 
-  useEffect(() => {
-    const doCompile = async () => {
-      try {
-        const compiled = await compile(content, {
-          outputFormat: "function-body",
-          useDynamicImport: true, // ✅ Fix: Allows imports in MDX
-          baseUrl: "/", // ✅ Fix: Required to resolve imports
-        });
-
-        const result = await run(compiled, runtime);
-        setMDXComponent(() => result.default);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    doCompile();
-  }, [content]);
-
-  const memoizedIframeSrc = useMemo(() => iframeSrc, [iframeSrc]);
-  console.log(publicURL);
-
   return (
     <>
-      <SEO
-        title={`${title} | Public Vinyl Radio`}
-        description={description}
-        image={publicURL} // ✅ Pass OG image dynamically
-      />
+      <SEO title={`${title} | Public Vinyl Radio`} description={description} />
       <Container
         sx={{
-          maxWidth: "960px",
+          maxWidth: "800px",
           mx: "auto",
           marginTop: [0, "20px", "20px"],
         }}
       >
         <Grid
-          columns={[1, 2]}
+          columns={[1, 1]}
           sx={{
             gap: "20px",
             backgroundColor: [
@@ -304,11 +183,6 @@ const ShowTemplate = ({ pageContext }: { pageContext: PageContext }) => {
             ],
           }}
         >
-          <Box
-            sx={{ display: "flex", flexDirection: "column", height: "100%" }}
-          >
-            <MyDynamicImage coverImage={coverImage} />
-          </Box>
           <Flex
             sx={{
               flexDirection: "column",
@@ -323,7 +197,7 @@ const ShowTemplate = ({ pageContext }: { pageContext: PageContext }) => {
                 sx={{ flexDirection: "column", gap: "10px", paddingY: "20px" }}
               >
                 <Box sx={{ flexDirection: "column", gap: "10px" }}>
-                  <Text>{formatDate(date) || "Unknown Date"}</Text>
+                  <Text>{formatDate(date || "") || "Unknown Date"}</Text>
                   {" · "}
                   <Text>Seattle</Text>
                 </Box>
@@ -555,24 +429,51 @@ const ShowTemplate = ({ pageContext }: { pageContext: PageContext }) => {
             </EmbedModal>
           )}
 
-          {MDXComponent ? (
-            <MDXComponent components={components} />
-          ) : (
-            <Text>Loading content...</Text>
-          )}
+          <Container>
+            <MDXProvider components={components}>{data.mdx.body}</MDXProvider>
+          </Container>
         </Container>
       </Container>
-
-      {/* Bottom Drawer */}
-      {iframeSrc && (
-        <BottomDrawer
-          isOpen={isDrawerOpen}
-          onClose={() => setIsDrawerOpen(false)}
-          iframeSrc={memoizedIframeSrc}
-        />
-      )}
     </>
   );
 };
 
 export default ShowTemplate;
+
+export const query = graphql`
+  query Show($id: String!) {
+    mdx: mdx(id: { eq: $id }) {
+      id
+      frontmatter {
+        template
+        title
+        description
+        episode
+        date
+        tags
+        iframeSrc
+        youtubeId
+        appleMusicUrl
+        spotifyId
+        slug
+        coverImage {
+          publicURL # ✅ Get direct URL for Open Graph images
+          childImageSharp {
+            gatsbyImageData(
+              width: 700
+              layout: CONSTRAINED
+              formats: [AUTO, WEBP]
+            )
+          }
+        }
+        tracklist {
+          title
+          artist
+          year
+        }
+        host
+      }
+      body
+    }
+  }
+`;

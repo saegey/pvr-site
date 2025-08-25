@@ -1,11 +1,10 @@
 import React from "react";
 import { graphql } from "gatsby";
-import Layout from "../components/layout";
 import { Badge, Flex, Card, Text, Link, Grid, Container, Box } from "theme-ui";
 import { Link as GatsbyLink } from "gatsby";
 
 import { PageProps } from "gatsby";
-import { GatsbyImage, getImage, IGatsbyImageData } from "gatsby-plugin-image";
+import { IGatsbyImageData } from "gatsby-plugin-image";
 import SEO from "../components/seo";
 import { formatDate } from "../templates/show-template";
 
@@ -20,6 +19,7 @@ interface Show {
     coverImage?: IGatsbyImageData;
     host: string[];
     youtubeId: string;
+    isActive?: boolean;
   };
 }
 
@@ -32,26 +32,14 @@ interface DataProps {
 const getYouTubeThumb = (id: string) =>
   `https://img.youtube.com/vi/${id}/hqdefault.jpg`;
 
-const MyDynamicImage = ({ coverImage }: { coverImage: IGatsbyImageData }) => {
-  const image = getImage(coverImage);
-
-  if (!image) return null;
-
-  return (
-    <GatsbyImage
-      image={image}
-      alt="Example Image"
-      style={{ borderRadius: "0px" }}
-    />
-  );
-};
-
 const ShowsPage: React.FC<PageProps<DataProps>> = ({ data }) => {
-  const shows = [...data.allMdx.nodes].sort(
-    (a, b) =>
-      new Date(b.frontmatter.date).getTime() -
-      new Date(a.frontmatter.date).getTime()
-  );
+  const shows = [...data.allMdx.nodes]
+    .filter((s) => s.frontmatter.isActive !== false)
+    .sort(
+      (a, b) =>
+        new Date(b.frontmatter.date).getTime() -
+        new Date(a.frontmatter.date).getTime()
+    );
 
   return (
     <>
@@ -74,7 +62,6 @@ const ShowsPage: React.FC<PageProps<DataProps>> = ({ data }) => {
             <Card
               key={show.id}
               sx={{
-                // maxWidth: 600,
                 borderColor: "cardBorderColor",
                 borderWidth: "2px",
                 borderStyle: "solid",
@@ -94,8 +81,10 @@ const ShowsPage: React.FC<PageProps<DataProps>> = ({ data }) => {
                 {show.frontmatter.coverImage && (
                   <Box
                     sx={{
-                      width: '100%',
-                      height: 'auto',
+                      position: "relative",
+                      width: "100%",
+                      paddingBottom: "56.25%", // 16:9 aspect ratio
+                      height: 0,
                       bg: "muted",
                       borderRadius: 8,
                       overflow: "hidden",
@@ -103,14 +92,24 @@ const ShowsPage: React.FC<PageProps<DataProps>> = ({ data }) => {
                     }}
                   >
                     <img
-                      src={getYouTubeThumb(show.frontmatter.youtubeId)}
+                      src={`https://img.youtube.com/vi/${show.frontmatter.youtubeId}/maxresdefault.jpg`}
                       alt={`${show.frontmatter.title} thumbnail`}
                       style={{
+                        position: "absolute",
+                        top: 0,
+                        left: 0,
                         width: "100%",
-                        height: "auto",
+                        height: "100%",
                         objectFit: "cover",
                       }}
                       loading="lazy"
+                      onError={(e) => {
+                        const target = e.currentTarget as HTMLImageElement;
+                        target.onerror = null; // prevent loop
+                        target.src = getYouTubeThumb(
+                          show.frontmatter.youtubeId
+                        );
+                      }}
                     />
                   </Box>
                 )}
@@ -143,7 +142,19 @@ const ShowsPage: React.FC<PageProps<DataProps>> = ({ data }) => {
                         "Unknown Host"}
                     </Text>
                   </Flex>
-                  <Text sx={{ fontSize: "15px", wordWrap: "break-word" }}>
+                  <Text
+                    sx={{
+                      fontSize: "15px",
+                      lineHeight: "20px",
+                      wordWrap: "break-word",
+                      display: "-webkit-box",
+                      WebkitLineClamp: "3",
+                      WebkitBoxOrient: "vertical",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      minHeight: "60px", // 3 lines * 20px
+                    }}
+                  >
                     {show.frontmatter.description ||
                       "No description available."}
                   </Text>
@@ -179,6 +190,7 @@ export const query = graphql`
     allMdx(
       sort: { frontmatter: { date: DESC } }
       filter: {
+        frontmatter: { isActive: { eq: true } }
         parent: { internal: { description: { regex: "/content/shows/" } } }
       }
     ) {
@@ -191,6 +203,7 @@ export const query = graphql`
           date
           tags
           youtubeId
+          isActive
           coverImage {
             childImageSharp {
               gatsbyImageData(

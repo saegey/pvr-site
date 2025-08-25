@@ -182,7 +182,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
               // backgroundColor: 'red',
             }}
           >
-            &copy; {new Date().getFullYear()} Public Vinyl Radio1
+            &copy; {new Date().getFullYear()} Public Vinyl Radio
           </Text>
         </Box>
 

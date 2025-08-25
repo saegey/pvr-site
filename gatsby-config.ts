@@ -81,13 +81,13 @@ const config: GatsbyConfig = {
         path: `${__dirname}/src/data/`,
       },
     },
-    {
-      resolve: `gatsby-source-filesystem`,
-      options: {
-        name: `blog`,
-        path: `${__dirname}/src/blog`,
-      },
-    },
+    // {
+    //   resolve: `gatsby-source-filesystem`,
+    //   options: {
+    //     name: `blog`,
+    //     path: `${__dirname}/src/blog`,
+    //   },
+    // },
 
     // → transformer-yaml must come after the filesystem that points at your .yml files
     `gatsby-transformer-yaml`,

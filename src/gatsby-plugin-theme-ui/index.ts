@@ -8,8 +8,9 @@ const theme = {
   },
   colors: {
     ...base.colors,
-    primary: "black",
+    primary: "#232323ff",
     secondary: "#30c",
+    muted: "#575757ff",
     badgePrimaryBg: "rgba(251, 251, 251, 1)",
     badgePrimaryText: "rgba(0, 0, 0, 1)",
     badgeSecondaryBg: "black",

@@ -12,10 +12,7 @@ const AboutPage = () => {
           mx: 'auto',
         }}
       >
-        <Box sx={{ maxWidth: '800px', mx: 'auto' }}>
-          <Heading as='h1' sx={{ fontSize: 5, mb: 3, textAlign: 'center' }}>
-            About Us
-          </Heading>
+        <Box sx={{ maxWidth: '800px', mx: 'auto', mt: 4 }}>
 
           <Text as='p' sx={{ fontSize: 2, lineHeight: '1.6', mb: 4 }}>
             Welcome to <strong>PUBLIC VINYL RADIO</strong>, an internet radio

@@ -33,12 +33,17 @@ const TrackCard: React.FC<Props> = ({ track: t, index: idx }) => {
         <Flex sx={{ alignItems: "center", gap: 2, flexWrap: "wrap" }}>
           <Badge
             variant="primary"
-            sx={{ borderRadius: "0px", minWidth: 24, textAlign: "center" }}
+            sx={{
+              borderRadius: "0px",
+              minWidth: 24,
+              textAlign: "center",
+              display: ["none", "block", "flex"],
+            }}
           >
             {idx + 1}
           </Badge>
 
-          <Flex sx={{ gap: 2 }}>
+          <Flex sx={{ gap: 2, flex: "1 1 auto", minWidth: 0 }}>
             {t.album_thumbnail ? (
               <Box sx={{ width: 60, height: 60, flexShrink: 0 }}>
                 <img
@@ -52,24 +57,64 @@ const TrackCard: React.FC<Props> = ({ track: t, index: idx }) => {
               <Box sx={{ width: 60, height: 60, flexShrink: 0, bg: "muted" }} />
             )}
 
-            <Flex sx={{ flexDirection: "column", flexWrap: "wrap" }}>
-              <Text sx={{ whiteSpace: "nowrap", textOverflow: "ellipsis", overflow: "hidden" }}>
-                {t.title || "Untitled"}
-              </Text>
+            <Flex
+              sx={{
+                flexDirection: "column",
+                flexWrap: "wrap",
+                flex: 1,
+                minWidth: 0,
+              }}
+            >
+              <Flex sx={{ alignItems: "center", gap: 2 }}>
+                <Text
+                  sx={{
+                    whiteSpace: "nowrap",
+                    textOverflow: "ellipsis",
+                    overflow: "hidden",
+                  }}
+                >
+                  {t.title || "Untitled"}{" "}
+                </Text>
+                <Text
+                  sx={{
+                    fontFamily: "body",
+                    fontSize: 1,
+                    flexShrink: 0,
+                    color: "muted",
+                  }}
+                >
+                  {formatDuration(t.duration_seconds)}
+                </Text>
+              </Flex>
               <Text
                 sx={{
                   fontWeight: 600,
                   whiteSpace: "nowrap",
                   textOverflow: "ellipsis",
+                  maxWidth: ["300px", "500px"],
                   overflow: "hidden",
                 }}
               >
                 {t.artist || "Unknown Artist"}
               </Text>
               {t.album && (
-                <Text sx={{ color: "primary", fontSize: 1 }}>
-                  {t.album} ({t.year}) - {formatDuration(t.duration_seconds)}
-                </Text>
+                <Flex sx={{ alignItems: "baseline", gap: 2, minWidth: 0 }}>
+                  <Text
+                    sx={{
+                      color: "primary",
+                      fontSize: 1,
+                      whiteSpace: "nowrap",
+                      textOverflow: "ellipsis",
+                      overflow: "hidden",
+                      flex: 1,
+                      maxWidth: ["300px", "500px"],
+                      minWidth: 0,
+                    }}
+                    title={`${t.album}${t.year ? ` (${t.year})` : ""}`}
+                  >
+                    {t.album} {t.year ? `(${t.year})` : ""}
+                  </Text>
+                </Flex>
               )}
             </Flex>
           </Flex>
@@ -79,7 +124,13 @@ const TrackCard: React.FC<Props> = ({ track: t, index: idx }) => {
             apple_music_url={t.apple_music_url as string | undefined}
             spotify_url={t.spotify_url as string | undefined}
             soundcloud_url={t.soundcloud_url as string | undefined}
-            containerSx={{ flex: "1 1 auto", minWidth: 0, ml: "auto" }}
+            containerSx={{
+              flex: ["1 0 100%", "1 1 auto"],
+              minWidth: 0,
+              ml: [0, "auto"],
+              mt: [2, 0],
+              justifyContent: ["flex-start", "flex-end"],
+            }}
           />
         </Flex>
       </Flex>

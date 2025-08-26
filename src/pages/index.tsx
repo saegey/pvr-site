@@ -2,12 +2,14 @@ import React from "react";
 import { graphql } from "gatsby";
 import { Badge, Flex, Card, Text, Grid, Container, Box } from "theme-ui";
 import { Link as GatsbyLink } from "gatsby";
-
 import { PageProps } from "gatsby";
 import { IGatsbyImageData } from "gatsby-plugin-image";
+import { Helmet } from "react-helmet";
+
 import SEO from "../components/seo";
 import { formatDate } from "../utils/date";
 import { youTubeHQThumb, youTubeMaxResThumb } from "../utils/youtube";
+import { useOgImageFromPath } from "../hooks/useOgImage";
 
 interface Show {
   id: string;
@@ -28,6 +30,14 @@ interface DataProps {
   allMdx: {
     nodes: Show[];
   };
+  site: {
+    siteMetadata: {
+      title: string;
+      description: string;
+      siteUrl: string;
+      image?: string;
+    };
+  };
 }
 
 const ShowsPage: React.FC<PageProps<DataProps>> = ({ data }) => {
@@ -39,9 +49,41 @@ const ShowsPage: React.FC<PageProps<DataProps>> = ({ data }) => {
         new Date(a.frontmatter.date).getTime()
     );
 
+  const ogImage = useOgImageFromPath("DSC_0955.png");
+  const { siteMetadata } = data.site;
+
   return (
     <>
-      <SEO title="Public Vinyl Radio" />
+      <SEO
+        title="Public Vinyl Radio"
+        image={ogImage}
+        url={siteMetadata.siteUrl}
+      />
+      <Helmet>
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            url: siteMetadata.siteUrl,
+            name: siteMetadata.title,
+            description: siteMetadata.description,
+          })}
+        </script>
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            url: siteMetadata.siteUrl,
+            name: siteMetadata.title,
+            logo: ogImage,
+            sameAs: [
+              "https://www.youtube.com/@PublicVinylRadio",
+              "https://www.mixcloud.com/public-vinyl-radio/",
+              "https://www.instagram.com/PublicVinylRadio",
+            ],
+          })}
+        </script>
+      </Helmet>
       <Container
         sx={{
           p: 3,
@@ -180,6 +222,14 @@ export default ShowsPage;
 // GraphQL Query
 export const query = graphql`
   query IndexPageQuery {
+    site {
+      siteMetadata {
+        title
+        description
+        siteUrl
+        image
+      }
+    }
     allMdx(
       sort: { frontmatter: { date: DESC } }
       filter: {

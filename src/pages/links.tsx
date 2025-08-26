@@ -11,6 +11,7 @@ import MixcloudIcon from "../icons/mixcloud.svg";
 import { formatDate } from "../utils/date";
 import { trackLinkClickDeduped } from "../utils/analytics";
 import PVRLogo from "../icons/heads.svg";
+import { youTubeHQThumb, youTubeMaxResThumb } from "../utils/youtube";
 
 type LinkItem = {
   title: string;
@@ -45,9 +46,6 @@ const iconMap: Record<string, React.ComponentType<any>> = {
   MixcloudIcon,
 };
 
-const getYouTubeThumb = (id: string) =>
-  `https://img.youtube.com/vi/${id}/hqdefault.jpg`;
-
 export default function LinktreePage({ data }: { data: DataProps }) {
   const items = data.allDataYaml.nodes?.[0]?.links ?? [];
   const latest = (data.shows.nodes || []).slice(0, 6);
@@ -56,7 +54,7 @@ export default function LinktreePage({ data }: { data: DataProps }) {
   return (
     <Container sx={{ maxWidth: 560, mx: "auto", px: 3, py: 4 }}>
       {/* Top logo */}
-      <Box sx={{ justifyItems: "center", mb: 2 }}>
+      <Flex sx={{ justifyItems: "center", justifyContent: "center", mb: 2 }}>
         <Box sx={{ width: "80px" }}>
           <Box
             as={PVRLogo}
@@ -73,7 +71,7 @@ export default function LinktreePage({ data }: { data: DataProps }) {
             }}
           />
         </Box>
-      </Box>
+      </Flex>
       {/* Title */}
       <Heading as="h1" sx={{ fontSize: 4, mb: 3, textAlign: "center" }}>
         PUBLIC VINYL RADIO
@@ -214,7 +212,7 @@ export default function LinktreePage({ data }: { data: DataProps }) {
                     }}
                   >
                     <img
-                      src={`https://img.youtube.com/vi/${show.frontmatter.youtubeId}/maxresdefault.jpg`}
+                      src={youTubeMaxResThumb(show.frontmatter.youtubeId)}
                       alt={`${show.frontmatter.title} thumbnail`}
                       style={{
                         position: "absolute",
@@ -227,9 +225,7 @@ export default function LinktreePage({ data }: { data: DataProps }) {
                       onError={(e) => {
                         const target = e.currentTarget as HTMLImageElement;
                         target.onerror = null;
-                        target.src = getYouTubeThumb(
-                          show.frontmatter.youtubeId
-                        );
+                        target.src = youTubeHQThumb(show.frontmatter.youtubeId);
                       }}
                     />
                   </Box>

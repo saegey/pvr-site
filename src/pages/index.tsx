@@ -7,6 +7,7 @@ import { PageProps } from "gatsby";
 import { IGatsbyImageData } from "gatsby-plugin-image";
 import SEO from "../components/seo";
 import { formatDate } from "../utils/date";
+import { youTubeHQThumb, youTubeMaxResThumb } from "../utils/youtube";
 
 interface Show {
   id: string;
@@ -28,9 +29,6 @@ interface DataProps {
     nodes: Show[];
   };
 }
-
-const getYouTubeThumb = (id: string) =>
-  `https://img.youtube.com/vi/${id}/hqdefault.jpg`;
 
 const ShowsPage: React.FC<PageProps<DataProps>> = ({ data }) => {
   const shows = [...data.allMdx.nodes]
@@ -89,7 +87,7 @@ const ShowsPage: React.FC<PageProps<DataProps>> = ({ data }) => {
                     }}
                   >
                     <img
-                      src={`https://img.youtube.com/vi/${show.frontmatter.youtubeId}/maxresdefault.jpg`}
+                      src={youTubeMaxResThumb(show.frontmatter.youtubeId)}
                       alt={`${show.frontmatter.title} thumbnail`}
                       style={{
                         position: "absolute",
@@ -103,9 +101,7 @@ const ShowsPage: React.FC<PageProps<DataProps>> = ({ data }) => {
                       onError={(e) => {
                         const target = e.currentTarget as HTMLImageElement;
                         target.onerror = null; // prevent loop
-                        target.src = getYouTubeThumb(
-                          show.frontmatter.youtubeId
-                        );
+                        target.src = youTubeHQThumb(show.frontmatter.youtubeId);
                       }}
                     />
                   </Box>

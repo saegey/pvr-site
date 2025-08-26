@@ -18,7 +18,6 @@ const SEO: React.FC<SEOProps> = ({ title, description, image, url }) => {
           description
           siteUrl
           image
-          twitterUsername
         }
       }
     }

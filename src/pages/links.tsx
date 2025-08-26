@@ -1,241 +1,301 @@
 import React from "react";
 import { graphql } from "gatsby";
-import {
-  GatsbyImage,
-  IGatsbyImageData,
-  StaticImage,
-} from "gatsby-plugin-image";
-import { Box, Container, Heading, Text, useColorMode } from "theme-ui";
-
-// 1) Import each SVG from /src/icons
+import { Box, Container, Heading, Text, Flex, Link } from "theme-ui";
+import { Link as GatsbyLink } from "gatsby";
+import { IGatsbyImageData } from "gatsby-plugin-image";
+import { StaticImage } from "gatsby-plugin-image";
 import InstagramIcon from "../icons/instagram.svg";
 import YouTubeIcon from "../icons/youtube.svg";
-import WebsiteIcon from "../icons/website.svg"; // Add more icons as needed
+import WebsiteIcon from "../icons/website.svg";
 import MixcloudIcon from "../icons/mixcloud.svg";
-
-// 2) Build a simple map from your yaml‐string → actual component
-const iconMap: Record<string, React.ComponentType<unknown>> = {
-  InstagramIcon,
-  YouTubeIcon,
-  WebsiteIcon,
-  MixcloudIcon,
-  // …add other SVGs here if you need
-};
+import { formatDate } from "../utils/date";
+import { trackLinkClickDeduped } from "../utils/analytics";
+import PVRLogo from "../icons/heads.svg";
 
 type LinkItem = {
   title: string;
   url: string;
   subtitle?: string;
-
-  // either of these two will be present
-  linkImage?: {
-    childImageSharp: {
-      gatsbyImageData: IGatsbyImageData;
-    };
-  };
+  linkImage?: { childImageSharp: { gatsbyImageData: IGatsbyImageData } };
   svgIcon?: string;
 };
 
-type Props = {
-  data: {
-    allDataYaml: {
-      nodes: Array<{ links: LinkItem[] }>;
-    };
+type Show = {
+  id: string;
+  frontmatter: {
+    slug: string;
+    title: string;
+    date: string;
+    host: string[];
+    youtubeId: string;
+    isActive?: boolean;
   };
 };
 
-export default function LinkTreePage({ data }: Props) {
-  const items = data.allDataYaml.nodes[0].links || [];
-  if (items.length === 0) {
-    return <Container>No links found.</Container>;
-  }
+type DataProps = {
+  allDataYaml: { nodes: Array<{ links: LinkItem[] }> };
+  shows: { nodes: Show[] };
+  site: { siteMetadata: { description?: string } };
+};
 
-  // 3) Separate out the first item to render as “featured”
-  const [featuredLink, ...otherLinks] = items;
-  const [colorMode] = useColorMode();
+const iconMap: Record<string, React.ComponentType<any>> = {
+  InstagramIcon,
+  YouTubeIcon,
+  WebsiteIcon,
+  MixcloudIcon,
+};
+
+const getYouTubeThumb = (id: string) =>
+  `https://img.youtube.com/vi/${id}/hqdefault.jpg`;
+
+export default function LinktreePage({ data }: { data: DataProps }) {
+  const items = data.allDataYaml.nodes?.[0]?.links ?? [];
+  const latest = (data.shows.nodes || []).slice(0, 6);
+  const bio = data.site?.siteMetadata?.description || "";
 
   return (
-    <Container sx={{ maxWidth: 640, mx: "auto", px: 3, py: 4 }}>
-      {/* ─── Static Logo + Heading ─── */}
-      <Box
-        sx={{
-          textAlign: "center",
-          mb: 2, // apply `invert(1)` in dark mode to turn a black logo into white
-        }}
-      >
-        {/* <StaticImage
-          src="../images/logo-black.png"
-          alt="My Static Avatar"
-          width={60}
-          placeholder="none"
-          style={{ margin: "0 auto", display: "block" }}
-          imgStyle={{
-            filter: colorMode === "dark" ? "invert(1)" : "none",
-          }}
-        /> */}
+    <Container sx={{ maxWidth: 560, mx: "auto", px: 3, py: 4 }}>
+      {/* Top logo */}
+      <Box sx={{ justifyItems: "center", mb: 2 }}>
+        <Box sx={{ width: "80px" }}>
+          <Box
+            as={PVRLogo}
+            aria-label="Public Vinyl Radio mark"
+            sx={{
+              display: "block",
+              width: "100%",
+              height: "100%",
+              color: "text",
+              "path, rect, circle, polygon, line, polyline": {
+                fill: "currentColor",
+                stroke: "currentColor",
+              },
+            }}
+          />
+        </Box>
       </Box>
+      {/* Title */}
       <Heading as="h1" sx={{ fontSize: 4, mb: 3, textAlign: "center" }}>
         PUBLIC VINYL RADIO
       </Heading>
-
-      {/* ─── FEATURED ITEM ─── */}
-      <Box
-        as="a"
-        href={featuredLink.url}
-        key="featured"
-        variant="linkCard"
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          textDecoration: "none",
-          mb: 2,
-          color: "primary",
-          border: "2px solid",
-          borderColor: "primary",
-          borderRadius: 0,
-          overflow: "hidden",
-        }}
-      >
-        {/* If it has an SVG icon, render that large on top */}
-        {featuredLink.svgIcon && iconMap[featuredLink.svgIcon] && (
-          <Box
-            sx={{
-              width: "100%",
-              display: "flex",
-              justifyContent: "center",
-              bg: "background",
-              py: 4,
-            }}
-          >
-            {/**  
-              If you prefer a big background color behind SVG, adjust sx above  
-            **/}
-            <Box
-              as={iconMap[featuredLink.svgIcon]!}
-              aria-label={featuredLink.title}
-              sx={{ width: 200, height: 200 }}
-            />
-          </Box>
-        )}
-
-        {/* If it has a raster image, render it full‐width on top */}
-        {featuredLink.linkImage?.childImageSharp?.gatsbyImageData && (
-          <Box sx={{ width: "100%", height: "auto" }}>
-            <GatsbyImage
-              image={featuredLink.linkImage.childImageSharp.gatsbyImageData}
-              alt={featuredLink.title}
-              style={{ width: "100%", height: "auto" }}
-              imgStyle={{ objectFit: "cover" }}
-            />
-          </Box>
-        )}
-
-        {/* Title + subtitle below the image/icon */}
-        <Box
+      {/* Bio */}
+      {bio && (
+        <Text
+          as="p"
           sx={{
-            display: "flex",
-            width: "100%",
-            flexDirection: "column",
+            fontSize: 2,
+            lineHeight: "body",
+            textAlign: "center",
+            color: "text",
+            mb: 3,
+            maxWidth: 560,
+            mx: "auto",
           }}
         >
-          <Heading
-            as="h2"
-            sx={{ fontSize: 4, mb: 1, paddingTop: "10px", color: "primary" }}
-          >
-            {featuredLink.title}
-          </Heading>
-          {featuredLink.subtitle && (
-            <Text sx={{ fontSize: 2, color: "primary" }}>
-              {featuredLink.subtitle}
-            </Text>
-          )}
-        </Box>
+          {bio}
+        </Text>
+      )}
+
+      {/* Linktree buttons */}
+      <Box as="nav" sx={{ display: "grid", gap: 2 }}>
+        {items.map((link, i) => {
+          const SvgComponent = link.svgIcon && iconMap[link.svgIcon];
+          return (
+            <Link
+              key={i}
+              href={link.url}
+              target={link.url.startsWith("http") ? "_blank" : undefined}
+              rel={
+                link.url.startsWith("http") ? "noopener noreferrer" : undefined
+              }
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 2,
+                py: 3,
+                px: 3,
+                border: "2px solid",
+                borderColor: "primary",
+                borderRadius: 2,
+                textDecoration: "none",
+                color: "primary",
+                fontWeight: 600,
+                textTransform: "uppercase",
+                transition:
+                  "background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease",
+                "&:hover": {
+                  bg: "transparent",
+                  color: "primary",
+                  boxShadow: "card",
+                },
+              }}
+              onMouseDown={() =>
+                trackLinkClickDeduped({
+                  linkText: link.title,
+                  linkUrl: link.url,
+                  linkType: link.url.startsWith("http")
+                    ? "external"
+                    : "internal",
+                  location: "links_buttons",
+                })
+              }
+              onClick={() =>
+                trackLinkClickDeduped({
+                  linkText: link.title,
+                  linkUrl: link.url,
+                  linkType: link.url.startsWith("http")
+                    ? "external"
+                    : "internal",
+                  location: "links_buttons",
+                })
+              }
+            >
+              {SvgComponent && (
+                <Box
+                  as={SvgComponent}
+                  aria-hidden
+                  sx={{ width: 20, height: 20, color: "primary" }}
+                />
+              )}
+              <Text as="span" sx={{ color: "primary" }}>
+                {link.title}
+              </Text>
+            </Link>
+          );
+        })}
       </Box>
 
-      {/* ─── ALL OTHER ITEMS ─── */}
-      {otherLinks.map((link, i) => {
-        const imageData = link.linkImage?.childImageSharp?.gatsbyImageData;
-        const SvgComponent = link.svgIcon && iconMap[link.svgIcon];
-
-        return (
-          <Box
-            as="a"
-            href={link.url}
-            key={i}
-            variant="linkCard"
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              textDecoration: "none",
-              mb: 2,
-            }}
-          >
-            {imageData ? (
-              // fixed 72×72 container, never shrinks, same margin as below
-              <Box sx={{ flexShrink: 0, width: 72, height: 72, mr: 3 }}>
-                <GatsbyImage
-                  image={imageData}
-                  alt={link.title}
-                  style={{ width: "100%", height: "100%" }}
-                  imgStyle={{ objectFit: "cover" }}
-                />
-              </Box>
-            ) : SvgComponent ? (
+      {/* Latest Shows */}
+      {latest.length > 0 && (
+        <Box sx={{ mt: 4 }}>
+          <Heading as="h2" sx={{ fontSize: 3, mb: 3, textAlign: "center" }}>
+            Latest Shows
+          </Heading>
+          <Box sx={{ display: "grid", gap: 3 }}>
+            {latest.map((show) => (
               <Box
-                as={SvgComponent}
-                aria-label={link.title}
+                key={show.id}
                 sx={{
-                  flexShrink: 0,
-                  width: 72,
-                  height: 72,
-                  mr: 3,
-                  color: "primary",
+                  border: "2px solid",
+                  borderColor: "primary",
+                  borderRadius: 2,
+                  overflow: "hidden",
+                  bg: "cardBackgroundColor",
                 }}
-              />
-            ) : null}
-
-            <Box>
-              <Heading as="h3" sx={{ fontSize: 2, mb: 1, color: "primary" }}>
-                {link.title}
-              </Heading>
-              {link.subtitle && (
-                <Text
-                  sx={{ fontSize: 1, color: "primary", lineHeight: "12px" }}
+              >
+                <GatsbyLink
+                  to={`/shows/${show.frontmatter.slug}`}
+                  style={{ textDecoration: "none", color: "inherit" }}
+                  onMouseDown={() =>
+                    trackLinkClickDeduped({
+                      linkText: show.frontmatter.title,
+                      linkUrl: `/shows/${show.frontmatter.slug}`,
+                      linkType: "internal",
+                      location: "latest_shows",
+                    })
+                  }
+                  onClick={() =>
+                    trackLinkClickDeduped({
+                      linkText: show.frontmatter.title,
+                      linkUrl: `/shows/${show.frontmatter.slug}`,
+                      linkType: "internal",
+                      location: "latest_shows",
+                    })
+                  }
                 >
-                  {link.subtitle}
-                </Text>
-              )}
-            </Box>
+                  <Box
+                    sx={{
+                      position: "relative",
+                      width: "100%",
+                      pb: "56.25%",
+                      height: 0,
+                      bg: "muted",
+                    }}
+                  >
+                    <img
+                      src={`https://img.youtube.com/vi/${show.frontmatter.youtubeId}/maxresdefault.jpg`}
+                      alt={`${show.frontmatter.title} thumbnail`}
+                      style={{
+                        position: "absolute",
+                        inset: 0,
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "cover",
+                      }}
+                      loading="lazy"
+                      onError={(e) => {
+                        const target = e.currentTarget as HTMLImageElement;
+                        target.onerror = null;
+                        target.src = getYouTubeThumb(
+                          show.frontmatter.youtubeId
+                        );
+                      }}
+                    />
+                  </Box>
+                  <Box sx={{ p: 3 }}>
+                    <Text sx={{ lineHeight: "20px", mb: 2 }}>
+                      {formatDate(show.frontmatter.date)}
+                    </Text>
+                    <Heading
+                      as="h3"
+                      sx={{ fontSize: 2, mb: 1, textTransform: "uppercase" }}
+                    >
+                      {show.frontmatter.title}
+                    </Heading>
+                    <Text sx={{ color: "text" }}>
+                      {`with ${(show.frontmatter.host || []).join(", ")}`}
+                    </Text>
+                  </Box>
+                </GatsbyLink>
+              </Box>
+            ))}
           </Box>
-        );
-      })}
+        </Box>
+      )}
     </Container>
   );
 }
 
 export const query = graphql`
-  query LinksPageQuery {
+  query LinksLinktreePageQuery {
+    site {
+      siteMetadata {
+        description
+      }
+    }
     allDataYaml {
       nodes {
         links {
           title
           url
           subtitle
-
-          # still query linkImage as before
+          svgIcon
           linkImage {
             childImageSharp {
-              gatsbyImageData(
-                width: 600 # for featured, you can query a larger size if you like
-                placeholder: BLURRED
-                layout: CONSTRAINED
-              )
+              gatsbyImageData(width: 300, layout: CONSTRAINED)
             }
           }
-
-          # and also pick up svgIcon if defined in the YAML
-          svgIcon
+        }
+      }
+    }
+    shows: allMdx(
+      sort: { frontmatter: { date: DESC } }
+      filter: {
+        frontmatter: { isActive: { eq: true } }
+        parent: { internal: { description: { regex: "/content/shows/" } } }
+      }
+      limit: 6
+    ) {
+      nodes {
+        id
+        frontmatter {
+          slug
+          title
+          date
+          host
+          youtubeId
+          isActive
         }
       }
     }

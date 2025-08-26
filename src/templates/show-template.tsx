@@ -5,22 +5,12 @@ import { format } from "date-fns";
 import SEO from "../components/seo";
 import { graphql, PageProps } from "gatsby";
 
-import AppleMusicEmbed from "../components/applemusic";
-import SpotifyEmbed from "../components/spotify";
 import TrackCard from "../components/track-card";
 import { MdxNode } from "../types/content";
 import ResponsiveYouTube from "../components/responsive-youtube";
 
 export const formatDate = (dateString: string) =>
   format(new Date(dateString), "MM.dd.yyyy");
-
-const isIOS = () => {
-  return (
-    typeof navigator !== "undefined" &&
-    (/iPad|iPhone|iPod/.test(navigator.platform) ||
-      (navigator.userAgent.includes("Mac") && navigator.maxTouchPoints > 1))
-  );
-};
 
 type DataProps = {
   mdx: MdxNode;
@@ -29,8 +19,6 @@ type DataProps = {
 const ShowTemplate: React.FC<PageProps<DataProps>> = ({ data, children }) => {
   const { title, description, date, tags, youtubeId, tracklist, host } =
     data.mdx.frontmatter;
-
-  console.log(tracklist);
 
   return (
     <>

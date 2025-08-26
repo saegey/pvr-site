@@ -4,10 +4,9 @@ const config: GatsbyConfig = {
   siteMetadata: {
     title: "Public Vinyl Radio",
     description:
-      "A vinyl-focused internet radio station with curated mixtapes.",
+      "PVR is an all-vinyl frequency dedicated to deep, unfiltered sounds—underground rhythms that transcend borders and dimensions. No algorithms, no fillers.",
     siteUrl: "https://publicvinylradio.com",
     image: "/default-social-image.jpg",
-    twitterUsername: "@your_twitter_handle",
   },
   graphqlTypegen: true,
   plugins: [
@@ -15,15 +14,14 @@ const config: GatsbyConfig = {
     {
       resolve: "gatsby-plugin-google-gtag",
       options: {
-        trackingIds: ["G-J46E6ZPHFF"],
-        pluginConfig: { head: true },
-      },
-    },
-    {
-      resolve: `gatsby-plugin-google-fonts`,
-      options: {
-        fonts: [`Work Sans\:300,400,500,600,700`],
-        display: "swap",
+        trackingIds: [process.env.GA_MEASUREMENT_ID || "G-J46E6ZPHFF"],
+        pluginConfig: {
+          head: false,
+          respectDNT: false,          // turn on later in prod if you want
+        },
+        gtagConfig: {
+          anonymize_ip: true,
+        },
       },
     },
 

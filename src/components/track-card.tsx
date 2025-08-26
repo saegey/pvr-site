@@ -79,9 +79,9 @@ const TrackCard: React.FC<Props> = ({ track: t, index: idx }) => {
                 <Text
                   sx={{
                     fontFamily: "body",
-                    fontSize: 1,
+                    fontSize: '13px',
                     flexShrink: 0,
-                    color: "muted",
+                    color: "textMuted",
                     display: ["none", "block"],
                   }}
                 >

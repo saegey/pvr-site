@@ -11,6 +11,7 @@ const theme = {
     primary: "#232323ff",
     secondary: "#30c",
     muted: "#bfbfbfff",
+    textMuted: "#6b6b6bff",
     badgePrimaryBg: "rgba(251, 251, 251, 1)",
     badgePrimaryText: "rgba(0, 0, 0, 1)",
     badgeSecondaryBg: "black",
@@ -24,6 +25,7 @@ const theme = {
     modes: {
       dark: {
         text: "white",
+        textMuted: "#a9a9a9ff",
         background: "black",
         badgePrimaryBg: "#000000",
         badgePrimaryText: "rgba(193, 191, 196, 1)",

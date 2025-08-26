@@ -2,10 +2,10 @@ import type { GatsbyConfig } from "gatsby";
 
 const config: GatsbyConfig = {
   siteMetadata: {
-    title: "Public Vinyl Radio",
+    title: "PUBLIC VINYL RADIO",
     description:
       "PVR is an all-vinyl frequency dedicated to deep, unfiltered sounds—underground rhythms that transcend borders and dimensions. No algorithms, no fillers.",
-    siteUrl: "https://publicvinylradio.com",
+    siteUrl: process.env.SITE_URL || "https://publicvinylradio.com",
     image: "/default-social-image.jpg",
   },
   graphqlTypegen: true,

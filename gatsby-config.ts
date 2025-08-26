@@ -1,21 +1,21 @@
-import type { GatsbyConfig } from 'gatsby';
+import type { GatsbyConfig } from "gatsby";
 
 const config: GatsbyConfig = {
   siteMetadata: {
-    title: 'Public Vinyl Radio',
+    title: "Public Vinyl Radio",
     description:
-      'A vinyl-focused internet radio station with curated mixtapes.',
-    siteUrl: 'https://publicvinylradio.com',
-    image: '/default-social-image.jpg',
-    twitterUsername: '@your_twitter_handle',
+      "A vinyl-focused internet radio station with curated mixtapes.",
+    siteUrl: "https://publicvinylradio.com",
+    image: "/default-social-image.jpg",
+    twitterUsername: "@your_twitter_handle",
   },
   graphqlTypegen: true,
   plugins: [
     // analytics + fonts
     {
-      resolve: 'gatsby-plugin-google-gtag',
+      resolve: "gatsby-plugin-google-gtag",
       options: {
-        trackingIds: ['G-J46E6ZPHFF'],
+        trackingIds: ["G-J46E6ZPHFF"],
         pluginConfig: { head: true },
       },
     },
@@ -23,7 +23,7 @@ const config: GatsbyConfig = {
       resolve: `gatsby-plugin-google-fonts`,
       options: {
         fonts: [`Work Sans\:300,400,500,600,700`],
-        display: 'swap',
+        display: "swap",
       },
     },
 
@@ -37,7 +37,9 @@ const config: GatsbyConfig = {
     {
       resolve: `gatsby-plugin-netlify`,
       options: {
-        headers: { '/*': ['Cache-Control: public, max-age=31536000, immutable'] },
+        headers: {
+          "/*": ["Cache-Control: public, max-age=31536000, immutable"],
+        },
       },
     },
     `gatsby-plugin-sitemap`,
@@ -79,13 +81,13 @@ const config: GatsbyConfig = {
         path: `${__dirname}/src/data/`,
       },
     },
-    {
-      resolve: `gatsby-source-filesystem`,
-      options: {
-        name: `blog`,
-        path: `${__dirname}/src/blog`,
-      },
-    },
+    // {
+    //   resolve: `gatsby-source-filesystem`,
+    //   options: {
+    //     name: `blog`,
+    //     path: `${__dirname}/src/blog`,
+    //   },
+    // },
 
     // → transformer-yaml must come after the filesystem that points at your .yml files
     `gatsby-transformer-yaml`,
@@ -94,22 +96,43 @@ const config: GatsbyConfig = {
     {
       resolve: `gatsby-plugin-mdx`,
       options: {
-        extensions: [`.mdx`, `.md`],
-        gatsbyRemarkPlugins: [],
-        mdxOptions: {
-          useDynamicImport: true,
-          rehypePlugins: [],
-        },
+        gatsbyRemarkPlugins: [
+          {
+            resolve: `gatsby-remark-images`,
+            options: { maxWidth: 900 },
+          },
+        ],
       },
     },
 
-     {
+    {
       resolve: `gatsby-plugin-react-svg`,
       options: {
         rule: {
           // <-- adjust this regex to match wherever you keep your SVGs
           include: /src\/icons/,
         },
+      },
+    },
+    {
+      resolve: `gatsby-transformer-remark`,
+      options: {
+        plugins: [
+          {
+            resolve: `gatsby-remark-images`,
+            options: {
+              maxWidth: 630,
+            },
+          },
+          {
+            resolve: `gatsby-remark-responsive-iframe`,
+            options: {
+              wrapperStyle: `margin-bottom: 1.0725rem`,
+            },
+          },
+          `gatsby-remark-copy-linked-files`,
+          `gatsby-remark-smartypants`,
+        ],
       },
     },
   ],

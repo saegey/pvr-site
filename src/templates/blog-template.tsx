@@ -1,16 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import { graphql } from 'gatsby';
-import Layout from '../components/layout';
-import SEO from '../components/seo';
-import { MDXProvider } from '@mdx-js/react';
-import { compile, run } from '@mdx-js/mdx';
-import * as runtime from 'react/jsx-runtime';
-import { format } from 'date-fns';
-import { Container, Flex, Image, Text } from 'theme-ui';
-import { StaticImage } from 'gatsby-plugin-image';
+import React, { useState, useEffect } from "react";
+import { graphql } from "gatsby";
+import Layout from "../components/layout";
+import SEO from "../components/seo";
+import { MDXProvider } from "@mdx-js/react";
+import { compile, run } from "@mdx-js/mdx";
+import * as runtime from "react/jsx-runtime";
+import { format } from "date-fns";
+import { Container, Flex, Image, Text } from "theme-ui";
+import { StaticImage } from "gatsby-plugin-image";
 
 const formatDate = (dateString: string) =>
-  format(new Date(dateString), 'MM.dd.yyyy');
+  format(new Date(dateString), "MM.dd.yyyy");
 
 const components = {
   StaticImage,
@@ -30,9 +30,9 @@ const BlogPostTemplate = ({ pageContext }: { pageContext: any }) => {
     const doCompile = async () => {
       try {
         const compiled = await compile(content, {
-          outputFormat: 'function-body',
+          outputFormat: "function-body",
           useDynamicImport: true,
-          baseUrl: '/',
+          baseUrl: "/",
         });
 
         const result = await run(compiled, runtime);
@@ -46,13 +46,13 @@ const BlogPostTemplate = ({ pageContext }: { pageContext: any }) => {
   }, [content]);
 
   return (
-    <Layout>
+    <>
       <SEO title={`${title} | Public Vinyl Radio Blog`} />
       <Container
         sx={{
           p: 3,
-          maxWidth: ['100%', '540px', '720px', '960px', '1140px'],
-          mx: 'auto',
+          maxWidth: ["100%", "540px", "720px", "960px", "1140px"],
+          mx: "auto",
         }}
       >
         <h1>{title}</h1>
@@ -63,7 +63,7 @@ const BlogPostTemplate = ({ pageContext }: { pageContext: any }) => {
           <Text>Loading content...</Text>
         )}
       </Container>
-    </Layout>
+    </>
   );
 };
 

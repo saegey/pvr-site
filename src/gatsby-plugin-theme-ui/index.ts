@@ -35,6 +35,7 @@ const theme = {
         cardBorderColor: "#212121ff",
         cardBackgroundColor: "#3e3e3eff",
         showCardBackground: "#3b3b3b",
+        muted: "#1f1f1fff",
       },
     },
   },

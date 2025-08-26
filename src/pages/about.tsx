@@ -141,7 +141,7 @@ const AboutPage = () => {
             backgroundSize: "cover",
             backgroundPosition: "center",
             backgroundRepeat: "no-repeat",
-            opacity: 1,
+            opacity: .9,
             pointerEvents: "none",
             zIndex: 0,
           }}
@@ -205,9 +205,9 @@ const AboutPage = () => {
           </Box>
           <Box
             sx={{
-              bg: "muted",
+              // bg: "muted",
               borderRadius: "2xl",
-              height: 280,
+              height: [280, 320],
             }}
           >
             <StaticImage
@@ -217,8 +217,8 @@ const AboutPage = () => {
               formats={["auto", "webp"]}
               style={{
                 display: "block",
-                width: "100%",
-                height: "auto",
+                width: "auto",
+                height: "100%",
               }}
               imgStyle={{
                 objectFit: "cover",
@@ -251,8 +251,8 @@ const AboutPage = () => {
               formats={["auto", "webp"]}
               style={{
                 display: "block",
-                width: "100%",
-                height: "auto",
+                width: "auto",
+                height: "100%",
               }}
               // imgStyle={{
               //   objectFit: "cover",

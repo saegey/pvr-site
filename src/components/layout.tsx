@@ -1,13 +1,5 @@
-import {
-  Box,
-  Link,
-  MenuButton,
-  Flex,
-  Text,
-  Close,
-  useColorMode,
-} from "theme-ui";
-import { ReactNode, useEffect, useState } from "react";
+import { Box, Link, MenuButton, Flex, Text, Close } from "theme-ui";
+import { ReactNode, useState } from "react";
 import React from "react";
 import { Link as GatsbyLink } from "gatsby";
 import { FaYoutube, FaInstagram } from "react-icons/fa";
@@ -15,28 +7,6 @@ import HeadsIcon from "../icons/heads.svg";
 
 const Layout = ({ children }: { children: ReactNode }) => {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [colorMode, setColorMode] = useColorMode();
-
-  // React to system theme changes without a hard refresh
-  useEffect(() => {
-    if (typeof window === "undefined" || !window.matchMedia) return;
-    const mq = window.matchMedia("(prefers-color-scheme: dark)");
-    const apply = (e: MediaQueryList | MediaQueryListEvent) => {
-      const matches = "matches" in e ? e.matches : mq.matches;
-      setColorMode(matches ? "dark" : "default");
-    };
-    // set initial in case Theme UI hasn't yet
-    apply(mq);
-    if (typeof mq.addEventListener === "function") {
-      mq.addEventListener("change", apply);
-      return () => mq.removeEventListener("change", apply);
-    } else if (typeof mq.addListener === "function") {
-      // Safari fallback
-      mq.addListener(apply);
-      return () => mq.removeListener(apply);
-    }
-  }, [setColorMode]);
-
   const toggleMenu = () => setMenuOpen(!menuOpen);
 
   return (

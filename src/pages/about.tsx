@@ -1,130 +1,31 @@
 import React from "react";
 
-import {
-  Box,
-  Container,
-  Flex,
-  Grid,
-  Heading,
-  Link,
-  Text,
-  Badge,
-  Image,
-} from "theme-ui";
+import { Box, Container, Flex, Grid, Heading, Link, Text } from "theme-ui";
 import { StaticImage } from "gatsby-plugin-image";
 import heroTexture from "../images/Scan167279.jpeg";
-import { FaYoutube, FaMixcloud, FaInstagram } from "react-icons/fa";
+import PersonCard from "../components/person-card";
+import SEO from "../components/seo";
+import Social from "../components/social";
+import { graphql, useStaticQuery } from "gatsby";
+import { useOgImageFromPath } from "../hooks/useOgImage";
 
-const Social = () => (
-  <Flex sx={{ justifyContent: "center", gap: 4, mt: 3 }}>
-    <Link
-      href="https://www.youtube.com/@PublicVinylRadio"
-      target="_blank"
-      sx={{ color: "white", "&:hover": { color: "primary" } }}
-    >
-      <FaYoutube size={32} />
-    </Link>
-    <Link
-      href="https://www.mixcloud.com/public-vinyl-radio/"
-      target="_blank"
-      sx={{ color: "white", "&:hover": { color: "primary" } }}
-    >
-      <FaMixcloud size={32} />
-    </Link>
-    <Link
-      href="https://www.instagram.com/PublicVinylRadio"
-      target="_blank"
-      sx={{ color: "white", "&:hover": { color: "primary" } }}
-    >
-      <FaInstagram size={32} />
-    </Link>
-  </Flex>
-);
-
-type PersonCardProps = {
-  name: string;
-  role: string;
-  bio: string;
-  imgSrc?: string;
-  image?: React.ReactNode; // allows StaticImage or any custom node
-  website?: string;
-};
-
-const PersonCard: React.FC<PersonCardProps> = ({
-  name,
-  role,
-  bio,
-  imgSrc,
-  image,
-  website,
-}) => (
-  <Box
-    sx={{
-      bg: "muted",
-      borderRadius: "2xl",
-      overflow: "hidden",
-      // boxShadow: "0 8px 30px rgba(0,0,0,0.15)",
-      transition: "transform 200ms ease",
-      "&:hover": { transform: "translateY(-4px)" },
-    }}
-  >
-    {image ? (
-      image
-    ) : imgSrc ? (
-      <Image
-        src={imgSrc}
-        alt={`${name} portrait`}
-        sx={{
-          display: "block",
-          width: "100%",
-          height: 280,
-          objectFit: "cover",
-        }}
-      />
-    ) : null}
-    <Box sx={{ p: 3 }}>
-      <Flex sx={{ alignItems: "center", gap: 2 }}>
-        <Heading as="h3" sx={{ fontSize: 3, mb: 1 }}>
-          {name}
-        </Heading>
-        {website && (
-          <Box sx={{ flex: 1, display: "flex", justifyContent: "flex-end" }}>
-            <Link
-              href={website}
-              target="_blank"
-              rel="noopener noreferrer"
-              sx={{
-                color: "primary",
-                textDecoration: "none",
-                border: "2px solid",
-                borderColor: "primary",
-                px: 2,
-                py: 1,
-                borderRadius: 2,
-                fontSize: 1,
-                "&:hover": { bg: "primary", color: "background" },
-              }}
-            >
-              Website
-            </Link>
-          </Box>
-        )}
-      </Flex>
-      <Badge sx={{ mb: 2 }}>{role}</Badge>
-      <Text as="p" sx={{ fontSize: 1, lineHeight: 1.6 }}>
-        {bio}
-      </Text>
-    </Box>
-  </Box>
-);
+// replaced with hook useOgImageFromPath
 
 const AboutPage = () => {
+  const ogImage = useOgImageFromPath("Scan167279.jpeg");
+
   return (
     <Box as="main">
+      <SEO
+        title="About · Public Vinyl Radio"
+        description="About Public Vinyl Radio — an all‑vinyl platform for deep, unfiltered sounds. Meet the people behind PVR and the ethos of analog selections."
+        url="https://publicvinylradio.com/about"
+        image={ogImage}
+      />
       {/* HERO — bold/arty */}
       <Box
         sx={{
-          // bg: "black",
+          bg: "black",
           color: "text",
           pt: [5, 6],
           pb: [5, 6],
@@ -141,7 +42,7 @@ const AboutPage = () => {
             backgroundSize: "cover",
             backgroundPosition: "center",
             backgroundRepeat: "no-repeat",
-            opacity: .9,
+            opacity: 0.4,
             pointerEvents: "none",
             zIndex: 0,
           }}
@@ -154,10 +55,10 @@ const AboutPage = () => {
           }}
         >
           <Flex sx={{ justifyContent: "center" }}>
-            <Box sx={{ width: ["100px", "200px"] }}>
+            <Box sx={{ width: ["100px", "120px"] }}>
               <StaticImage
                 src="../images/logo-black.png"
-                alt="Adam Saegebarth portrait"
+                alt="Logo PVR Black with wordmark"
                 placeholder="blurred"
                 formats={["auto", "webp"]}
                 style={{
@@ -197,7 +98,7 @@ const AboutPage = () => {
               Why Vinyl?
             </Heading>
             <Text as="p" sx={{ fontSize: 2, lineHeight: 1.7 }}>
-              Vinyl isn’t just a format—it’s a philosophy. The ritual of
+              Vinyl isn't just a format—it's a philosophy. The ritual of
               selecting, cueing, and mixing records creates a tactile connection
               to the music. Every set has its own fingerprints: warm, raw, and
               human.
@@ -254,9 +155,6 @@ const AboutPage = () => {
                 width: "auto",
                 height: "100%",
               }}
-              // imgStyle={{
-              //   objectFit: "cover",
-              // }}
             />
           </Box>
           <Box sx={{ order: [1, null, 2] }}>
@@ -309,7 +207,7 @@ const AboutPage = () => {
                 imgStyle={{ objectFit: "cover" }}
               />
             }
-            bio="Designer and selector. Records/edits his own sets and helps shape the visual identity that matches PVR’s eclectic energy."
+            bio="Designer and selector. Records/edits his own sets and helps shape the visual identity that matches PVR's eclectic energy."
           />
 
           <PersonCard
@@ -346,7 +244,7 @@ const AboutPage = () => {
             Collaborate with Public Vinyl Radio
           </Heading>
           <Text as="p" sx={{ fontSize: 2, mb: 3 }}>
-            Are you a vinyl selector with a story to tell? We’re building a home
+            Are you a vinyl selector with a story to tell? We're building a home
             for analog mixes and global sounds.
           </Text>
           <Link

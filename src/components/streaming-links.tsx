@@ -2,6 +2,7 @@ import React from "react";
 import { Flex, Link } from "theme-ui";
 import { FaApple, FaSpotify, FaPlay } from "react-icons/fa";
 import { SiDiscogs } from "react-icons/si";
+import { trackStreamClickDeduped } from "../utils/analytics";
 
 type Props = {
   discogs_url?: string | null;
@@ -9,12 +10,13 @@ type Props = {
   spotify_url?: string | null;
   soundcloud_url?: string | null;
   containerSx?: any;
+  trackingLocation?: string; // e.g., 'track_card' or 'show_template'
+  showSlug?: string;
+  trackTitle?: string;
 };
 
 const iconLinkSx = {
   p: 1,
-  // border: "2px solid",
-  // borderColor: "cardBorderColor",
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
@@ -27,7 +29,46 @@ const StreamingLinks: React.FC<Props> = ({
   spotify_url,
   soundcloud_url,
   containerSx,
+  trackingLocation = "streaming_links",
+  showSlug,
+  trackTitle,
 }) => {
+  // Build a small config list and filter to available links
+  const services = (
+    [
+      { key: "discogs", url: discogs_url, Icon: SiDiscogs },
+      { key: "apple_music", url: apple_music_url, Icon: FaApple },
+      { key: "spotify", url: spotify_url, Icon: FaSpotify },
+      { key: "soundcloud", url: soundcloud_url, Icon: FaPlay },
+    ] as const
+  ).filter((s) => !!s.url) as Array<{
+    key: "discogs" | "apple_music" | "spotify" | "soundcloud";
+    url: string;
+    Icon: React.ComponentType<{ size?: number }>;
+  }>;
+
+  const onInteract = (
+    service: "discogs" | "apple_music" | "spotify" | "soundcloud",
+    url: string
+  ) => ({
+    onMouseDown: () =>
+      trackStreamClickDeduped({
+        service,
+        linkUrl: url,
+        location: trackingLocation,
+        showSlug,
+        trackTitle,
+      }),
+    onClick: () =>
+      trackStreamClickDeduped({
+        service,
+        linkUrl: url,
+        location: trackingLocation,
+        showSlug,
+        trackTitle,
+      }),
+  });
+
   return (
     <Flex
       sx={{
@@ -39,26 +80,18 @@ const StreamingLinks: React.FC<Props> = ({
         ...containerSx,
       }}
     >
-      {discogs_url && (
-        <Link href={discogs_url} target="_blank" rel="noopener noreferrer" sx={iconLinkSx}>
-          <SiDiscogs size={20} />
+      {services.map(({ key, url, Icon }) => (
+        <Link
+          key={key}
+          href={url}
+          target="_blank"
+          rel="noopener noreferrer"
+          sx={iconLinkSx}
+          {...onInteract(key, url)}
+        >
+          <Icon size={20} />
         </Link>
-      )}
-      {apple_music_url && (
-        <Link href={apple_music_url} target="_blank" rel="noopener noreferrer" sx={iconLinkSx}>
-          <FaApple size={20} />
-        </Link>
-      )}
-      {spotify_url && (
-        <Link href={spotify_url} target="_blank" rel="noopener noreferrer" sx={iconLinkSx}>
-          <FaSpotify size={20} />
-        </Link>
-      )}
-      {soundcloud_url && (
-        <Link href={soundcloud_url} target="_blank" rel="noopener noreferrer" sx={iconLinkSx}>
-          <FaPlay size={20} />
-        </Link>
-      )}
+      ))}
     </Flex>
   );
 };

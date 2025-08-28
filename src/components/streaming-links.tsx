@@ -35,7 +35,6 @@ const StreamingLinks: React.FC<Props> = ({
   showSlug,
   trackTitle,
 }) => {
-  console.log(youtube_url)
   // Build a small config list and filter to available links
   const services = (
     [

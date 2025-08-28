@@ -11,7 +11,6 @@ type Props = {
 const formatDuration = (totalSeconds?: number | null): string | null => {
   if (totalSeconds == null || Number.isNaN(totalSeconds)) return null;
   const sec = Math.max(0, Math.floor(totalSeconds));
-  const h = Math.floor(sec / 3600);
   const m = Math.floor((sec % 3600) / 60);
   const s = sec % 60;
   return [m, s].map((n) => String(n).padStart(2, "0")).join(":");
@@ -127,6 +126,7 @@ const TrackCard: React.FC<Props> = ({ track: t, index: idx }) => {
             apple_music_url={t.apple_music_url as string | undefined}
             spotify_url={t.spotify_url as string | undefined}
             soundcloud_url={t.soundcloud_url as string | undefined}
+            youtube_url={t.youtube_url as string | undefined}
             containerSx={{
               flex: ["1 0 100%", "1 1 auto"],
               minWidth: 0,

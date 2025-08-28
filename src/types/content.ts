@@ -18,6 +18,7 @@ export interface TrackItem {
   apple_music_url?: string;
   spotify_url?: string;
   soundcloud_url?: string;
+  youtube_url?: string;
 }
 
 export interface Frontmatter {

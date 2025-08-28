@@ -1,6 +1,6 @@
 import React from "react";
 import { Flex, Link } from "theme-ui";
-import { FaApple, FaSpotify, FaPlay } from "react-icons/fa";
+import { FaApple, FaSpotify, FaPlay, FaYoutubeSquare, FaYoutube } from "react-icons/fa";
 import { SiDiscogs } from "react-icons/si";
 import { trackStreamClickDeduped } from "../utils/analytics";
 
@@ -9,6 +9,7 @@ type Props = {
   apple_music_url?: string | null;
   spotify_url?: string | null;
   soundcloud_url?: string | null;
+  youtube_url?: string | null;
   containerSx?: any;
   trackingLocation?: string; // e.g., 'track_card' or 'show_template'
   showSlug?: string;
@@ -28,6 +29,7 @@ const StreamingLinks: React.FC<Props> = ({
   apple_music_url,
   spotify_url,
   soundcloud_url,
+  youtube_url,
   containerSx,
   trackingLocation = "streaming_links",
   showSlug,
@@ -40,6 +42,7 @@ const StreamingLinks: React.FC<Props> = ({
       { key: "apple_music", url: apple_music_url, Icon: FaApple },
       { key: "spotify", url: spotify_url, Icon: FaSpotify },
       { key: "soundcloud", url: soundcloud_url, Icon: FaPlay },
+      { key: "youtube", url: youtube_url, Icon: FaYoutube },
     ] as const
   ).filter((s) => !!s.url) as Array<{
     key: "discogs" | "apple_music" | "spotify" | "soundcloud";
@@ -48,7 +51,7 @@ const StreamingLinks: React.FC<Props> = ({
   }>;
 
   const onInteract = (
-    service: "discogs" | "apple_music" | "spotify" | "soundcloud",
+    service: "discogs" | "apple_music" | "spotify" | "soundcloud" | "youtube",
     url: string
   ) => ({
     onMouseDown: () =>

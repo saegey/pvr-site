@@ -217,6 +217,7 @@ export const query = graphql`
           apple_music_url
           spotify_url
           soundcloud_url
+          youtube_url
         }
         host
       }

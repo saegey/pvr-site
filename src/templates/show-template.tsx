@@ -106,11 +106,21 @@ const ShowTemplate: React.FC<PageProps<DataProps>> = ({ data, children }) => {
                   </Text>
                   <Box>
                     <Text>with</Text>{" "}
-                    {(host || []).map((h: string, index: number) => (
-                      <Text key={index} sx={{ fontWeight: 600 }}>
-                        {h}
-                      </Text>
-                    ))}
+                    {(host || []).map(
+                      (h: string, index: number, arr: string[]) => (
+                        <>
+                          <Text as="span" key={index} sx={{ fontWeight: 600 }}>
+                            {h}
+                          </Text>
+
+                          {index < (host || []).length - 1 ? (
+                            <Text sx={{ marginRight: '5px'}}>,</Text>
+                          ) : (
+                            ""
+                          )}
+                        </>
+                      )
+                    )}
                   </Box>
                 </Box>
                 <Text

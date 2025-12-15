@@ -8,6 +8,18 @@ interface R2AudioPlayerProps {
   showDownload?: boolean;
 }
 
+// Helper function to track audio events in Google Analytics
+const trackAudioEvent = (action: string, url: string, title?: string, value?: number) => {
+  if (typeof window !== 'undefined' && (window as any).gtag) {
+    (window as any).gtag('event', action, {
+      event_category: 'Audio Player',
+      event_label: title || url,
+      audio_url: url,
+      value: value,
+    });
+  }
+};
+
 const R2AudioPlayer = ({ url, title, showDownload = true }: R2AudioPlayerProps) => {
   const audioRef = useRef<HTMLAudioElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -15,6 +27,7 @@ const R2AudioPlayer = ({ url, title, showDownload = true }: R2AudioPlayerProps) 
   const [duration, setDuration] = useState(0);
   const [volume, setVolume] = useState(1);
   const [isMuted, setIsMuted] = useState(false);
+  const [trackedMilestones, setTrackedMilestones] = useState<Set<number>>(new Set());
   const { colorMode } = useThemeUI();
   const isDarkMode = colorMode === 'dark';
 
@@ -22,8 +35,10 @@ const R2AudioPlayer = ({ url, title, showDownload = true }: R2AudioPlayerProps) 
     if (audioRef.current) {
       if (isPlaying) {
         audioRef.current.pause();
+        trackAudioEvent('pause', url, title, Math.round(currentTime));
       } else {
         audioRef.current.play();
+        trackAudioEvent('play', url, title, Math.round(currentTime));
       }
       setIsPlaying(!isPlaying);
     }
@@ -32,6 +47,19 @@ const R2AudioPlayer = ({ url, title, showDownload = true }: R2AudioPlayerProps) 
   const handleTimeUpdate = () => {
     if (audioRef.current) {
       setCurrentTime(audioRef.current.currentTime);
+
+      // Track playback milestones
+      if (duration > 0) {
+        const progress = (audioRef.current.currentTime / duration) * 100;
+        const milestones = [25, 50, 75, 100];
+
+        milestones.forEach(milestone => {
+          if (progress >= milestone && !trackedMilestones.has(milestone)) {
+            trackAudioEvent(`playback_${milestone}%`, url, title, milestone);
+            setTrackedMilestones(prev => new Set(prev).add(milestone));
+          }
+        });
+      }
     }
   };
 
@@ -68,6 +96,7 @@ const R2AudioPlayer = ({ url, title, showDownload = true }: R2AudioPlayerProps) 
   };
 
   const handleDownload = () => {
+    trackAudioEvent('download', url, title);
     const link = document.createElement('a');
     link.href = url;
     link.download = title || 'audio.mp3';

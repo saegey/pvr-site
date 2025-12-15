@@ -5,6 +5,7 @@ import { format } from "date-fns";
 import SEO from "../components/seo";
 import { graphql, PageProps } from "gatsby";
 import { Helmet } from "react-helmet";
+import { GatsbyImage, getImage } from "gatsby-plugin-image";
 
 import TrackCard from "../components/track-card";
 import { MdxNode } from "../types/content";
@@ -20,8 +21,10 @@ type DataProps = {
 };
 
 const ShowTemplate: React.FC<PageProps<DataProps>> = ({ data, children }) => {
-  const { title, description, date, tags, youtubeId, tracklist, host, slug } =
+  const { title, description, date, tags, youtubeId, tracklist, host, slug, coverImage } =
     data.mdx.frontmatter as any;
+
+  const coverImageData = coverImage ? getImage(coverImage) : null;
 
   // Build SEO description: prefer MDX excerpt, then frontmatter description
   const seoDescription = (data.mdx.excerpt as string) || description || "";
@@ -93,7 +96,17 @@ const ShowTemplate: React.FC<PageProps<DataProps>> = ({ data, children }) => {
         >
           <Box>
             <Flex sx={{ flexDirection: "column", paddingY: [0, "20px"] }}>
-              {youtubeId && <ResponsiveYouTube videoId={youtubeId} />}
+              {youtubeId ? (
+                <ResponsiveYouTube videoId={youtubeId} />
+              ) : (
+                coverImageData && (
+                  <GatsbyImage
+                    image={coverImageData}
+                    alt={title || "Show cover"}
+                    style={{ width: '100%', borderRadius: '0px' }}
+                  />
+                )
+              )}
               <Box p={"20px"} backgroundColor="cardBackgroundColor">
                 <Box sx={{ flexDirection: "column", gap: "10px" }}>
                   <Text>{formatDate(date || "") || "Unknown Date"}</Text>

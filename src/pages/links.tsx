@@ -2,7 +2,7 @@ import React from "react";
 import { graphql } from "gatsby";
 import { Box, Container, Heading, Text, Flex, Link } from "theme-ui";
 import { Link as GatsbyLink } from "gatsby";
-import { IGatsbyImageData } from "gatsby-plugin-image";
+import { GatsbyImage, getImage, IGatsbyImageData } from "gatsby-plugin-image";
 import { StaticImage } from "gatsby-plugin-image";
 import InstagramIcon from "../icons/instagram.svg";
 import YouTubeIcon from "../icons/youtube.svg";
@@ -28,7 +28,12 @@ type Show = {
     title: string;
     date: string;
     host: string[];
-    youtubeId: string;
+    youtubeId?: string;
+    coverImage?: {
+      childImageSharp?: {
+        gatsbyImageData?: IGatsbyImageData;
+      };
+    };
     isActive?: boolean;
   };
 };
@@ -171,7 +176,10 @@ export default function LinktreePage({ data }: { data: DataProps }) {
             Latest Shows
           </Heading>
           <Box sx={{ display: "grid", gap: 3 }}>
-            {latest.map((show) => (
+            {latest.map((show) => {
+              const coverImageData = show.frontmatter.coverImage ? getImage(show.frontmatter.coverImage as any) : null;
+
+              return (
               <Box
                 key={show.id}
                 sx={{
@@ -202,33 +210,51 @@ export default function LinktreePage({ data }: { data: DataProps }) {
                     })
                   }
                 >
-                  <Box
-                    sx={{
-                      position: "relative",
-                      width: "100%",
-                      pb: "56.25%",
-                      height: 0,
-                      bg: "muted",
-                    }}
-                  >
-                    <img
-                      src={youTubeMaxResThumb(show.frontmatter.youtubeId)}
-                      alt={`${show.frontmatter.title} thumbnail`}
-                      style={{
-                        position: "absolute",
-                        inset: 0,
+                  {(show.frontmatter.youtubeId || coverImageData) && (
+                    <Box
+                      sx={{
+                        position: "relative",
                         width: "100%",
-                        height: "100%",
-                        objectFit: "cover",
+                        pb: "56.25%",
+                        height: 0,
+                        bg: "muted",
                       }}
-                      loading="lazy"
-                      onError={(e) => {
-                        const target = e.currentTarget as HTMLImageElement;
-                        target.onerror = null;
-                        target.src = youTubeHQThumb(show.frontmatter.youtubeId);
-                      }}
-                    />
-                  </Box>
+                    >
+                      {show.frontmatter.youtubeId ? (
+                        <img
+                          src={youTubeMaxResThumb(show.frontmatter.youtubeId)}
+                          alt={`${show.frontmatter.title} thumbnail`}
+                          style={{
+                            position: "absolute",
+                            inset: 0,
+                            width: "100%",
+                            height: "100%",
+                            objectFit: "cover",
+                          }}
+                          loading="lazy"
+                          onError={(e) => {
+                            const target = e.currentTarget as HTMLImageElement;
+                            target.onerror = null;
+                            target.src = youTubeHQThumb(show.frontmatter.youtubeId!);
+                          }}
+                        />
+                      ) : coverImageData ? (
+                        <GatsbyImage
+                          image={coverImageData}
+                          alt={`${show.frontmatter.title} cover`}
+                          style={{
+                            position: "absolute",
+                            inset: 0,
+                            width: "100%",
+                            height: "100%",
+                          }}
+                          imgStyle={{
+                            objectFit: "cover",
+                          }}
+                        />
+                      ) : null}
+                    </Box>
+                  )}
                   <Box sx={{ p: 3 }}>
                     <Text sx={{ lineHeight: "20px", mb: 2 }}>
                       {formatDate(show.frontmatter.date)}
@@ -245,7 +271,8 @@ export default function LinktreePage({ data }: { data: DataProps }) {
                   </Box>
                 </GatsbyLink>
               </Box>
-            ))}
+              );
+            })}
           </Box>
         </Box>
       )}
@@ -292,6 +319,15 @@ export const query = graphql`
           host
           youtubeId
           isActive
+          coverImage {
+            childImageSharp {
+              gatsbyImageData(
+                width: 600
+                layout: CONSTRAINED
+                formats: [AUTO, WEBP]
+              )
+            }
+          }
         }
       }
     }

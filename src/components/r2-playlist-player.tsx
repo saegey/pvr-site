@@ -15,6 +15,18 @@ interface R2PlaylistPlayerProps {
   showDownload?: boolean;
 }
 
+// Helper function to track audio events in Google Analytics
+const trackAudioEvent = (action: string, url: string, title?: string, value?: number) => {
+  if (typeof window !== 'undefined' && (window as any).gtag) {
+    (window as any).gtag('event', action, {
+      event_category: 'Audio Player - Playlist',
+      event_label: title || url,
+      audio_url: url,
+      value: value,
+    });
+  }
+};
+
 const R2PlaylistPlayer = ({ tracks, autoplay = false, showDownload = true }: R2PlaylistPlayerProps) => {
   const audioRef = useRef<HTMLAudioElement>(null);
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
@@ -23,6 +35,7 @@ const R2PlaylistPlayer = ({ tracks, autoplay = false, showDownload = true }: R2P
   const [duration, setDuration] = useState(0);
   const [volume, setVolume] = useState(1);
   const [isMuted, setIsMuted] = useState(false);
+  const [trackedMilestones, setTrackedMilestones] = useState<Set<number>>(new Set());
   const { colorMode } = useThemeUI();
   const isDarkMode = colorMode === 'dark';
 
@@ -40,8 +53,10 @@ const R2PlaylistPlayer = ({ tracks, autoplay = false, showDownload = true }: R2P
     if (audioRef.current) {
       if (isPlaying) {
         audioRef.current.pause();
+        trackAudioEvent('pause', currentTrack.url, currentTrack.title, Math.round(currentTime));
       } else {
         audioRef.current.play();
+        trackAudioEvent('play', currentTrack.url, currentTrack.title, Math.round(currentTime));
       }
       setIsPlaying(!isPlaying);
     }
@@ -50,6 +65,19 @@ const R2PlaylistPlayer = ({ tracks, autoplay = false, showDownload = true }: R2P
   const handleTimeUpdate = () => {
     if (audioRef.current) {
       setCurrentTime(audioRef.current.currentTime);
+
+      // Track playback milestones
+      if (duration > 0) {
+        const progress = (audioRef.current.currentTime / duration) * 100;
+        const milestones = [25, 50, 75, 100];
+
+        milestones.forEach(milestone => {
+          if (progress >= milestone && !trackedMilestones.has(milestone)) {
+            trackAudioEvent(`playback_${milestone}%`, currentTrack.url, currentTrack.title, milestone);
+            setTrackedMilestones(prev => new Set(prev).add(milestone));
+          }
+        });
+      }
     }
   };
 
@@ -86,6 +114,7 @@ const R2PlaylistPlayer = ({ tracks, autoplay = false, showDownload = true }: R2P
   };
 
   const handleDownload = () => {
+    trackAudioEvent('download', currentTrack.url, currentTrack.title);
     const link = document.createElement('a');
     link.href = currentTrack.url;
     link.download = `${currentTrack.title}.mp3`;
@@ -95,8 +124,11 @@ const R2PlaylistPlayer = ({ tracks, autoplay = false, showDownload = true }: R2P
   };
 
   const playTrack = (index: number) => {
+    const newTrack = tracks[index];
+    trackAudioEvent('track_change', newTrack.url, newTrack.title, index);
     setCurrentTrackIndex(index);
     setCurrentTime(0);
+    setTrackedMilestones(new Set()); // Reset milestones for new track
     if (audioRef.current) {
       audioRef.current.load();
       if (isPlaying) {

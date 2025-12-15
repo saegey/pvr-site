@@ -3,7 +3,7 @@ import { graphql } from "gatsby";
 import { Badge, Flex, Card, Text, Grid, Container, Box } from "theme-ui";
 import { Link as GatsbyLink } from "gatsby";
 import { PageProps } from "gatsby";
-import { IGatsbyImageData } from "gatsby-plugin-image";
+import { GatsbyImage, getImage, IGatsbyImageData } from "gatsby-plugin-image";
 import { Helmet } from "react-helmet";
 
 import SEO from "../components/seo";
@@ -19,7 +19,11 @@ interface Show {
     slug: string;
     date: string;
     tags: string[];
-    coverImage?: IGatsbyImageData;
+    coverImage?: {
+      childImageSharp?: {
+        gatsbyImageData?: IGatsbyImageData;
+      };
+    };
     host: string[];
     youtubeId: string;
     isActive?: boolean;
@@ -99,7 +103,10 @@ const ShowsPage: React.FC<PageProps<DataProps>> = ({ data }) => {
             gridAutoFlow: "row", // Ensures left-to-right ordering
           }}
         >
-          {shows.map((show) => (
+          {shows.map((show) => {
+          const coverImageData = show.frontmatter.coverImage ? getImage(show.frontmatter.coverImage as any) : null;
+
+          return (
             <Card
               key={show.id}
               sx={{
@@ -115,7 +122,7 @@ const ShowsPage: React.FC<PageProps<DataProps>> = ({ data }) => {
                 to={`/shows/${show.frontmatter.slug || "#"}`}
                 style={{ textDecoration: "none", color: "inherit" }}
               >
-                {show.frontmatter.coverImage && (
+                {(show.frontmatter.youtubeId || coverImageData) && (
                   <Box
                     sx={{
                       position: "relative",
@@ -128,24 +135,41 @@ const ShowsPage: React.FC<PageProps<DataProps>> = ({ data }) => {
                       flex: "0 0 auto",
                     }}
                   >
-                    <img
-                      src={youTubeMaxResThumb(show.frontmatter.youtubeId)}
-                      alt={`${show.frontmatter.title} thumbnail`}
-                      style={{
-                        position: "absolute",
-                        top: 0,
-                        left: 0,
-                        width: "100%",
-                        height: "100%",
-                        objectFit: "cover",
-                      }}
-                      loading="lazy"
-                      onError={(e) => {
-                        const target = e.currentTarget as HTMLImageElement;
-                        target.onerror = null; // prevent loop
-                        target.src = youTubeHQThumb(show.frontmatter.youtubeId);
-                      }}
-                    />
+                    {show.frontmatter.youtubeId ? (
+                      <img
+                        src={youTubeMaxResThumb(show.frontmatter.youtubeId)}
+                        alt={`${show.frontmatter.title} thumbnail`}
+                        style={{
+                          position: "absolute",
+                          top: 0,
+                          left: 0,
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "cover",
+                        }}
+                        loading="lazy"
+                        onError={(e) => {
+                          const target = e.currentTarget as HTMLImageElement;
+                          target.onerror = null; // prevent loop
+                          target.src = youTubeHQThumb(show.frontmatter.youtubeId);
+                        }}
+                      />
+                    ) : coverImageData ? (
+                      <GatsbyImage
+                        image={coverImageData}
+                        alt={`${show.frontmatter.title} cover`}
+                        style={{
+                          position: "absolute",
+                          top: 0,
+                          left: 0,
+                          width: "100%",
+                          height: "100%",
+                        }}
+                        imgStyle={{
+                          objectFit: "cover",
+                        }}
+                      />
+                    ) : null}
                   </Box>
                 )}
                 <Flex
@@ -210,7 +234,8 @@ const ShowsPage: React.FC<PageProps<DataProps>> = ({ data }) => {
                 </Flex>
               </GatsbyLink>
             </Card>
-          ))}
+          );
+        })}
         </Grid>
       </Container>
     </>

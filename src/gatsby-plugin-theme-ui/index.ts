@@ -89,6 +89,13 @@ const theme = {
     span: {
       lineHeight: "unset",
     },
+    a: {
+      color: "inherit", // Use same color as surrounding text
+      textDecoration: "underline",
+      "&:hover": {
+        textDecoration: "none",
+      },
+    },
   },
   badges: {
     primary: {

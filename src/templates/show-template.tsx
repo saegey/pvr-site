@@ -5,7 +5,7 @@ import { format } from "date-fns";
 import SEO from "../components/seo";
 import { graphql, PageProps } from "gatsby";
 import { Helmet } from "react-helmet";
-import { GatsbyImage, getImage } from "gatsby-plugin-image";
+import { GatsbyImage, getImage, getSrc } from "gatsby-plugin-image";
 
 import TrackCard from "../components/track-card";
 import { MdxNode } from "../types/content";
@@ -28,12 +28,25 @@ const ShowTemplate: React.FC<PageProps<DataProps>> = ({ data, children }) => {
   const coverImageData = coverImage ? getImage(coverImage) : null;
 
   // Process carousel images for the ImageGallery component
+  // Use Gatsby-optimized images instead of full-resolution publicURL
   const carouselData = carouselImages?.map((img: any) => {
-    const imageData = getImage(img);
-    const thumbnailData = img?.childImageSharp?.thumbnail;
+    // Main carousel image - optimized ~1200px width
+    const mainImageSrc = getSrc(img);
+
+    // Small thumbnail for navigation - 150px width
+    const thumbnailSrc = img?.childImageSharp?.thumbnail
+      ? getSrc(img.childImageSharp.thumbnail)
+      : mainImageSrc;
+
+    // Fullscreen - larger high-quality version ~2400px width
+    const fullscreenSrc = img?.childImageSharp?.fullscreen
+      ? getSrc(img.childImageSharp.fullscreen)
+      : img.publicURL; // Fallback to original for fullscreen
+
     return {
-      original: img.publicURL,
-      thumbnail: img.publicURL,
+      original: mainImageSrc || img.publicURL, // Optimized medium-res for carousel
+      thumbnail: thumbnailSrc || img.publicURL, // Small thumbnail for navigation
+      fullscreen: fullscreenSrc, // High-res for fullscreen mode
       originalAlt: title || "Show image",
       thumbnailAlt: title || "Show image",
     };
@@ -252,15 +265,26 @@ export const query = graphql`
         carouselImages {
           publicURL
           childImageSharp {
+            # Main carousel image - optimized medium resolution
             gatsbyImageData(
               width: 1200
+              quality: 85
               layout: CONSTRAINED
               formats: [AUTO, WEBP]
             )
+            # Small thumbnail for bottom navigation
             thumbnail: gatsbyImageData(
               width: 150
               height: 100
+              quality: 80
               layout: FIXED
+              formats: [AUTO, WEBP]
+            )
+            # Fullscreen - larger high-quality version
+            fullscreen: gatsbyImageData(
+              width: 2400
+              quality: 90
+              layout: CONSTRAINED
               formats: [AUTO, WEBP]
             )
           }

@@ -11,6 +11,7 @@ import TrackCard from "../components/track-card";
 import { MdxNode } from "../types/content";
 import ResponsiveYouTube from "../components/responsive-youtube";
 import { youTubeMaxResThumb, youTubeHQThumb } from "../utils/youtube";
+import ImageCarousel from "../components/image-carousel";
 
 export const formatDate = (dateString: string) =>
   format(new Date(dateString), "MM.dd.yyyy");
@@ -21,10 +22,22 @@ type DataProps = {
 };
 
 const ShowTemplate: React.FC<PageProps<DataProps>> = ({ data, children }) => {
-  const { title, description, date, tags, youtubeId, tracklist, host, slug, coverImage } =
+  const { title, description, date, tags, youtubeId, tracklist, host, slug, coverImage, carouselImages } =
     data.mdx.frontmatter as any;
 
   const coverImageData = coverImage ? getImage(coverImage) : null;
+
+  // Process carousel images for the ImageGallery component
+  const carouselData = carouselImages?.map((img: any) => {
+    const imageData = getImage(img);
+    const thumbnailData = img?.childImageSharp?.thumbnail;
+    return {
+      original: img.publicURL,
+      thumbnail: img.publicURL,
+      originalAlt: title || "Show image",
+      thumbnailAlt: title || "Show image",
+    };
+  }) || [];
 
   // Build SEO description: prefer MDX excerpt, then frontmatter description
   const seoDescription = (data.mdx.excerpt as string) || description || "";
@@ -172,6 +185,13 @@ const ShowTemplate: React.FC<PageProps<DataProps>> = ({ data, children }) => {
           }}
         >
           <MDXProvider>{children}</MDXProvider>
+
+          {carouselData.length > 0 && (
+            <Box sx={{ mt: 4, mb: 4 }}>
+              <ImageCarousel images={carouselData} showThumbnails={true} />
+            </Box>
+          )}
+
           {tracklist && tracklist.length > 0 && (
             <Box sx={{ mt: 3 }}>
               <Text as="h3" sx={{ mb: 2 }}>
@@ -225,6 +245,22 @@ export const query = graphql`
             gatsbyImageData(
               width: 700
               layout: CONSTRAINED
+              formats: [AUTO, WEBP]
+            )
+          }
+        }
+        carouselImages {
+          publicURL
+          childImageSharp {
+            gatsbyImageData(
+              width: 1200
+              layout: CONSTRAINED
+              formats: [AUTO, WEBP]
+            )
+            thumbnail: gatsbyImageData(
+              width: 150
+              height: 100
+              layout: FIXED
               formats: [AUTO, WEBP]
             )
           }

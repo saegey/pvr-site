@@ -48,8 +48,12 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
           color: "white",
           filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.5))",
         },
+        ".image-gallery-svg": {
+          width: ["40px", "30px", "30px"], // Smaller on desktop
+          height: ["40px", "30px", "30px"],
+        },
         ".image-gallery-left-nav, .image-gallery-right-nav": {
-          padding: ["10px", "20px"],
+          padding: ["10px", "15px", "15px"], // Less padding on desktop
         },
         ".image-gallery-thumbnail.active": {
           border: "2px solid",

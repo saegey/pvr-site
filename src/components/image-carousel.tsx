@@ -61,6 +61,10 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
         showFullscreenButton={true}
         lazyLoad={true}
         slideDuration={450}
+        loading="lazy"
+        // Preload only adjacent slides for smoother navigation
+        slideOnThumbnailOver={false}
+        additionalClass="lazy-carousel"
       />
     </Box>
   );

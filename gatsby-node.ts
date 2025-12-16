@@ -31,6 +31,7 @@ exports.createSchemaCustomization = ({ actions }: { actions: any }) => {
       spotifyId: String
       slug: String
       coverImage: File @fileByRelativePath
+      carouselImages: [File] @fileByRelativePath
       tracklist: [Track]
       host: [String]
       isActive: Boolean

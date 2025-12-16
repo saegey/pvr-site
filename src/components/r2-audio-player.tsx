@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { Box, useThemeUI } from 'theme-ui';
+import { Box, Button, IconButton, Input, useThemeUI } from 'theme-ui';
 import { IoPlay, IoPause, IoVolumeHigh, IoVolumeMedium, IoVolumeMute, IoDownload } from 'react-icons/io5';
 
 interface R2AudioPlayerProps {
@@ -119,7 +119,7 @@ const R2AudioPlayer = ({ url, title, showDownload = true }: R2AudioPlayerProps) 
         maxWidth: '600px',
         margin: '0 auto',
         padding: 3,
-        borderRadius: '10px',
+        // borderRadius: '10px',
         backgroundColor: isDarkMode ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.03)',
         border: '1px solid',
         borderColor: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
@@ -150,12 +150,12 @@ const R2AudioPlayer = ({ url, title, showDownload = true }: R2AudioPlayerProps) 
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
         {/* Play/Pause Button and Controls */}
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-          <button
+          <Button
             onClick={togglePlay}
             sx={{
-              width: '48px',
-              height: '48px',
-              borderRadius: '50%',
+              // width: '40px',
+              // height: '40px',
+              // borderRadius: '50%',
               border: 'none',
               backgroundColor: isDarkMode ? 'white' : 'black',
               color: isDarkMode ? 'black' : 'white',
@@ -174,7 +174,7 @@ const R2AudioPlayer = ({ url, title, showDownload = true }: R2AudioPlayerProps) 
             }}
           >
             {isPlaying ? <IoPause size={20} /> : <IoPlay size={20} />}
-          </button>
+          </Button>
 
           {/* Time Display */}
           <Box
@@ -190,7 +190,7 @@ const R2AudioPlayer = ({ url, title, showDownload = true }: R2AudioPlayerProps) 
 
           {/* Volume Controls */}
           <Box sx={{ display: ['none', 'flex'], alignItems: 'center', gap: 1 }}>
-            <button
+            <Button
               onClick={toggleMute}
               sx={{
                 background: 'none',
@@ -211,8 +211,8 @@ const R2AudioPlayer = ({ url, title, showDownload = true }: R2AudioPlayerProps) 
               ) : (
                 <IoVolumeHigh size={20} />
               )}
-            </button>
-            <input
+            </Button>
+            <Input
               type="range"
               min="0"
               max="1"
@@ -257,7 +257,7 @@ const R2AudioPlayer = ({ url, title, showDownload = true }: R2AudioPlayerProps) 
 
           {/* Download Button */}
           {showDownload && (
-            <button
+            <IconButton
               onClick={handleDownload}
               sx={{
                 background: 'none',
@@ -273,12 +273,12 @@ const R2AudioPlayer = ({ url, title, showDownload = true }: R2AudioPlayerProps) 
               title="Download"
             >
               <IoDownload size={20} />
-            </button>
+            </IconButton>
           )}
         </Box>
 
         {/* Progress Bar */}
-        <input
+        <Input
           type="range"
           min="0"
           max={duration || 0}

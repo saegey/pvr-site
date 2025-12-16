@@ -197,13 +197,19 @@ const ShowTemplate: React.FC<PageProps<DataProps>> = ({ data, children }) => {
             paddingX: ["20px", 0, 0],
           }}
         >
-          <MDXProvider>{children}</MDXProvider>
-
-          {carouselData.length > 0 && (
-            <Box sx={{ mt: 4, mb: 4 }}>
-              <ImageCarousel images={carouselData} showThumbnails={true} />
-            </Box>
-          )}
+          <MDXProvider
+            components={{
+              // Make ShowCarousel available in MDX with pre-loaded carousel data
+              ShowCarousel: () =>
+                carouselData.length > 0 ? (
+                  <Box sx={{ my: 4 }}>
+                    <ImageCarousel images={carouselData} showThumbnails={true} />
+                  </Box>
+                ) : null,
+            }}
+          >
+            {children}
+          </MDXProvider>
 
           {tracklist && tracklist.length > 0 && (
             <Box sx={{ mt: 3 }}>

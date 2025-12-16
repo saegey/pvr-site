@@ -24,6 +24,10 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
     return null;
   }
 
+  // For large galleries (>10 images), disable thumbnails by default to improve performance
+  // Users can still navigate with arrows/keyboard
+  const shouldShowThumbnails = images.length <= 10 ? showThumbnails : false;
+
   return (
     <Box
       sx={{
@@ -51,21 +55,32 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
           border: "2px solid",
           borderColor: "primary",
         },
+        // Add image counter for galleries without thumbnails
+        ".image-gallery-index": {
+          background: "rgba(0, 0, 0, 0.4)",
+          color: "white",
+          padding: "8px 12px",
+          fontSize: "14px",
+        },
       }}
     >
       <ImageGallery
         items={images}
-        showThumbnails={showThumbnails}
+        showThumbnails={shouldShowThumbnails}
         autoPlay={autoPlay}
         showPlayButton={false}
         showFullscreenButton={true}
+        showIndex={!shouldShowThumbnails} // Show "1 / 41" counter instead
         lazyLoad={true}
         slideDuration={450}
-        loading="lazy"
-        // Preload only adjacent slides for smoother navigation
         slideOnThumbnailOver={false}
         additionalClass="lazy-carousel"
       />
+      {!shouldShowThumbnails && (
+        <Box sx={{ mt: 2, fontSize: "14px", color: "text", opacity: 0.7 }}>
+          Use arrow keys or click the arrows to navigate through {images.length} images
+        </Box>
+      )}
     </Box>
   );
 };

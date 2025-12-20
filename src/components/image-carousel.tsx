@@ -34,11 +34,19 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
         ".image-gallery": {
           width: "100%",
         },
+        ".image-gallery-slide": {
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          height: ["500px", "600px", "700px"],
+          backgroundColor: "black",
+        },
         ".image-gallery-slide img": {
-          width: "100%",
-          height: "auto",
-          maxHeight: ["400px", "500px", "600px"],
-          objectFit: "cover",
+          width: "auto",
+          height: "100%",
+          maxWidth: "100%",
+          maxHeight: "100%",
+          objectFit: "contain",
         },
         ".image-gallery-thumbnail img": {
           height: "60px",

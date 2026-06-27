@@ -1,8 +1,9 @@
 import React from "react";
+import ShopifyBuyButton from '../components/store/shopify-buy-button'
 
 const ShopPage = () => {
   return (
-    <div>/shop</div>
+    <div><ShopifyBuyButton /></div>
   );
 };
 

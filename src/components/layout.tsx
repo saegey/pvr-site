@@ -194,6 +194,25 @@ const Layout = ({ children }: { children: ReactNode }) => {
                 Join
               </GatsbyLink>
             </Text>
+            <Text
+              as="span"
+              sx={{
+                color: "white",
+                fontSize: [80, 100, 100],
+                fontWeight: 600,
+                textTransform: "uppercase",
+                a: {
+                  color: "inherit",
+                  textDecoration: "none",
+                  transition: "color 0.2s ease",
+                },
+                "a:hover": { color: "primary" },
+              }}
+            >
+              <GatsbyLink to="/shop" onClick={() => setMenuOpen(false)}>
+                Shop
+              </GatsbyLink>
+            </Text>
           </Flex>
         </Box>
       )}

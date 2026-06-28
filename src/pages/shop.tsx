@@ -1,10 +1,13 @@
 import React from "react";
-import ShopifyBuyButton from '../components/store/shopify-buy-button'
 
 const ShopPage = () => {
   return (
-    <div><ShopifyBuyButton /></div>
-  );
-};
+    <div>
+      <a href="https://buy.stripe.com/test_9B67sL8SPdD32x81sBfUQ00" target="_blank">
+        Buy Now
+      </a>
+    </div>
+  )
+}
 
 export default ShopPage;

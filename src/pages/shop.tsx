@@ -152,6 +152,7 @@ const ShopPage = () => {
       if (params.get('success') === 'true') {
         setSuccess(true)
         clearCart()
+        localStorage.removeItem('pvr-cart')
         window.history.replaceState({}, '', '/shop')
       }
     }

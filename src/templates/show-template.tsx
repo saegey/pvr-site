@@ -98,35 +98,36 @@ const ShowTemplate: React.FC<PageProps<DataProps>> = ({ data, children }) => {
       )}
 
       {/* ── Full-bleed cover band ── */}
-      <div className="w-full border-b border-fg/12 overflow-hidden grayscale" style={{ aspectRatio: '21/9' }}>
-        {youtubeId ? (
-          <img
-            src={youTubeMaxResThumb(youtubeId)}
-            alt={title}
-            className="w-full h-full object-cover"
-            onError={(e) => {
-              const t = e.currentTarget as HTMLImageElement
-              t.onerror = null
-              t.src = youTubeHQThumb(youtubeId)
-            }}
+      {youtubeId ? (
+        <div className="w-full border-b border-fg/12" style={{ position: 'relative', paddingBottom: '56.25%', height: 0 }}>
+          <iframe
+            src={`https://www.youtube.com/embed/${youtubeId}?si=EaheM0eWWNF_J6-x`}
+            title={title}
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerPolicy="strict-origin-when-cross-origin"
+            allowFullScreen
+            style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}
           />
-        ) : coverImageData ? (
+        </div>
+      ) : coverImageData ? (
+        <div className="w-full border-b border-fg/12 grayscale">
           <GatsbyImage
             image={coverImageData}
             alt={title || 'Show cover'}
-            className="w-full h-full"
-            imgStyle={{ objectFit: 'cover' }}
+            className="w-full"
+            imgStyle={{ objectFit: 'contain', maxHeight: '560px' }}
           />
-        ) : (
-          <div
-            className="w-full h-full"
-            style={{
-              background:
-                'repeating-linear-gradient(135deg, #141412, #141412 8px, #1a1a17 8px, #1a1a17 16px)',
-            }}
-          />
-        )}
-      </div>
+        </div>
+      ) : (
+        <div
+          className="w-full border-b border-fg/12"
+          style={{
+            height: '320px',
+            background: 'repeating-linear-gradient(135deg, #141412, #141412 8px, #1a1a17 8px, #1a1a17 16px)',
+          }}
+        />
+      )}
 
       {/* ── Content column ── */}
       <div className="max-w-[860px] mx-auto px-12 py-14">

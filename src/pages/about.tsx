@@ -25,7 +25,7 @@ const TEAM = [
   {
     name: 'Ben Schauland',
     role: 'DJ · Editor · Visual Collab',
-    bio: 'Designer and selector. Records and edits his own sets and helps shape the visual identity that matches PVR\'s eclectic energy.',
+    bio: "Designer and selector. Records and edits his own sets and helps shape the visual identity that matches PVR's eclectic energy.",
     website: 'https://www.benschauland.com',
     image: (
       <StaticImage
@@ -73,10 +73,10 @@ const AboutPage = () => {
       />
 
       {/* ── Header band ── */}
-      <div className="max-w-[1320px] mx-auto px-12 pt-16 pb-12">
-        <div className="grid gap-12" style={{ gridTemplateColumns: '1.2fr 1fr' }}>
+      <div className="max-w-[1320px] mx-auto px-4 md:px-12 pt-16 pb-12">
+        <div className="flex flex-col-reverse md:grid md:gap-12" style={{ gridTemplateColumns: 'minmax(0,1.2fr) minmax(0,1fr)' }}>
           {/* Left: eyebrow + h1 */}
-          <div className="flex flex-col justify-end">
+          <div className="flex flex-col justify-end mt-8 md:mt-0">
             <p className="text-xs tracking-[2px] uppercase text-fg/40 mb-6">About</p>
             <h1
               className="text-fg leading-tight"
@@ -90,8 +90,8 @@ const AboutPage = () => {
             </h1>
           </div>
 
-          {/* Right: photo */}
-          <div className="overflow-hidden grayscale" style={{ aspectRatio: '4/3' }}>
+          {/* Right: photo — full width on mobile, constrained on desktop */}
+          <div className="overflow-hidden grayscale w-full" style={{ aspectRatio: '4/3' }}>
             <StaticImage
               src="../images/DSC00847.png"
               alt="Public Vinyl Radio"
@@ -105,7 +105,7 @@ const AboutPage = () => {
       </div>
 
       {/* ── Mission ── */}
-      <div className="max-w-[820px] mx-auto px-12 py-12 border-t border-fg/12">
+      <div className="max-w-[820px] mx-auto px-4 md:px-12 py-12 border-t border-fg/12">
         <p className="text-base text-fg/75 leading-[1.8]">
           100% vinyl DJ sets, recorded and edited by the people who spin them.
           We collect, we curate, we share our favorite music with the world.
@@ -113,7 +113,7 @@ const AboutPage = () => {
       </div>
 
       {/* ── Why Vinyl / What PVR Is ── */}
-      <div className="max-w-[820px] mx-auto px-12">
+      <div className="max-w-[820px] mx-auto px-4 md:px-12">
         <div className="border-t border-fg/12 py-12">
           <p className="text-xs tracking-[2px] uppercase text-fg/40 mb-4">Why Vinyl?</p>
           <p className="text-sm text-fg/65 leading-[1.8]">
@@ -134,7 +134,7 @@ const AboutPage = () => {
       </div>
 
       {/* ── The People Behind It ── */}
-      <div className="max-w-[1320px] mx-auto px-12 mt-4 mb-24">
+      <div className="max-w-[1320px] mx-auto px-4 md:px-12 mt-4 mb-24">
         <div className="border-t border-fg/12 pt-6 mb-2">
           <p className="text-xs tracking-[2px] uppercase text-fg/40">The People Behind It</p>
         </div>
@@ -142,48 +142,73 @@ const AboutPage = () => {
         {TEAM.map((person) => (
           <div
             key={person.name}
-            className="grid items-start gap-8 py-8 border-b border-fg/12"
-            style={{ gridTemplateColumns: '60px 1fr 2fr auto' }}
+            className="py-8 border-b border-fg/12"
           >
-            {/* Circular photo */}
-            <div className="w-[60px] h-[60px] rounded-full overflow-hidden shrink-0 grayscale">
-              {person.image}
-            </div>
-
-            {/* Name + role */}
-            <div className="pt-1">
-              <p
-                className="text-fg leading-snug"
-                style={{ fontFamily: 'var(--font-display)', fontSize: '20px' }}
-              >
-                {person.name}
-              </p>
-              <p className="text-xs tracking-[1px] uppercase text-fg/40 mt-1">{person.role}</p>
-            </div>
-
-            {/* Bio */}
-            <p className="text-sm text-fg/60 leading-[1.7] pt-1">{person.bio}</p>
-
-            {/* Website */}
-            <div className="pt-1">
-              {person.website ? (
-                <a
-                  href={person.website}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-xs tracking-[1px] uppercase text-fg/40 hover:text-fg transition-colors whitespace-nowrap"
+            {/* Mobile: photo + name/role inline, bio below */}
+            <div className="flex items-start gap-4 mb-4 md:hidden">
+              <div className="w-[48px] h-[48px] rounded-full overflow-hidden shrink-0 grayscale">
+                {person.image}
+              </div>
+              <div className="pt-1 min-w-0">
+                <p
+                  className="text-fg leading-snug"
+                  style={{ fontFamily: 'var(--font-display)', fontSize: '18px' }}
                 >
-                  Website →
-                </a>
-              ) : null}
+                  {person.name}
+                </p>
+                <p className="text-xs tracking-[1px] uppercase text-fg/40 mt-1">{person.role}</p>
+              </div>
+            </div>
+            <p className="text-sm text-fg/60 leading-[1.7] mb-3 md:hidden">{person.bio}</p>
+            {person.website && (
+              <a
+                href={person.website}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs tracking-[1px] uppercase text-fg/40 hover:text-fg transition-colors md:hidden"
+              >
+                Website →
+              </a>
+            )}
+
+            {/* Desktop: 4-column grid */}
+            <div
+              className="hidden md:grid items-start gap-8"
+              style={{ gridTemplateColumns: '60px 1fr 2fr 100px' }}
+            >
+              <div className="w-[60px] h-[60px] rounded-full overflow-hidden shrink-0 grayscale">
+                {person.image}
+              </div>
+              <div className="pt-1">
+                <p
+                  className="text-fg leading-snug"
+                  style={{ fontFamily: 'var(--font-display)', fontSize: '20px' }}
+                >
+                  {person.name}
+                </p>
+                <p className="text-xs tracking-[1px] uppercase text-fg/40 mt-1">{person.role}</p>
+              </div>
+              <p className="text-sm text-fg/60 leading-[1.7] pt-1">{person.bio}</p>
+              <div className="pt-1">
+                {person.website ? (
+                  <a
+                    href={person.website}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-xs tracking-[1px] uppercase text-fg/40 hover:text-fg transition-colors whitespace-nowrap"
+                  >
+                    Website →
+                  </a>
+                ) : null}
+              </div>
             </div>
           </div>
         ))}
       </div>
 
       {/* ── Collaborate CTA ── */}
-      <div className="max-w-[820px] mx-auto px-12 mb-24">
-        <div className="border border-fg/16 p-12">
+      <div className="max-w-[820px] mx-auto px-4 md:px-12 mb-24">
+        <div className="border border-fg/16 p-8 md:p-12">
           <p className="text-xs tracking-[2px] uppercase text-fg/40 mb-4">Collaborate</p>
           <h2
             className="text-fg mb-4 leading-tight"

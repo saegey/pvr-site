@@ -130,7 +130,7 @@ const ShowTemplate: React.FC<PageProps<DataProps>> = ({ data, children }) => {
       )}
 
       {/* ── Content column ── */}
-      <div className="max-w-[860px] mx-auto px-12 py-14">
+      <div className="max-w-[860px] mx-auto px-4 md:px-12 py-14">
         {/* Back link */}
         <Link
           to="/"

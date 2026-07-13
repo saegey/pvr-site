@@ -1,6 +1,7 @@
 import React from 'react'
 
 import Layout from './src/components/layout'
+import { CartProvider } from './src/context/cart-context'
 
 type Props = {
   element: JSX.Element
@@ -21,7 +22,7 @@ const rootWrapper = ({ element, props }: Props) => {
   if (shouldBypassLayout(pathname)) {
     return <>{element}</>
   }
-  return <Layout>{element}</Layout>
+  return <CartProvider><Layout>{element}</Layout></CartProvider>
 }
 
 export default rootWrapper

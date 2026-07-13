@@ -19,7 +19,10 @@
 }
 
 /* ─── CSS variables for inline style references ─── */
+/* --pvr-fg/bg are raw channel values so rgb(var(--pvr-fg) / 0.4) works in inline styles */
 :root {
+  --pvr-bg: 11 11 10;
+  --pvr-fg: 236 236 230;
   --font-display: "ITC Lubalin Graph Std Demi", Georgia, serif;
   --font-mono: "JetBrains Mono", "Courier New", monospace;
 }

@@ -1,48 +1,57 @@
-import React from 'react'
-import SEO from '../components/seo'
+import React from "react";
+import SEO from "../components/seo";
 
-const PUBLIC_EVENTS = [
-  {
-    date: 'Aug 3, 2026',
-    title: 'Rooftop Vinyl Sunset',
-    venue: 'Phinney Beer Co.',
-    location: 'Seattle',
-    djs: ['Saegey', 'TOPYEN'],
-    rsvpUrl: '#',
-  },
-  {
-    date: 'Sep 12, 2026',
-    title: 'Late Night Disco',
-    venue: 'The Vera Project',
-    location: 'Seattle',
-    djs: ['Saegey', 'Ben Schauland'],
-    rsvpUrl: '#',
-  },
-  {
-    date: 'Oct 4, 2026',
-    title: 'Analog Rhythms Vol. 3',
-    venue: 'King Street Station',
-    location: 'Seattle',
-    djs: ['Saegey'],
-    rsvpUrl: '#',
-  },
-]
+type PublicEvent = {
+  date: string
+  title: string
+  venue: string
+  location: string
+  djs: string[]
+  rsvpUrl: string
+}
+
+const PUBLIC_EVENTS: PublicEvent[] = [
+  // {
+  //   date: 'Aug 3, 2026',
+  //   title: 'Rooftop Vinyl Sunset',
+  //   venue: 'Phinney Beer Co.',
+  //   location: 'Seattle',
+  //   djs: ['Saegey', 'TOPYEN'],
+  //   rsvpUrl: '#',
+  // },
+  // {
+  //   date: 'Sep 12, 2026',
+  //   title: 'Late Night Disco',
+  //   venue: 'The Vera Project',
+  //   location: 'Seattle',
+  //   djs: ['Saegey', 'Ben Schauland'],
+  //   rsvpUrl: '#',
+  // },
+  // {
+  //   date: 'Oct 4, 2026',
+  //   title: 'Analog Rhythms Vol. 3',
+  //   venue: 'King Street Station',
+  //   location: 'Seattle',
+  //   djs: ['Saegey'],
+  //   rsvpUrl: '#',
+  // },
+];
 
 const SESSION = {
-  title: 'Home Listening Session Vol. 5',
-  date: 'August 22, 2026',
-  time: '8:00 PM',
+  title: "Home Listening Session Vol. 5",
+  date: "August 22, 2026",
+  time: "8:00 PM",
   description:
-    'An intimate evening of all-vinyl selections in a living room setting. No phones, no distractions — just the music and the people who love it.',
+    "An intimate evening of all-vinyl selections in a living room setting. No phones, no distractions — just the music and the people who love it.",
   capacity: 9,
   confirmed: 5,
   pending: 2,
-  guests: ['JR', 'MK', 'TP', 'SG'],
-}
+  guests: ["JR", "MK", "TP", "SG"],
+};
 
 const EventsPage = () => {
-  const spotsLeft = SESSION.capacity - SESSION.confirmed - SESSION.pending
-  const fillPct = Math.round((SESSION.confirmed / SESSION.capacity) * 100)
+  const spotsLeft = SESSION.capacity - SESSION.confirmed - SESSION.pending;
+  const fillPct = Math.round((SESSION.confirmed / SESSION.capacity) * 100);
 
   return (
     <>
@@ -54,21 +63,26 @@ const EventsPage = () => {
 
       {/* ── Header band ── */}
       <div className="max-w-[1320px] mx-auto px-4 md:px-12 pt-16 pb-12">
-        <p className="text-xs tracking-[2px] uppercase text-fg/40 mb-6">Events</p>
+        <p className="text-xs tracking-[2px] uppercase text-fg/40 mb-6">
+          Events
+        </p>
         <h1
           className="text-fg leading-tight mb-10"
           style={{
-            fontFamily: 'var(--font-display)',
-            fontSize: 'clamp(34px, 4.5vw, 60px)',
-            letterSpacing: '-0.5px',
+            fontFamily: "var(--font-display)",
+            fontSize: "clamp(34px, 4.5vw, 60px)",
+            letterSpacing: "-0.5px",
           }}
         >
-          Out in public.<br />In the living room.
+          Out in public.
+          <br />
+          In the living room.
         </h1>
         <div className="border-t border-fg/12 pt-8 max-w-[640px]">
           <p className="text-sm text-fg/60 leading-[1.8]">
-            We play records wherever we can — rooftops, warehouses, living rooms.
-            Public shows are open to anyone. Private sessions are small, invite-only, and seriously good.
+            We play records wherever we can — rooftops, warehouses, living
+            rooms. Public shows are open to anyone. Private sessions are small,
+            invite-only, and seriously good.
           </p>
         </div>
       </div>
@@ -76,8 +90,16 @@ const EventsPage = () => {
       {/* ── Public Events ── */}
       <div className="max-w-[1320px] mx-auto px-4 md:px-12 mb-20">
         <div className="flex items-baseline justify-between border-t border-b border-fg/12 py-4 mb-0">
-          <span className="text-xs tracking-[2px] uppercase text-fg/55">Public Events</span>
+          <span className="text-xs tracking-[2px] uppercase text-fg/55">
+            Public Events
+          </span>
         </div>
+
+        {PUBLIC_EVENTS.length === 0 && (
+          <div className="py-12 text-center border-b border-fg/12">
+            <p className="text-sm text-fg/35">No upcoming public events. Check back soon.</p>
+          </div>
+        )}
 
         {PUBLIC_EVENTS.map((event, i) => (
           <div
@@ -87,7 +109,7 @@ const EventsPage = () => {
             {/* Top row on mobile: index + date + RSVP pill */}
             <div className="flex items-center gap-3 md:contents">
               <span className="text-xs text-fg/30 w-6 shrink-0 tabular-nums hidden md:inline">
-                {String(i + 1).padStart(2, '0')}
+                {String(i + 1).padStart(2, "0")}
               </span>
               <span className="text-xs tracking-[1px] uppercase text-fg/40 md:w-28 md:shrink-0">
                 {event.date}
@@ -105,12 +127,15 @@ const EventsPage = () => {
             <div className="flex-1 min-w-0">
               <p
                 className="text-fg leading-snug"
-                style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(18px, 4vw, 21px)' }}
+                style={{
+                  fontFamily: "var(--font-display)",
+                  fontSize: "clamp(18px, 4vw, 21px)",
+                }}
               >
                 {event.title}
               </p>
               <p className="text-xs text-fg/40 mt-1">
-                {event.venue}, {event.location} · with {event.djs.join(', ')}
+                {event.venue}, {event.location} · with {event.djs.join(", ")}
               </p>
             </div>
 
@@ -128,11 +153,13 @@ const EventsPage = () => {
       {/* ── Private Listening Sessions ── */}
       <div className="max-w-[1320px] mx-auto px-4 md:px-12 mb-24">
         <div className="border-t border-fg/12 pt-6 mb-3">
-          <span className="text-xs tracking-[2px] uppercase text-fg/55">Private Listening Sessions</span>
+          <span className="text-xs tracking-[2px] uppercase text-fg/55">
+            Private Listening Sessions
+          </span>
         </div>
         <p className="text-sm text-fg/45 mb-10 max-w-[560px] leading-[1.7]">
-          Monthly, at the house. All vinyl, no phones, 8–10 seats.
-          Address shared once you're approved.
+          Monthly, at the house. All vinyl, no phones, 8–10 seats. Address
+          shared once you're approved.
         </p>
 
         {/* Session card */}
@@ -145,9 +172,9 @@ const EventsPage = () => {
             <h2
               className="text-fg leading-tight mb-5"
               style={{
-                fontFamily: 'var(--font-display)',
-                fontSize: '30px',
-                letterSpacing: '-0.5px',
+                fontFamily: "var(--font-display)",
+                fontSize: "30px",
+                letterSpacing: "-0.5px",
               }}
             >
               {SESSION.title}
@@ -222,7 +249,7 @@ const EventsPage = () => {
         </div>
       </div>
     </>
-  )
-}
+  );
+};
 
-export default EventsPage
+export default EventsPage;

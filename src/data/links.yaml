@@ -12,3 +12,7 @@ links:
     url: "https://mixcloud.com/public-vinyl-radio"
     subtitle: "Listen to our mixes"
     svgIcon: "MixcloudIcon"
+  - title: "Shop"
+    url: "https://publicvinylradio.com/shop"
+    subtitle: "Gear from Public Vinyl Radio"
+    svgIcon: "ShopIcon"

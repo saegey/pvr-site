@@ -27,13 +27,24 @@ export default async function handler(
       return res.status(400).json({ error: 'Cart is empty' })
     }
 
-    const baseUrl = process.env.URL || 'http://localhost:8000'
+    const baseUrl = process.env.NETLIFY_DEV === 'true'
+      ? 'http://localhost:8888'
+      : (process.env.DEPLOY_PRIME_URL || process.env.URL || 'http://localhost:8888')
 
     const session = await stripe.checkout.sessions.create({
       mode: 'payment',
       shipping_address_collection: {
         allowed_countries: ['US'],
       },
+      shipping_options: [
+        {
+          shipping_rate_data: {
+            type: 'fixed_amount',
+            fixed_amount: { amount: 800, currency: 'usd' },
+            display_name: 'Shipping',
+          },
+        },
+      ],
       line_items: items.map(item => ({
         quantity: item.quantity,
         price_data: {

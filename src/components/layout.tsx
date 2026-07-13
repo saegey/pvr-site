@@ -1,6 +1,8 @@
 import React, { ReactNode, useState, useEffect } from 'react'
 import { Link } from 'gatsby'
 import HeadIcon from '../icons/head.svg'
+import { useCart } from '../context/cart-context'
+import CartDrawer from './cart-drawer'
 
 const NAV_LINKS = [
   { label: 'Archive', to: '/' },
@@ -16,6 +18,7 @@ const EXTERNAL_LINKS = [
 
 const Layout = ({ children }: { children: ReactNode }) => {
   const [menuOpen, setMenuOpen] = useState(false)
+  const { count, openCart } = useCart()
 
   // Lock body scroll when menu is open
   useEffect(() => {
@@ -68,9 +71,36 @@ const Layout = ({ children }: { children: ReactNode }) => {
             ))}
           </nav>
 
-          {/* Mobile hamburger */}
+          {/* Cart icon */}
           <button
-            className="md:hidden flex flex-col justify-center gap-[5px] w-8 h-8 shrink-0"
+            onClick={openCart}
+            className="relative text-xs tracking-[1px] uppercase text-fg/60 hover:text-fg transition-colors hidden md:flex items-center gap-1.5"
+            aria-label="Open cart"
+          >
+            Cart
+            {count > 0 && (
+              <span className="w-4 h-4 rounded-full bg-fg text-bg text-[10px] flex items-center justify-center tabular-nums">
+                {count}
+              </span>
+            )}
+          </button>
+
+          {/* Mobile: cart + hamburger */}
+          <div className="flex items-center gap-4 md:hidden">
+            <button
+              onClick={openCart}
+              className="relative text-xs tracking-[1px] uppercase text-fg/60 hover:text-fg transition-colors flex items-center gap-1.5"
+              aria-label="Open cart"
+            >
+              Cart
+              {count > 0 && (
+                <span className="w-4 h-4 rounded-full bg-fg text-bg text-[10px] flex items-center justify-center tabular-nums">
+                  {count}
+                </span>
+              )}
+            </button>
+          <button
+            className="flex flex-col justify-center gap-[5px] w-8 h-8 shrink-0"
             onClick={() => setMenuOpen((v) => !v)}
             aria-label={menuOpen ? 'Close menu' : 'Open menu'}
           >
@@ -87,8 +117,11 @@ const Layout = ({ children }: { children: ReactNode }) => {
               style={menuOpen ? { transform: 'translateY(-6px) rotate(-45deg)' } : {}}
             />
           </button>
+          </div>
         </div>
       </header>
+
+      <CartDrawer />
 
       {/* Mobile full-screen overlay */}
       {menuOpen && (

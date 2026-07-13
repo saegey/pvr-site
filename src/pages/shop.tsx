@@ -144,12 +144,14 @@ const ProductCard = ({ product }: { product: Product }) => {
 
 const ShopPage = () => {
   const [success, setSuccess] = useState(false)
+  const { clearCart } = useCart()
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search)
       if (params.get('success') === 'true') {
         setSuccess(true)
+        clearCart()
         window.history.replaceState({}, '', '/shop')
       }
     }

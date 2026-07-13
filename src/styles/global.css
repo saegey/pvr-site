@@ -9,6 +9,15 @@
   --font-family-mono: "JetBrains Mono", "Courier New", monospace;
 }
 
+/* ─── Font: JetBrains Mono ─── */
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('/fonts/JetBrainsMono-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* ─── Font: ITC Lubalin Graph Std Demi ─── */
 @font-face {
   font-family: 'ITC Lubalin Graph Std Demi';

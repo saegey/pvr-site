@@ -27,8 +27,6 @@ const config: GatsbyConfig = {
 
     // css
     `gatsby-plugin-postcss`,
-    // theme-ui kept for pages not yet migrated to Tailwind
-    `gatsby-plugin-theme-ui`,
 
     // images
     `gatsby-plugin-image`,

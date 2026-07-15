@@ -1,70 +1,79 @@
-import React from "react";
+import React from 'react'
+import { graphql, Link } from 'gatsby'
+import { format } from 'date-fns'
+import SEO from '../components/seo'
 
 interface BlogData {
   allMdx: {
     nodes: {
-      id: string;
+      id: string
       frontmatter: {
-        title: string;
-        description: string;
-        slug: string;
-        date: string;
-        // tags: string[];
-        // coverImage: {
-        //   childImageSharp: {
-        //     gatsbyImageData: any;
-        //   };
-        // };
-        // host: string;
-      };
-    }[];
-  };
+        title: string
+        description: string
+        slug: string
+        date: string
+      }
+    }[]
+  }
 }
-import { Text, Container, Box, Heading, Flex, Link } from "theme-ui";
-import { graphql } from "gatsby";
 
 const BlogPage = ({ data }: { data: BlogData }) => {
-  const shows = [...data.allMdx.nodes].sort(
-    (a, b) =>
-      new Date(b.frontmatter.date).getTime() -
-      new Date(a.frontmatter.date).getTime()
-  );
-  console.log(shows);
+  const posts = [...data.allMdx.nodes].sort(
+    (a, b) => new Date(b.frontmatter.date).getTime() - new Date(a.frontmatter.date).getTime()
+  )
 
   return (
-    <Container
-      sx={{
-        p: 3,
-        maxWidth: ["100%", "540px", "720px", "960px", "1140px"],
-        mx: "auto",
-      }}
-    >
-      <Box sx={{ maxWidth: "800px", mx: "auto", px: 4, py: 5 }}>
-        <Heading as="h1" sx={{ fontSize: 5, mb: 3, lineHeight: 5 }}>
+    <>
+      <SEO
+        title="Blog · Public Vinyl Radio"
+        description="Behind the music — stories and notes from Public Vinyl Radio."
+        url="https://publicvinylradio.com/blog"
+      />
+      <div className="max-w-[860px] mx-auto px-4 md:px-12 pt-16 pb-24">
+        <p className="text-xs tracking-[2px] uppercase text-fg/40 mb-6">Blog</p>
+        <h1
+          className="text-fg leading-tight mb-14"
+          style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(30px, 4vw, 52px)', letterSpacing: '-0.5px' }}
+        >
           Behind the Music
-        </Heading>
-        {shows.map((node) => (
-          <Box key={node.id} sx={{ mb: 4 }}>
-            <Heading as="h2" sx={{ fontSize: 3, mb: 2 }}>
-              {node.frontmatter.title}
-            </Heading>
-            <Text sx={{ color: "text", fontSize: 1, mb: 2 }}>
-              {node.frontmatter.date}
-            </Text>
-            <Text sx={{ mb: 2 }}>{node.frontmatter.description}</Text>
-            <Flex>
-              <Link href={`/blog/${node.frontmatter.slug}`}>Read More</Link>
-            </Flex>
-          </Box>
-        ))}
-      </Box>
-    </Container>
-  );
-};
+        </h1>
 
-export default BlogPage;
+        <div className="border-t border-fg/12">
+          {posts.length === 0 && (
+            <p className="text-sm text-fg/35 py-12">No posts yet.</p>
+          )}
+          {posts.map(node => (
+            <div key={node.id} className="py-8 border-b border-fg/12">
+              <p className="text-xs tracking-[1px] uppercase text-fg/35 mb-3">
+                {format(new Date(node.frontmatter.date), 'MMMM d, yyyy')}
+              </p>
+              <h2
+                className="text-fg leading-snug mb-2"
+                style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(18px, 3vw, 26px)' }}
+              >
+                {node.frontmatter.title}
+              </h2>
+              {node.frontmatter.description && (
+                <p className="text-sm text-fg/55 leading-[1.7] mb-4 max-w-[560px]">
+                  {node.frontmatter.description}
+                </p>
+              )}
+              <Link
+                to={`/blog/${node.frontmatter.slug}`}
+                className="text-xs tracking-[1px] uppercase text-fg/50 hover:text-fg transition-colors"
+              >
+                Read More →
+              </Link>
+            </div>
+          ))}
+        </div>
+      </div>
+    </>
+  )
+}
 
-// GraphQL Query
+export default BlogPage
+
 export const query = graphql`
   query BlogPageQuery {
     allMdx(
@@ -78,19 +87,8 @@ export const query = graphql`
           description
           slug
           date
-          tags
-          coverImage {
-            childImageSharp {
-              gatsbyImageData(
-                width: 600
-                layout: CONSTRAINED
-                formats: [AUTO, WEBP]
-              )
-            }
-          }
-          host
         }
       }
     }
   }
-`;
+`

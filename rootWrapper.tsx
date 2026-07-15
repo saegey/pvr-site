@@ -13,7 +13,7 @@ const shouldBypassLayout = (pathname?: string) => {
   // Normalize (remove trailing slash)
   const p = pathname.replace(/\/+$/, '') || '/'
   // Add any routes that shouldn't use Layout here
-  const noLayout = new Set(['/links', '/link-in-bio'])
+  const noLayout = new Set(['/links', '/link-in-bio', '/qr'])
   return noLayout.has(p)
 }
 

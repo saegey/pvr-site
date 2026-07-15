@@ -11,15 +11,14 @@
   "workspace": {
     "packageJson": {
       "dependencies": [
-        "npm:@emotion/react@^11.14.0",
         "npm:@mdx-js/react@^2.3.0",
         "npm:@tailwindcss/postcss@4.3.2",
         "npm:@theme-ui/mdx@~0.17.1",
-        "npm:@theme-ui/presets@~0.17.1",
         "npm:@types/node@^20.11.19",
         "npm:@types/react-dom@^18.2.19",
         "npm:@types/react-helmet@^6.1.11",
         "npm:@types/react@^18.2.55",
+        "npm:co-body@6.2.0",
         "npm:date-fns@^4.1.0",
         "npm:eslint-plugin-mdx@^3.6.2",
         "npm:gatsby-omni-font-loader@^2.0.2",
@@ -33,7 +32,6 @@
         "npm:gatsby-plugin-react-svg@^3.3.0",
         "npm:gatsby-plugin-sharp@^5.14.0",
         "npm:gatsby-plugin-sitemap@^6.14.0",
-        "npm:gatsby-plugin-theme-ui@~0.17.1",
         "npm:gatsby-remark-copy-linked-files@^6.14.0",
         "npm:gatsby-remark-images@^7.14.0",
         "npm:gatsby-remark-responsive-iframe@^6.14.0",
@@ -50,7 +48,6 @@
         "npm:react@^18.2.0",
         "npm:stripe@22.3.1",
         "npm:tailwindcss@4.3.2",
-        "npm:theme-ui@~0.17.1",
         "npm:typescript@^5.3.3"
       ],
       "overrides": {

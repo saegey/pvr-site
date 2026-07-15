@@ -1,5 +1,4 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { Box, useThemeUI } from 'theme-ui';
 import { IoPlay, IoPause, IoVolumeHigh, IoVolumeMedium, IoVolumeMute, IoDownload, IoPlaySkipForward, IoPlaySkipBack } from 'react-icons/io5';
 
 interface Track {
@@ -15,17 +14,26 @@ interface R2PlaylistPlayerProps {
   showDownload?: boolean;
 }
 
-// Helper function to track audio events in Google Analytics
 const trackAudioEvent = (action: string, url: string, title?: string, value?: number) => {
   if (typeof window !== 'undefined' && (window as any).gtag) {
     (window as any).gtag('event', action, {
       event_category: 'Audio Player - Playlist',
       event_label: title || url,
       audio_url: url,
-      value: value,
+      value,
     });
   }
 };
+
+const formatTime = (time: number) => {
+  if (isNaN(time)) return '0:00';
+  const minutes = Math.floor(time / 60);
+  const seconds = Math.floor(time % 60);
+  return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+};
+
+const trackStyle = (fill: number) =>
+  `linear-gradient(to right, rgb(236 236 230) 0%, rgb(236 236 230) ${fill}%, rgba(236,236,230,0.15) ${fill}%, rgba(236,236,230,0.15) 100%)`;
 
 const R2PlaylistPlayer = ({ tracks, autoplay = false, showDownload = true }: R2PlaylistPlayerProps) => {
   const audioRef = useRef<HTMLAudioElement>(null);
@@ -36,81 +44,57 @@ const R2PlaylistPlayer = ({ tracks, autoplay = false, showDownload = true }: R2P
   const [volume, setVolume] = useState(1);
   const [isMuted, setIsMuted] = useState(false);
   const [trackedMilestones, setTrackedMilestones] = useState<Set<number>>(new Set());
-  const { colorMode } = useThemeUI();
-  const isDarkMode = colorMode === 'dark';
 
   const currentTrack = tracks[currentTrackIndex];
 
   useEffect(() => {
     if (audioRef.current && autoplay && currentTrackIndex === 0) {
-      audioRef.current.play().catch(() => {
-        setIsPlaying(false);
-      });
+      audioRef.current.play().catch(() => setIsPlaying(false));
     }
   }, [autoplay, currentTrackIndex]);
 
   const togglePlay = () => {
-    if (audioRef.current) {
-      if (isPlaying) {
-        audioRef.current.pause();
-        trackAudioEvent('pause', currentTrack.url, currentTrack.title, Math.round(currentTime));
-      } else {
-        audioRef.current.play();
-        trackAudioEvent('play', currentTrack.url, currentTrack.title, Math.round(currentTime));
-      }
-      setIsPlaying(!isPlaying);
+    if (!audioRef.current) return;
+    if (isPlaying) {
+      audioRef.current.pause();
+      trackAudioEvent('pause', currentTrack.url, currentTrack.title, Math.round(currentTime));
+    } else {
+      audioRef.current.play();
+      trackAudioEvent('play', currentTrack.url, currentTrack.title, Math.round(currentTime));
     }
+    setIsPlaying(!isPlaying);
   };
 
   const handleTimeUpdate = () => {
-    if (audioRef.current) {
-      setCurrentTime(audioRef.current.currentTime);
-
-      // Track playback milestones
-      if (duration > 0) {
-        const progress = (audioRef.current.currentTime / duration) * 100;
-        const milestones = [25, 50, 75, 100];
-
-        milestones.forEach(milestone => {
-          if (progress >= milestone && !trackedMilestones.has(milestone)) {
-            trackAudioEvent(`playback_${milestone}%`, currentTrack.url, currentTrack.title, milestone);
-            setTrackedMilestones(prev => new Set(prev).add(milestone));
-          }
-        });
-      }
-    }
-  };
-
-  const handleLoadedMetadata = () => {
-    if (audioRef.current) {
-      setDuration(audioRef.current.duration);
+    if (!audioRef.current) return;
+    setCurrentTime(audioRef.current.currentTime);
+    if (duration > 0) {
+      const progress = (audioRef.current.currentTime / duration) * 100;
+      [25, 50, 75, 100].forEach(milestone => {
+        if (progress >= milestone && !trackedMilestones.has(milestone)) {
+          trackAudioEvent(`playback_${milestone}%`, currentTrack.url, currentTrack.title, milestone);
+          setTrackedMilestones(prev => new Set(prev).add(milestone));
+        }
+      });
     }
   };
 
   const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
     const time = parseFloat(e.target.value);
-    if (audioRef.current) {
-      audioRef.current.currentTime = time;
-      setCurrentTime(time);
-    }
+    if (audioRef.current) audioRef.current.currentTime = time;
+    setCurrentTime(time);
   };
 
   const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newVolume = parseFloat(e.target.value);
-    setVolume(newVolume);
-    if (audioRef.current) {
-      audioRef.current.volume = newVolume;
-    }
-    if (newVolume > 0 && isMuted) {
-      setIsMuted(false);
-    }
+    const v = parseFloat(e.target.value);
+    setVolume(v);
+    if (audioRef.current) audioRef.current.volume = v;
+    if (v > 0 && isMuted) setIsMuted(false);
   };
 
   const toggleMute = () => {
-    if (audioRef.current) {
-      audioRef.current.muted = !isMuted;
-      setIsMuted(!isMuted);
-    }
+    if (audioRef.current) audioRef.current.muted = !isMuted;
+    setIsMuted(!isMuted);
   };
 
   const handleDownload = () => {
@@ -128,166 +112,106 @@ const R2PlaylistPlayer = ({ tracks, autoplay = false, showDownload = true }: R2P
     trackAudioEvent('track_change', newTrack.url, newTrack.title, index);
     setCurrentTrackIndex(index);
     setCurrentTime(0);
-    setTrackedMilestones(new Set()); // Reset milestones for new track
+    setTrackedMilestones(new Set());
     if (audioRef.current) {
       audioRef.current.load();
-      if (isPlaying) {
-        audioRef.current.play();
-      }
+      if (isPlaying) audioRef.current.play();
     }
   };
 
-  const playNext = () => {
-    if (currentTrackIndex < tracks.length - 1) {
-      playTrack(currentTrackIndex + 1);
-    }
-  };
-
-  const playPrevious = () => {
-    if (currentTrackIndex > 0) {
-      playTrack(currentTrackIndex - 1);
-    }
-  };
+  const playNext = () => { if (currentTrackIndex < tracks.length - 1) playTrack(currentTrackIndex + 1); };
+  const playPrevious = () => { if (currentTrackIndex > 0) playTrack(currentTrackIndex - 1); };
 
   const handleEnded = () => {
-    if (currentTrackIndex < tracks.length - 1) {
-      playTrack(currentTrackIndex + 1);
-    } else {
-      setIsPlaying(false);
-    }
+    if (currentTrackIndex < tracks.length - 1) playTrack(currentTrackIndex + 1);
+    else setIsPlaying(false);
   };
 
-  const formatTime = (time: number) => {
-    if (isNaN(time)) return '0:00';
-    const minutes = Math.floor(time / 60);
-    const seconds = Math.floor(time % 60);
-    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+  const pct = duration > 0 ? (currentTime / duration) * 100 : 0;
+  const volPct = (isMuted ? 0 : volume) * 100;
+
+  const btnStyle: React.CSSProperties = {
+    background: 'none',
+    border: 'none',
+    cursor: 'pointer',
+    padding: 0,
+    color: 'rgb(236 236 230)',
+    display: 'flex',
+    alignItems: 'center',
   };
 
   return (
-    <Box
-      sx={{
+    <div
+      style={{
         width: '100%',
         maxWidth: '700px',
         margin: '0 auto',
         borderRadius: '10px',
-        backgroundColor: isDarkMode ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.03)',
-        border: '1px solid',
-        borderColor: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
+        backgroundColor: 'rgba(255,255,255,0.05)',
+        border: '1px solid rgba(255,255,255,0.1)',
         overflow: 'hidden',
       }}
     >
       {/* Current Track Info */}
-      <Box
-        sx={{
-          padding: 3,
-          borderBottom: '1px solid',
-          borderColor: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
-        }}
-      >
-        <Box
-          sx={{
-            fontSize: 2,
-            fontWeight: 'bold',
-            marginBottom: 1,
-            color: isDarkMode ? 'white' : 'black',
-          }}
-        >
+      <div style={{ padding: '16px', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
+        <div style={{ fontSize: '15px', fontWeight: 'bold', marginBottom: '4px', color: 'rgb(236 236 230)' }}>
           {currentTrack.title}
-        </Box>
+        </div>
         {currentTrack.artist && (
-          <Box
-            sx={{
-              fontSize: 1,
-              color: isDarkMode ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 0.7)',
-            }}
-          >
+          <div style={{ fontSize: '13px', color: 'rgba(236,236,230,0.7)' }}>
             {currentTrack.artist}
-          </Box>
+          </div>
         )}
-      </Box>
+      </div>
 
       <audio
         ref={audioRef}
         src={currentTrack.url}
         onTimeUpdate={handleTimeUpdate}
-        onLoadedMetadata={handleLoadedMetadata}
+        onLoadedMetadata={() => audioRef.current && setDuration(audioRef.current.duration)}
         onEnded={handleEnded}
         preload="metadata"
       />
 
       {/* Player Controls */}
-      <Box sx={{ padding: 3 }}>
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+      <div style={{ padding: '16px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
           {/* Main Controls */}
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, justifyContent: 'center' }}>
-            {/* Previous Button */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px', justifyContent: 'center' }}>
             <button
               onClick={playPrevious}
               disabled={currentTrackIndex === 0}
-              sx={{
-                background: 'none',
-                border: 'none',
-                cursor: currentTrackIndex === 0 ? 'not-allowed' : 'pointer',
-                fontSize: '24px',
-                padding: 0,
-                color: isDarkMode ? 'white' : 'black',
-                opacity: currentTrackIndex === 0 ? 0.3 : 1,
-                '&:hover': {
-                  opacity: currentTrackIndex === 0 ? 0.3 : 0.7,
-                },
-              }}
+              style={{ ...btnStyle, opacity: currentTrackIndex === 0 ? 0.3 : 1, cursor: currentTrackIndex === 0 ? 'not-allowed' : 'pointer' }}
             >
               <IoPlaySkipBack size={24} />
             </button>
 
-            {/* Play/Pause Button */}
             <button
               onClick={togglePlay}
-              sx={{
+              style={{
                 width: '48px',
                 height: '48px',
                 borderRadius: '50%',
                 border: 'none',
-                backgroundColor: isDarkMode ? 'white' : 'black',
-                color: isDarkMode ? 'black' : 'white',
+                backgroundColor: 'rgb(236 236 230)',
+                color: 'rgb(11 11 10)',
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                fontSize: '20px',
-                transition: 'transform 0.2s',
-                '&:hover': {
-                  transform: 'scale(1.05)',
-                },
-                '&:active': {
-                  transform: 'scale(0.95)',
-                },
               }}
             >
               {isPlaying ? <IoPause size={20} /> : <IoPlay size={20} />}
             </button>
 
-            {/* Next Button */}
             <button
               onClick={playNext}
               disabled={currentTrackIndex === tracks.length - 1}
-              sx={{
-                background: 'none',
-                border: 'none',
-                cursor: currentTrackIndex === tracks.length - 1 ? 'not-allowed' : 'pointer',
-                fontSize: '24px',
-                padding: 0,
-                color: isDarkMode ? 'white' : 'black',
-                opacity: currentTrackIndex === tracks.length - 1 ? 0.3 : 1,
-                '&:hover': {
-                  opacity: currentTrackIndex === tracks.length - 1 ? 0.3 : 0.7,
-                },
-              }}
+              style={{ ...btnStyle, opacity: currentTrackIndex === tracks.length - 1 ? 0.3 : 1, cursor: currentTrackIndex === tracks.length - 1 ? 'not-allowed' : 'pointer' }}
             >
               <IoPlaySkipForward size={24} />
             </button>
-          </Box>
+          </div>
 
           {/* Progress Bar */}
           <input
@@ -296,78 +220,20 @@ const R2PlaylistPlayer = ({ tracks, autoplay = false, showDownload = true }: R2P
             max={duration || 0}
             value={currentTime}
             onChange={handleSeek}
-            sx={{
-              width: '100%',
-              height: '6px',
-              borderRadius: '3px',
-              outline: 'none',
-              background: `linear-gradient(to right, ${
-                isDarkMode ? '#fff' : '#000'
-              } 0%, ${isDarkMode ? '#fff' : '#000'} ${
-                (currentTime / duration) * 100
-              }%, ${
-                isDarkMode ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.2)'
-              } ${(currentTime / duration) * 100}%, ${
-                isDarkMode ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.2)'
-              } 100%)`,
-              WebkitAppearance: 'none',
-              '&::-webkit-slider-thumb': {
-                WebkitAppearance: 'none',
-                appearance: 'none',
-                width: '14px',
-                height: '14px',
-                borderRadius: '50%',
-                backgroundColor: isDarkMode ? 'white' : 'black',
-                cursor: 'pointer',
-              },
-              '&::-moz-range-thumb': {
-                width: '14px',
-                height: '14px',
-                borderRadius: '50%',
-                backgroundColor: isDarkMode ? 'white' : 'black',
-                cursor: 'pointer',
-                border: 'none',
-              },
-            }}
+            className="h-px cursor-pointer appearance-none"
+            style={{ width: '100%', background: trackStyle(pct) }}
           />
 
-          {/* Time and Additional Controls */}
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-            {/* Time Display */}
-            <Box
-              sx={{
-                fontSize: 1,
-                fontFamily: 'monospace',
-                color: isDarkMode ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 0.7)',
-                flex: 1,
-              }}
-            >
+          {/* Time and Volume */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <span style={{ fontSize: '12px', fontFamily: 'monospace', color: 'rgba(236,236,230,0.7)', flex: 1 }}>
               {formatTime(currentTime)} / {formatTime(duration)}
-            </Box>
+            </span>
 
-            {/* Volume Controls */}
-            <Box sx={{ display: ['none', 'flex'], alignItems: 'center', gap: 1 }}>
-              <button
-                onClick={toggleMute}
-                sx={{
-                  background: 'none',
-                  border: 'none',
-                  cursor: 'pointer',
-                  fontSize: '20px',
-                  padding: 0,
-                  color: isDarkMode ? 'white' : 'black',
-                  '&:hover': {
-                    opacity: 0.7,
-                  },
-                }}
-              >
-                {isMuted || volume === 0 ? (
-                  <IoVolumeMute size={20} />
-                ) : volume < 0.5 ? (
-                  <IoVolumeMedium size={20} />
-                ) : (
-                  <IoVolumeHigh size={20} />
-                )}
+            {/* Volume (hidden on mobile via inline media hack — use className) */}
+            <div className="hidden md:flex" style={{ alignItems: 'center', gap: '8px', display: 'flex' }}>
+              <button onClick={toggleMute} style={btnStyle}>
+                {isMuted || volume === 0 ? <IoVolumeMute size={20} /> : volume < 0.5 ? <IoVolumeMedium size={20} /> : <IoVolumeHigh size={20} />}
               </button>
               <input
                 type="range"
@@ -376,149 +242,60 @@ const R2PlaylistPlayer = ({ tracks, autoplay = false, showDownload = true }: R2P
                 step="0.01"
                 value={isMuted ? 0 : volume}
                 onChange={handleVolumeChange}
-                sx={{
-                  width: '80px',
-                  height: '4px',
-                  borderRadius: '2px',
-                  outline: 'none',
-                  background: `linear-gradient(to right, ${
-                    isDarkMode ? '#fff' : '#000'
-                  } 0%, ${isDarkMode ? '#fff' : '#000'} ${
-                    (isMuted ? 0 : volume) * 100
-                  }%, ${
-                    isDarkMode ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.2)'
-                  } ${(isMuted ? 0 : volume) * 100}%, ${
-                    isDarkMode ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.2)'
-                  } 100%)`,
-                  WebkitAppearance: 'none',
-                  '&::-webkit-slider-thumb': {
-                    WebkitAppearance: 'none',
-                    appearance: 'none',
-                    width: '12px',
-                    height: '12px',
-                    borderRadius: '50%',
-                    backgroundColor: isDarkMode ? 'white' : 'black',
-                    cursor: 'pointer',
-                  },
-                  '&::-moz-range-thumb': {
-                    width: '12px',
-                    height: '12px',
-                    borderRadius: '50%',
-                    backgroundColor: isDarkMode ? 'white' : 'black',
-                    cursor: 'pointer',
-                    border: 'none',
-                  },
-                }}
+                className="cursor-pointer appearance-none"
+                style={{ width: '80px', height: '4px', background: trackStyle(volPct) }}
               />
-            </Box>
+            </div>
 
-            {/* Download Button */}
             {showDownload && (
-              <button
-                onClick={handleDownload}
-                sx={{
-                  background: 'none',
-                  border: 'none',
-                  cursor: 'pointer',
-                  fontSize: '20px',
-                  padding: 0,
-                  color: isDarkMode ? 'white' : 'black',
-                  '&:hover': {
-                    opacity: 0.7,
-                  },
-                }}
-                title="Download current track"
-              >
+              <button onClick={handleDownload} style={btnStyle} title="Download current track">
                 <IoDownload size={20} />
               </button>
             )}
-          </Box>
-        </Box>
-      </Box>
+          </div>
+        </div>
+      </div>
 
       {/* Playlist */}
-      <Box
-        sx={{
-          maxHeight: '300px',
-          overflowY: 'auto',
-          borderTop: '1px solid',
-          borderColor: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
-        }}
-      >
+      <div style={{ maxHeight: '300px', overflowY: 'auto', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
         {tracks.map((track, index) => (
-          <Box
+          <div
             key={index}
             onClick={() => playTrack(index)}
-            sx={{
-              padding: 2,
+            style={{
+              padding: '10px 16px',
               cursor: 'pointer',
-              backgroundColor:
-                index === currentTrackIndex
-                  ? isDarkMode
-                    ? 'rgba(255, 255, 255, 0.1)'
-                    : 'rgba(0, 0, 0, 0.05)'
-                  : 'transparent',
-              borderBottom:
-                index < tracks.length - 1
-                  ? `1px solid ${
-                      isDarkMode ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)'
-                    }`
-                  : 'none',
-              '&:hover': {
-                backgroundColor: isDarkMode
-                  ? 'rgba(255, 255, 255, 0.08)'
-                  : 'rgba(0, 0, 0, 0.03)',
-              },
+              backgroundColor: index === currentTrackIndex ? 'rgba(255,255,255,0.1)' : 'transparent',
+              borderBottom: index < tracks.length - 1 ? '1px solid rgba(255,255,255,0.05)' : 'none',
               transition: 'background-color 0.2s',
             }}
+            onMouseEnter={e => { if (index !== currentTrackIndex) (e.currentTarget as HTMLElement).style.backgroundColor = 'rgba(255,255,255,0.08)' }}
+            onMouseLeave={e => { (e.currentTarget as HTMLElement).style.backgroundColor = index === currentTrackIndex ? 'rgba(255,255,255,0.1)' : 'transparent' }}
           >
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-              <Box
-                sx={{
-                  fontSize: 0,
-                  color: isDarkMode ? 'rgba(255, 255, 255, 0.5)' : 'rgba(0, 0, 0, 0.5)',
-                  width: '24px',
-                }}
-              >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <div style={{ fontSize: '12px', color: 'rgba(236,236,230,0.5)', width: '24px', flexShrink: 0 }}>
                 {index === currentTrackIndex && isPlaying ? <IoPlay size={12} /> : index + 1}
-              </Box>
-              <Box sx={{ flex: 1 }}>
-                <Box
-                  sx={{
-                    fontSize: 1,
-                    fontWeight: index === currentTrackIndex ? 'bold' : 'normal',
-                    color: isDarkMode ? 'white' : 'black',
-                  }}
-                >
+              </div>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ fontSize: '13px', fontWeight: index === currentTrackIndex ? 'bold' : 'normal', color: 'rgb(236 236 230)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                   {track.title}
-                </Box>
+                </div>
                 {track.artist && (
-                  <Box
-                    sx={{
-                      fontSize: 0,
-                      color: isDarkMode ? 'rgba(255, 255, 255, 0.6)' : 'rgba(0, 0, 0, 0.6)',
-                    }}
-                  >
+                  <div style={{ fontSize: '12px', color: 'rgba(236,236,230,0.6)' }}>
                     {track.artist}
-                  </Box>
+                  </div>
                 )}
-              </Box>
-              {track.duration && (
-                <Box
-                  sx={{
-                    fontSize: 0,
-                    fontFamily: 'monospace',
-                    color: isDarkMode ? 'rgba(255, 255, 255, 0.5)' : 'rgba(0, 0, 0, 0.5)',
-                  }}
-                >
+              </div>
+              {!!track.duration && (
+                <div style={{ fontSize: '12px', fontFamily: 'monospace', color: 'rgba(236,236,230,0.5)', flexShrink: 0 }}>
                   {formatTime(track.duration)}
-                </Box>
+                </div>
               )}
-            </Box>
-          </Box>
+            </div>
+          </div>
         ))}
-      </Box>
-    </Box>
+      </div>
+    </div>
   );
 };
 

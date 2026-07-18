@@ -98,7 +98,7 @@ const ShowsPage: React.FC<PageProps<DataProps>> = ({ data }) => {
         {/* Hero text */}
         <div className="relative z-10 max-w-[1320px] w-full mx-auto px-12 pb-24 pt-40">
           <p className="hero-fadeup-1 text-xs tracking-[2px] uppercase text-fg/55 mb-6">
-            Seattle, WA — Est. 2023
+            Seattle, WA — Est. 2025
           </p>
           <h1
             className="hero-fadeup-2 text-fg leading-none tracking-tight mb-10"
@@ -108,15 +108,15 @@ const ShowsPage: React.FC<PageProps<DataProps>> = ({ data }) => {
               letterSpacing: '-0.5px',
             }}
           >
-            All vinyl.<br />No algorithm.
+            The future<br />is analog.
           </h1>
           <div className="hero-fadeup-3 border-t border-fg/12 pt-8 grid grid-cols-1 md:grid-cols-2 gap-12">
             <p className="text-sm text-fg/65 leading-relaxed">
-              Public Vinyl Radio is a Seattle-based collective dedicated to the art of vinyl DJing.
-              100% vinyl sets, recorded and shared with the world — no algorithms, no fillers.
+              A Seattle collective built around the art and culture of vinyl. Live and intimate —
+              custom setups, curated sounds, original art. Always evolving.
             </p>
             <p className="text-sm text-fg/65 leading-relaxed">
-              We collect, we curate, we share our favorite music.{' '}
+              We collect, we collaborate, we share.{' '}
               <Link to="/events" className="text-fg underline underline-offset-2 hover:text-fg/70 transition-colors">
                 See events →
               </Link>

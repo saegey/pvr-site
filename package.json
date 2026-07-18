@@ -24,7 +24,6 @@
   },
   "dependencies": {
     "@mdx-js/react": "^2.3.0",
-    "@theme-ui/mdx": "^0.17.1",
     "co-body": "6.2.0",
     "date-fns": "^4.1.0",
     "gatsby": "^5.14.6",

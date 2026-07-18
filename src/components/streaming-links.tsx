@@ -1,28 +1,27 @@
-import React from "react";
-import { Flex, Link } from "theme-ui";
-import { FaApple, FaSpotify, FaPlay, FaYoutubeSquare, FaYoutube } from "react-icons/fa";
-import { SiDiscogs } from "react-icons/si";
-import { trackStreamClickDeduped } from "../utils/analytics";
+import React, { useEffect, useRef, useState } from 'react'
+import { FaApple, FaSpotify, FaPlay, FaYoutube } from 'react-icons/fa'
+import { SiDiscogs } from 'react-icons/si'
+import { IoEllipsisHorizontal } from 'react-icons/io5'
+import { trackStreamClickDeduped } from '../utils/analytics'
 
 type Props = {
-  discogs_url?: string | null;
-  apple_music_url?: string | null;
-  spotify_url?: string | null;
-  soundcloud_url?: string | null;
-  youtube_url?: string | null;
-  containerSx?: any;
-  trackingLocation?: string; // e.g., 'track_card' or 'show_template'
-  showSlug?: string;
-  trackTitle?: string;
-};
+  discogs_url?: string | null
+  apple_music_url?: string | null
+  spotify_url?: string | null
+  soundcloud_url?: string | null
+  youtube_url?: string | null
+  trackingLocation?: string
+  showSlug?: string
+  trackTitle?: string
+}
 
-const iconLinkSx = {
-  p: 1,
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  color: "primary",
-} as const;
+const SERVICES = [
+  { key: 'discogs',     label: 'Discogs',      Icon: SiDiscogs  },
+  { key: 'apple_music', label: 'Apple Music',  Icon: FaApple    },
+  { key: 'spotify',     label: 'Spotify',      Icon: FaSpotify  },
+  { key: 'soundcloud',  label: 'SoundCloud',   Icon: FaPlay     },
+  { key: 'youtube',     label: 'YouTube',      Icon: FaYoutube  },
+] as const
 
 const StreamingLinks: React.FC<Props> = ({
   discogs_url,
@@ -30,73 +29,76 @@ const StreamingLinks: React.FC<Props> = ({
   spotify_url,
   soundcloud_url,
   youtube_url,
-  containerSx,
-  trackingLocation = "streaming_links",
+  trackingLocation = 'streaming_links',
   showSlug,
   trackTitle,
 }) => {
-  // Build a small config list and filter to available links
-  const services = (
-    [
-      { key: "discogs", url: discogs_url, Icon: SiDiscogs },
-      { key: "apple_music", url: apple_music_url, Icon: FaApple },
-      { key: "spotify", url: spotify_url, Icon: FaSpotify },
-      { key: "soundcloud", url: soundcloud_url, Icon: FaPlay },
-      { key: "youtube", url: youtube_url, Icon: FaYoutube },
-    ] as const
-  ).filter((s) => !!s.url) as Array<{
-    key: "discogs" | "apple_music" | "spotify" | "soundcloud";
-    url: string;
-    Icon: React.ComponentType<{ size?: number }>;
-  }>;
+  const urlMap: Record<string, string | null | undefined> = {
+    discogs: discogs_url,
+    apple_music: apple_music_url,
+    spotify: spotify_url,
+    soundcloud: soundcloud_url,
+    youtube: youtube_url,
+  }
 
-  const onInteract = (
-    service: "discogs" | "apple_music" | "spotify" | "soundcloud" | "youtube",
-    url: string
-  ) => ({
-    onMouseDown: () =>
-      trackStreamClickDeduped({
-        service,
-        linkUrl: url,
-        location: trackingLocation,
-        showSlug,
-        trackTitle,
-      }),
-    onClick: () =>
-      trackStreamClickDeduped({
-        service,
-        linkUrl: url,
-        location: trackingLocation,
-        showSlug,
-        trackTitle,
-      }),
-  });
+  const available = SERVICES.filter((s) => !!urlMap[s.key])
+  const [open, setOpen] = useState(false)
+  const ref = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (!open) return
+    const handler = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) {
+        setOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handler)
+    return () => document.removeEventListener('mousedown', handler)
+  }, [open])
+
+  if (available.length === 0) return null
 
   return (
-    <Flex
-      sx={{
-        gap: 2,
-        flexWrap: "wrap",
-        justifyContent: "flex-end",
-        alignItems: "flex-start",
-        alignSelf: "flex-start",
-        ...containerSx,
-      }}
-    >
-      {services.map(({ key, url, Icon }) => (
-        <Link
-          key={key}
-          href={url}
-          target="_blank"
-          rel="noopener noreferrer"
-          sx={iconLinkSx}
-          {...onInteract(key, url)}
-        >
-          <Icon size={20} />
-        </Link>
-      ))}
-    </Flex>
-  );
-};
+    <div ref={ref} className="relative shrink-0">
+      <button
+        onClick={(e) => { e.preventDefault(); setOpen((v) => !v) }}
+        className="w-7 h-7 flex items-center justify-center text-fg/35 hover:text-fg transition-colors duration-150"
+        aria-label="Streaming links"
+      >
+        <IoEllipsisHorizontal size={16} />
+      </button>
 
-export default StreamingLinks;
+      {open && (
+        <div className="absolute right-0 bottom-full mb-1 z-50 border border-fg/16 bg-bg min-w-[160px]">
+          {available.map(({ key, label, Icon }) => {
+            const url = urlMap[key] as string
+            return (
+              <a
+                key={key}
+                href={url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-3 px-4 py-2.5 text-xs text-fg/60 hover:text-fg hover:bg-fg/[0.04] transition-colors duration-100"
+                onMouseDown={() =>
+                  trackStreamClickDeduped({
+                    service: key,
+                    linkUrl: url,
+                    location: trackingLocation,
+                    showSlug,
+                    trackTitle,
+                  })
+                }
+                onClick={() => setOpen(false)}
+              >
+                <Icon size={14} />
+                <span className="tracking-[0.5px]">{label}</span>
+              </a>
+            )
+          })}
+        </div>
+      )}
+    </div>
+  )
+}
+
+export default StreamingLinks

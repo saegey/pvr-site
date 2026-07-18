@@ -25,8 +25,10 @@ const config: GatsbyConfig = {
       },
     },
 
-    // theming + images
-    `gatsby-plugin-theme-ui`,
+    // css
+    `gatsby-plugin-postcss`,
+
+    // images
     `gatsby-plugin-image`,
     `gatsby-plugin-sharp`,
     `gatsby-transformer-sharp`,

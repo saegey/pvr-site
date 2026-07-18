@@ -1,5 +1,4 @@
 import React, { useState, useCallback } from "react";
-import { Box } from "theme-ui";
 import { FaPlay } from "react-icons/fa";
 import { trackEventDeduped } from "../utils/analytics";
 import { youTubeHQThumb, youTubeMaxResThumb } from "../utils/youtube";
@@ -13,7 +12,6 @@ const ResponsiveYouTube: React.FC<Props> = ({ videoId }) => {
   const [thumbSrc, setThumbSrc] = useState(youTubeMaxResThumb(videoId));
 
   const handlePlay = useCallback(() => {
-    // Track play intent once
     trackEventDeduped(
       "video_play",
       {
@@ -27,11 +25,11 @@ const ResponsiveYouTube: React.FC<Props> = ({ videoId }) => {
   }, [videoId]);
 
   return (
-    <Box
-      sx={{
+    <div
+      style={{
         position: "relative",
         width: "100%",
-        paddingBottom: "56.25%", // 16:9 aspect ratio
+        paddingBottom: "56.25%",
         height: 0,
         overflow: "hidden",
       }}
@@ -54,7 +52,6 @@ const ResponsiveYouTube: React.FC<Props> = ({ videoId }) => {
         />
       ) : (
         <>
-          {/* Thumbnail */}
           <img
             src={thumbSrc}
             alt="YouTube thumbnail"
@@ -75,7 +72,7 @@ const ResponsiveYouTube: React.FC<Props> = ({ videoId }) => {
           />
 
           {/* Click overlay with centered play icon */}
-          <Box
+          <div
             role="button"
             aria-label="Play video"
             tabIndex={0}
@@ -87,25 +84,25 @@ const ResponsiveYouTube: React.FC<Props> = ({ videoId }) => {
                 handlePlay();
               }
             }}
-            sx={{
+            style={{
               position: "absolute",
               inset: 0,
               cursor: "pointer",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              bg: "rgba(0,0,0,0.2)",
+              backgroundColor: "rgba(0,0,0,0.2)",
               transition: "background-color 0.2s ease",
-              ":hover": { bg: "rgba(0,0,0,0.35)" },
-              ":focus": { outline: "2px solid", outlineColor: "primary" },
             }}
+            onMouseEnter={e => (e.currentTarget.style.backgroundColor = "rgba(0,0,0,0.35)")}
+            onMouseLeave={e => (e.currentTarget.style.backgroundColor = "rgba(0,0,0,0.2)")}
           >
-            <Box
-              sx={{
+            <div
+              style={{
                 width: 64,
                 height: 64,
                 borderRadius: "50%",
-                bg: "rgba(0,0,0,0.6)",
+                backgroundColor: "rgba(0,0,0,0.6)",
                 color: "white",
                 display: "flex",
                 alignItems: "center",
@@ -114,11 +111,11 @@ const ResponsiveYouTube: React.FC<Props> = ({ videoId }) => {
               }}
             >
               <FaPlay size={22} />
-            </Box>
-          </Box>
+            </div>
+          </div>
         </>
       )}
-    </Box>
+    </div>
   );
 };
 

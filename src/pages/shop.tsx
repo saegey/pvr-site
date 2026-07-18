@@ -290,6 +290,7 @@ const ShopPage = () => {
         clearCart()
         localStorage.removeItem('pvr-cart')
         window.history.replaceState({}, '', '/shop')
+        window.scrollTo({ top: 0, behavior: 'smooth' })
       }
     }
   }, [])

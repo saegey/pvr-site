@@ -1,96 +1,75 @@
-import React, { useState } from "react";
-
-import { Text, Container, Input, Button, Flex, Box } from "theme-ui";
+import React, { useState } from 'react'
+import SEO from '../components/seo'
 
 const NewsletterForm = () => {
-  const [email, setEmail] = useState("");
-  const [message, setMessage] = useState("");
+  const [email, setEmail] = useState('')
+  const [message, setMessage] = useState('')
+  const [loading, setLoading] = useState(false)
 
-  const handleSubmit = async (e: { preventDefault: () => void }) => {
-    e.preventDefault();
-    console.log("email", email);
-    const response = await fetch(
-      "https://api.buttondown.email/v1/subscribers",
-      {
-        method: "POST",
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setLoading(true)
+    try {
+      const response = await fetch('https://api.buttondown.email/v1/subscribers', {
+        method: 'POST',
         headers: {
           Authorization: `Token 95c23da4-3415-4cde-a755-36a02cd53d4d`,
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({ email_address: email }),
-      }
-    );
-
-    const data = await response.json();
-    setMessage(data.detail || "Successfully subscribed!");
-  };
+      })
+      const data = await response.json()
+      setMessage(data.detail || 'Successfully subscribed!')
+    } catch {
+      setMessage('Something went wrong. Try again.')
+    } finally {
+      setLoading(false)
+    }
+  }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <Flex sx={{ flexDirection: "column", gap: "20px" }}>
-        <Box>
-          <Input
-            type="email"
-            placeholder="Your email"
-            value={email}
-            onChange={(e) => {
-              console.log(e.target.value);
-              setEmail(e.target.value);
-            }}
-            sx={{ fontFamily: "body" }}
-            required
-          />
-        </Box>
-        <Box>
-          <Button
-            type="submit"
-            sx={{
-              fontFamily: "body",
-              backgroundColor: "primary",
-              color: "primaryText",
-            }}
-          >
-            Subscribe
-          </Button>
-        </Box>
-        {message && <p>{message}</p>}
-      </Flex>
-    </form>
-  );
-};
-
-const JoinPage = () => {
-  return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        minHeight: "calc(100vh - 100px)", // Ensures full viewport height
-      }}
-    >
-      {/* Main Content Area */}
-      <Container
-        sx={{
-          flex: "1", // Pushes the footer down
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center", // Centers content vertically
-          // alignItems: 'center', // Centers content horizontally
-          p: 3,
-          maxWidth: ["100%", "540px", "540px", "540px", "540px"],
-          mx: "auto",
-        }}
+    <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+      <input
+        type="email"
+        placeholder="Your email"
+        value={email}
+        onChange={e => setEmail(e.target.value)}
+        required
+        className="bg-transparent border border-fg/20 px-4 py-3 text-sm text-fg placeholder:text-fg/30 outline-none focus:border-fg/50 transition-colors"
+      />
+      <button
+        type="submit"
+        disabled={loading}
+        className="py-3 text-xs tracking-[2px] uppercase border border-fg/30 text-fg/70 hover:border-fg/60 hover:text-fg transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
       >
-        <Text as="h1" sx={{ fontSize: 5, mb: 3 }}>
-          Join
-        </Text>
-        <Text as="p" sx={{ fontSize: 3, mb: 3 }}>
-          Subscribe to our newsletter for the latest updates.
-        </Text>
-        <NewsletterForm />
-      </Container>
-    </Box>
-  );
-};
+        {loading ? 'Subscribing…' : 'Subscribe'}
+      </button>
+      {message && <p className="text-xs text-fg/50">{message}</p>}
+    </form>
+  )
+}
 
-export default JoinPage;
+const JoinPage = () => (
+  <>
+    <SEO
+      title="Join · Public Vinyl Radio"
+      description="Subscribe to the Public Vinyl Radio newsletter."
+      url="https://publicvinylradio.com/join"
+    />
+    <div className="max-w-[540px] mx-auto px-4 md:px-12 pt-16 pb-24">
+      <p className="text-xs tracking-[2px] uppercase text-fg/40 mb-6">Newsletter</p>
+      <h1
+        className="text-fg leading-tight mb-4"
+        style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(30px, 4vw, 48px)', letterSpacing: '-0.5px' }}
+      >
+        Join
+      </h1>
+      <p className="text-sm text-fg/55 leading-[1.7] mb-10">
+        Subscribe for the latest sets, events, and updates from Public Vinyl Radio.
+      </p>
+      <NewsletterForm />
+    </div>
+  </>
+)
+
+export default JoinPage

@@ -1,279 +1,188 @@
-import { Box, Link, MenuButton, Flex, Text, Close } from "theme-ui";
-import { ReactNode, useState } from "react";
-import React from "react";
-import { Link as GatsbyLink } from "gatsby";
-import { FaYoutube, FaInstagram } from "react-icons/fa";
-import HeadsIcon from "../icons/heads.svg";
+import React, { ReactNode, useState, useEffect } from 'react'
+import { Link } from 'gatsby'
+import HeadIcon from '../icons/head.svg'
+import { useCart } from '../context/cart-context'
+import CartDrawer from './cart-drawer'
+
+const NAV_LINKS = [
+  { label: 'Archive', to: '/' },
+  { label: 'Events', to: '/events' },
+  { label: 'Shop', to: '/shop' },
+  { label: 'About', to: '/about' },
+]
+
+const EXTERNAL_LINKS = [
+  { label: 'YouTube', href: 'https://www.youtube.com/@PublicVinylRadio' },
+  { label: 'IG', href: 'https://www.instagram.com/PublicVinylRadio' },
+]
 
 const Layout = ({ children }: { children: ReactNode }) => {
-  const [menuOpen, setMenuOpen] = useState(false);
-  const toggleMenu = () => setMenuOpen(!menuOpen);
+  const [menuOpen, setMenuOpen] = useState(false)
+  const { count, openCart } = useCart()
+
+  // Lock body scroll when menu is open
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? 'hidden' : ''
+    return () => { document.body.style.overflow = '' }
+  }, [menuOpen])
 
   return (
-    <Box
-      sx={{
-        fontFamily: "body",
-        lineHeight: "body",
-        color: "text",
-        bg: "background",
-      }}
-    >
-      {/* Header */}
-      <Box
-        as="header"
-        sx={{
-          bg: "background",
-          borderBottomColor: "cardBorderColor",
-          borderBottomWidth: "2px",
-          borderBottomStyle: "solid",
-          p: 1,
-          textAlign: "center",
-          position: "relative",
-        }}
+    <div className="min-h-screen bg-bg text-fg font-mono">
+      {/* Sticky header */}
+      <header
+        className="sticky top-0 z-50 border-b border-fg/12"
+        style={{ backgroundColor: 'rgba(11,11,10,0.85)', backdropFilter: 'blur(8px)' }}
       >
-        <Flex
-          sx={{
-            alignItems: "center",
-            justifyContent: "space-between",
-            padding: "10px",
-          }}
-        >
-          {/* Left-aligned Menu Button */}
-          <MenuButton
-            aria-label="Toggle Menu"
-            onClick={toggleMenu}
-            sx={{
-              color: "text",
-            }}
-          />
-
-          {/* Absolutely centered Title (independent of menu button) */}
-          <Box
-            sx={{
-              position: "absolute",
-              left: "50%",
-              top: "50%",
-              transform: "translate(-50%, -50%)",
-              textAlign: "center",
-              zIndex: 1,
-              // Link + hover styling
-              a: { textDecoration: "none" },
-              "a:hover h1": { color: "primary" },
-            }}
+        <div className="max-w-[1320px] mx-auto px-6 md:px-12 h-14 flex items-center justify-between">
+          {/* Logo + wordmark */}
+          <Link
+            to="/"
+            className="flex items-center gap-3 shrink-0 text-fg"
+            onClick={() => setMenuOpen(false)}
           >
-            <GatsbyLink to="/">
-              <Text
-                as="h1"
-                sx={{
-                  margin: 0,
-                  fontSize: 4,
-                  fontWeight: 700,
-                  color: "text",
-                  letterSpacing: "-0.02em",
-                  transition: "color 0.2s ease",
-                  display: ["none", "block"],
+            <HeadIcon width={22} height={22} aria-hidden="true" />
+            <span className="text-xs font-bold tracking-[2px] uppercase">
+              Public Vinyl Radio
+            </span>
+          </Link>
+
+          {/* Desktop nav */}
+          <nav className="hidden md:flex items-center gap-8">
+            {NAV_LINKS.map(({ label, to }) => (
+              <Link
+                key={to}
+                to={to}
+                className="text-xs tracking-[1px] uppercase border-b border-transparent hover:border-fg/60 pb-px transition-colors duration-150"
+                activeClassName="border-fg!"
+              >
+                {label}
+              </Link>
+            ))}
+            {EXTERNAL_LINKS.map(({ label, href }) => (
+              <a
+                key={href}
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs tracking-[1px] uppercase text-fg/40 border-b border-transparent pb-px hover:text-fg/60 transition-colors duration-150"
+              >
+                {label}
+              </a>
+            ))}
+          </nav>
+
+          {/* Cart icon */}
+          <button
+            onClick={openCart}
+            className="relative text-xs tracking-[1px] uppercase text-fg/60 hover:text-fg transition-colors hidden md:flex items-center gap-1.5"
+            aria-label="Open cart"
+          >
+            Cart
+            {count > 0 && (
+              <span className="w-4 h-4 rounded-full bg-fg text-bg text-[10px] flex items-center justify-center tabular-nums">
+                {count}
+              </span>
+            )}
+          </button>
+
+          {/* Mobile: cart + hamburger */}
+          <div className="flex items-center gap-4 md:hidden">
+            <button
+              onClick={openCart}
+              className="relative text-xs tracking-[1px] uppercase text-fg/60 hover:text-fg transition-colors flex items-center gap-1.5"
+              aria-label="Open cart"
+            >
+              Cart
+              {count > 0 && (
+                <span className="w-4 h-4 rounded-full bg-fg text-bg text-[10px] flex items-center justify-center tabular-nums">
+                  {count}
+                </span>
+              )}
+            </button>
+          <button
+            className="flex flex-col justify-center gap-[5px] w-8 h-8 shrink-0"
+            onClick={() => setMenuOpen((v) => !v)}
+            aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+          >
+            <span
+              className="block h-px bg-fg transition-all duration-200 origin-center"
+              style={menuOpen ? { transform: 'translateY(6px) rotate(45deg)' } : {}}
+            />
+            <span
+              className="block h-px bg-fg transition-all duration-200"
+              style={menuOpen ? { opacity: 0 } : {}}
+            />
+            <span
+              className="block h-px bg-fg transition-all duration-200 origin-center"
+              style={menuOpen ? { transform: 'translateY(-6px) rotate(-45deg)' } : {}}
+            />
+          </button>
+          </div>
+        </div>
+      </header>
+
+      <CartDrawer />
+
+      {/* Mobile full-screen overlay */}
+      {menuOpen && (
+        <div className="fixed inset-0 z-40 bg-bg flex flex-col px-8 pt-24 pb-12">
+          <nav className="flex flex-col gap-2 flex-1">
+            {NAV_LINKS.map(({ label, to }) => (
+              <Link
+                key={to}
+                to={to}
+                onClick={() => setMenuOpen(false)}
+                className="text-fg/80 hover:text-fg transition-colors duration-150 py-4 border-b border-fg/12"
+                style={{
+                  fontFamily: 'var(--font-display)',
+                  fontSize: 'clamp(36px, 10vw, 56px)',
+                  letterSpacing: '-0.5px',
                 }}
               >
-                PUBLIC VINYL RADIO
-              </Text>
-              <Box sx={{ width: "40px", display: ["block", "none"] }}>
-                <Box
-                  as={HeadsIcon}
-                  aria-label="Public Vinyl Radio mark"
-                  sx={{
-                    display: "block",
-                    width: "100%",
-                    height: "100%",
-                    color: "text",
-                    "path, rect, circle, polygon, line, polyline": {
-                      fill: "currentColor",
-                      stroke: "currentColor",
-                    },
-                  }}
-                />
-              </Box>
-            </GatsbyLink>
-          </Box>
-        </Flex>
-      </Box>
+                {label}
+              </Link>
+            ))}
+          </nav>
 
-      {/* Full-Screen Menu */}
-      {menuOpen && (
-        <Box
-          sx={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-            bg: "black",
-            color: "white",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            zIndex: 9999,
-          }}
-        >
-          <Close
-            onClick={toggleMenu}
-            sx={{
-              position: "absolute",
-              top: 3,
-              left: 3,
-              color: "white",
-              bg: "transparent",
-              border: "none",
-              cursor: "pointer",
-              fontSize: 3,
-            }}
-          />
-          <Flex
-            as="nav"
-            sx={{
-              flexDirection: "column",
-              alignItems: "center",
-              gap: 4,
-            }}
-          >
-            <Text
-              as="span"
-              sx={{
-                color: "white",
-                fontSize: [80, 100, 100],
-                fontWeight: 600,
-                textTransform: "uppercase",
-                // style the nested anchor
-                a: {
-                  color: "inherit",
-                  textDecoration: "none",
-                  transition: "color 0.2s ease",
-                },
-                "a:hover": { color: "primary" },
-              }}
-            >
-              <GatsbyLink to="/" onClick={() => setMenuOpen(false)}>
-                Shows
-              </GatsbyLink>
-            </Text>
-            <Text
-              as="span"
-              sx={{
-                color: "white",
-                fontSize: [80, 100, 100],
-                fontWeight: 600,
-                textTransform: "uppercase",
-                a: {
-                  color: "inherit",
-                  textDecoration: "none",
-                  transition: "color 0.2s ease",
-                },
-                "a:hover": { color: "primary" },
-              }}
-            >
-              <GatsbyLink to="/about" onClick={() => setMenuOpen(false)}>
-                About
-              </GatsbyLink>
-            </Text>
-            <Text
-              as="span"
-              sx={{
-                color: "white",
-                fontSize: [80, 100, 100],
-                fontWeight: 600,
-                textTransform: "uppercase",
-                a: {
-                  color: "inherit",
-                  textDecoration: "none",
-                  transition: "color 0.2s ease",
-                },
-                "a:hover": { color: "primary" },
-              }}
-            >
-              <GatsbyLink to="/join" onClick={() => setMenuOpen(false)}>
-                Join
-              </GatsbyLink>
-            </Text>
-            <Text
-              as="span"
-              sx={{
-                color: "white",
-                fontSize: [80, 100, 100],
-                fontWeight: 600,
-                textTransform: "uppercase",
-                a: {
-                  color: "inherit",
-                  textDecoration: "none",
-                  transition: "color 0.2s ease",
-                },
-                "a:hover": { color: "primary" },
-              }}
-            >
-              <GatsbyLink to="/shop" onClick={() => setMenuOpen(false)}>
-                Shop
-              </GatsbyLink>
-            </Text>
-          </Flex>
-        </Box>
+          {/* External links at bottom */}
+          <div className="flex gap-6 pt-8 border-t border-fg/12">
+            {EXTERNAL_LINKS.map(({ label, href }) => (
+              <a
+                key={href}
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs tracking-[2px] uppercase text-fg/40 hover:text-fg/70 transition-colors"
+              >
+                {label}
+              </a>
+            ))}
+          </div>
+        </div>
       )}
 
-      {children}
+      <main>{children}</main>
 
-      {/* Footer */}
-      <Flex
-        as="footer"
-        sx={{
-          p: 3,
-          borderTopColor: "cardBorderColor",
-          borderTopWidth: "2px",
-          borderTopStyle: "solid",
-          marginTop: "100px",
-        }}
-      >
-        <Box>
-          <Text
-            as="p"
-            sx={{
-              color: "text",
-              fontWeight: 600,
-              height: "100%",
-              alignContent: "center",
-              textTransform: "uppercase",
-            }}
-          >
-            &copy; {new Date().getFullYear()} Public Vinyl Radio
-          </Text>
-        </Box>
+      <footer className="border-t border-fg/12 mt-24 px-6 md:px-12 py-8 max-w-[1320px] mx-auto flex items-center justify-between">
+        <span className="text-xs tracking-[1px] uppercase text-fg/40">
+          &copy; {new Date().getFullYear()} Public Vinyl Radio
+        </span>
+        <div className="flex gap-6">
+          {EXTERNAL_LINKS.map(({ label, href }) => (
+            <a
+              key={href}
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs tracking-[1px] uppercase text-fg/40 hover:text-fg/70 transition-colors duration-150"
+            >
+              {label}
+            </a>
+          ))}
+        </div>
+      </footer>
+    </div>
+  )
+}
 
-        {/* Social Media Links */}
-        <Flex
-          sx={{
-            justifyContent: "right",
-            gap: 3,
-            flexGrow: 1,
-            height: "100%",
-            alignContent: "center",
-          }}
-        >
-          <Link
-            href="https://www.youtube.com/@PublicVinylRadio"
-            target="_blank"
-            sx={{ color: "text", "&:hover": { color: "primary" } }}
-          >
-            <FaYoutube size={24} />
-          </Link>
-
-          <Link
-            href="https://www.instagram.com/PublicVinylRadio"
-            target="_blank"
-            sx={{ color: "text", "&:hover": { color: "primary" } }}
-          >
-            <FaInstagram size={24} />
-          </Link>
-        </Flex>
-      </Flex>
-    </Box>
-  );
-};
-
-export default Layout;
+export default Layout

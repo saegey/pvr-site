@@ -1,12 +1,11 @@
 import React from 'react';
-import { Box } from 'theme-ui';
 
 const ResponsiveYouTube = ({ videoId }: { videoId: string }) => (
-  <Box
-    sx={{
+  <div
+    style={{
       position: 'relative',
       width: '100%',
-      paddingBottom: '56.25%', // 16:9 aspect ratio
+      paddingBottom: '56.25%',
       height: 0,
       overflow: 'hidden',
     }}
@@ -26,7 +25,7 @@ const ResponsiveYouTube = ({ videoId }: { videoId: string }) => (
         height: '100%',
       }}
     ></iframe>
-  </Box>
+  </div>
 );
 
 export default ResponsiveYouTube;

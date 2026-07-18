@@ -1,81 +1,75 @@
-import React from "react";
-import { Box, Flex, Grid, Badge, Text, Container } from "theme-ui";
-import { MDXProvider } from "@mdx-js/react";
-import { format } from "date-fns";
-import SEO from "../components/seo";
-import { graphql, PageProps } from "gatsby";
-import { Helmet } from "react-helmet";
-import { GatsbyImage, getImage, getSrc } from "gatsby-plugin-image";
-
-import TrackCard from "../components/track-card";
-import { MdxNode } from "../types/content";
-import ResponsiveYouTube from "../components/responsive-youtube";
-import { youTubeMaxResThumb, youTubeHQThumb } from "../utils/youtube";
-import ImageCarousel from "../components/image-carousel";
+import React from 'react'
+import { MDXProvider } from '@mdx-js/react'
+import { format } from 'date-fns'
+import SEO from '../components/seo'
+import { graphql, Link, PageProps } from 'gatsby'
+import { Helmet } from 'react-helmet'
+import { GatsbyImage, getImage, getSrc } from 'gatsby-plugin-image'
+import ImageCarousel from '../components/image-carousel'
+import StreamingLinks from '../components/streaming-links'
+import { MdxNode } from '../types/content'
+import { youTubeMaxResThumb, youTubeHQThumb } from '../utils/youtube'
 
 export const formatDate = (dateString: string) =>
-  format(new Date(dateString), "MM.dd.yyyy");
+  format(new Date(dateString), 'MMMM d, yyyy')
+
+const formatDuration = (seconds?: number) => {
+  if (!seconds) return ''
+  const m = Math.floor(seconds / 60)
+  const s = seconds % 60
+  return `${m}:${String(s).padStart(2, '0')}`
+}
 
 type DataProps = {
-  mdx: MdxNode & { excerpt?: string };
-  site: { siteMetadata: { siteUrl: string; image?: string } };
-};
+  mdx: MdxNode & { excerpt?: string }
+  site: { siteMetadata: { siteUrl: string; image?: string } }
+}
 
 const ShowTemplate: React.FC<PageProps<DataProps>> = ({ data, children }) => {
-  const { title, description, date, tags, youtubeId, tracklist, host, slug, coverImage, carouselImages } =
-    data.mdx.frontmatter as any;
+  const {
+    title,
+    description,
+    date,
+    tags,
+    youtubeId,
+    tracklist,
+    host,
+    slug,
+    coverImage,
+    carouselImages,
+  } = data.mdx.frontmatter as any
 
-  const coverImageData = coverImage ? getImage(coverImage) : null;
+  const coverImageData = coverImage ? getImage(coverImage) : null
 
-  // Process carousel images for the ImageGallery component
-  // Use Gatsby-optimized images instead of full-resolution publicURL
-  const carouselData = carouselImages?.map((img: any) => {
-    // Main carousel image - optimized ~1200px width
-    const mainImageSrc = getSrc(img);
+  const carouselData =
+    carouselImages?.map((img: any) => {
+      const mainImageSrc = getSrc(img)
+      const thumbnailSrc = img?.childImageSharp?.thumbnail
+        ? getSrc(img.childImageSharp.thumbnail)
+        : mainImageSrc
+      const fullscreenSrc = img?.childImageSharp?.fullscreen
+        ? getSrc(img.childImageSharp.fullscreen)
+        : img.publicURL
+      return {
+        original: mainImageSrc || img.publicURL,
+        thumbnail: thumbnailSrc || img.publicURL,
+        fullscreen: fullscreenSrc,
+        originalAlt: title || 'Show image',
+        thumbnailAlt: title || 'Show image',
+      }
+    }) || []
 
-    // Small thumbnail for navigation - 150px width
-    const thumbnailSrc = img?.childImageSharp?.thumbnail
-      ? getSrc(img.childImageSharp.thumbnail)
-      : mainImageSrc;
-
-    // Fullscreen - larger high-quality version ~2400px width
-    const fullscreenSrc = img?.childImageSharp?.fullscreen
-      ? getSrc(img.childImageSharp.fullscreen)
-      : img.publicURL; // Fallback to original for fullscreen
-
-    return {
-      original: mainImageSrc || img.publicURL, // Optimized medium-res for carousel
-      thumbnail: thumbnailSrc || img.publicURL, // Small thumbnail for navigation
-      fullscreen: fullscreenSrc, // High-res for fullscreen mode
-      originalAlt: title || "Show image",
-      thumbnailAlt: title || "Show image",
-    };
-  }) || [];
-
-  // Build SEO description: prefer MDX excerpt, then frontmatter description
-  const seoDescription = (data.mdx.excerpt as string) || description || "";
-
-  // Canonical URL for this show
-  const siteUrl = data.site.siteMetadata.siteUrl.replace(/\/$/, "");
-  const pageUrl = `${siteUrl}/shows/${slug || ""}`;
-
-  // OG image preference: YouTube maxres -> cover publicURL -> site default
-  const ogFromYouTube = youtubeId ? youTubeMaxResThumb(youtubeId) : undefined;
+  const seoDescription = (data.mdx.excerpt as string) || description || ''
+  const siteUrl = data.site.siteMetadata.siteUrl.replace(/\/$/, '')
+  const pageUrl = `${siteUrl}/shows/${slug || ''}`
+  const ogFromYouTube = youtubeId ? youTubeMaxResThumb(youtubeId) : undefined
   const ogFallback = data.site.siteMetadata.image
-    ? `${siteUrl}${data.site.siteMetadata.image.startsWith("/") ? "" : "/"}${
-        data.site.siteMetadata.image
-      }`
-    : undefined;
+    ? `${siteUrl}${data.site.siteMetadata.image}`
+    : undefined
   const coverUrl = (data.mdx.frontmatter as any)?.coverImage?.publicURL
-    ? `${siteUrl}${
-        (
-          (data.mdx.frontmatter as any)?.coverImage?.publicURL as string
-        ).startsWith("/")
-          ? ""
-          : "/"
-      }${(data.mdx.frontmatter as any)?.coverImage?.publicURL as string}`
-    : undefined;
-  const ogImage = ogFromYouTube || coverUrl || ogFallback;
+    ? `${siteUrl}${(data.mdx.frontmatter as any).coverImage.publicURL}`
+    : undefined
+  const ogImage = ogFromYouTube || coverUrl || ogFallback
 
   return (
     <>
@@ -90,150 +84,204 @@ const ShowTemplate: React.FC<PageProps<DataProps>> = ({ data, children }) => {
         <Helmet>
           <script type="application/ld+json">
             {JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "VideoObject",
+              '@context': 'https://schema.org',
+              '@type': 'VideoObject',
               name: title,
               description: seoDescription,
               uploadDate: date,
-              thumbnailUrl: [
-                youTubeHQThumb(youtubeId),
-                youTubeMaxResThumb(youtubeId),
-              ],
+              thumbnailUrl: [youTubeHQThumb(youtubeId), youTubeMaxResThumb(youtubeId)],
               embedUrl: `https://www.youtube.com/embed/${youtubeId}`,
               url: pageUrl,
             })}
           </script>
         </Helmet>
       )}
-      <Container
-        sx={{
-          maxWidth: "800px",
-          mx: "auto",
-          marginTop: [0, "20px", "20px"],
-        }}
-      >
-        <Flex
-          sx={{
-            flexDirection: "column",
-            gap: "10px",
-            justifyContent: "space-between",
-            height: "100%",
+
+      {/* ── Full-bleed cover band ── */}
+      {youtubeId ? (
+        <div className="w-full border-b border-fg/12" style={{ position: 'relative', paddingBottom: '56.25%', height: 0 }}>
+          <iframe
+            src={`https://www.youtube.com/embed/${youtubeId}?si=EaheM0eWWNF_J6-x`}
+            title={title}
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerPolicy="strict-origin-when-cross-origin"
+            allowFullScreen
+            style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}
+          />
+        </div>
+      ) : coverImageData ? (
+        <div className="w-full border-b border-fg/12 grayscale">
+          <GatsbyImage
+            image={coverImageData}
+            alt={title || 'Show cover'}
+            className="w-full"
+            imgStyle={{ objectFit: 'contain', maxHeight: '560px' }}
+          />
+        </div>
+      ) : (
+        <div
+          className="w-full border-b border-fg/12"
+          style={{
+            height: '320px',
+            background: 'repeating-linear-gradient(135deg, #141412, #141412 8px, #1a1a17 8px, #1a1a17 16px)',
           }}
+        />
+      )}
+
+      {/* ── Content column ── */}
+      <div className="max-w-[860px] mx-auto px-4 md:px-12 py-14">
+        {/* Back link */}
+        <Link
+          to="/"
+          className="text-xs tracking-[1px] uppercase text-fg/40 hover:text-fg/70 transition-colors mb-10 inline-block"
         >
-          <Box>
-            <Flex sx={{ flexDirection: "column", paddingY: [0, "20px"] }}>
-              {youtubeId ? (
-                <ResponsiveYouTube videoId={youtubeId} />
-              ) : (
-                coverImageData && (
-                  <GatsbyImage
-                    image={coverImageData}
-                    alt={title || "Show cover"}
-                    style={{ width: '100%', borderRadius: '0px' }}
-                  />
-                )
-              )}
-              <Box p={"20px"} backgroundColor="cardBackgroundColor">
-                <Box sx={{ flexDirection: "column", gap: "10px" }}>
-                  <Text>{formatDate(date || "") || "Unknown Date"}</Text>
-                  {" · "}
-                  <Text>Seattle</Text>
-                </Box>
-                <Box>
-                  <Text as="h2" sx={{ marginBottom: 0 }}>
-                    {title}
-                  </Text>
-                  <Box>
-                    <Text>with</Text>{" "}
-                    {(host || []).map(
-                      (h: string, index: number, arr: string[]) => (
-                        <>
-                          <Text as="span" key={index} sx={{ fontWeight: 600 }}>
-                            {h}
-                          </Text>
+          ← Back to archive
+        </Link>
 
-                          {index < (host || []).length - 1 ? (
-                            <Text sx={{ marginRight: '5px'}}>,</Text>
-                          ) : (
-                            ""
-                          )}
-                        </>
-                      )
-                    )}
-                  </Box>
-                </Box>
-                <Text
-                  as="h4"
-                  style={{ wordWrap: "break-word", fontWeight: 400 }}
-                >
-                  {description}
-                </Text>
+        {/* Meta + title */}
+        <div className="mb-8">
+          <p className="text-xs tracking-[2px] uppercase text-fg/40 mb-4">
+            {formatDate(date)}
+          </p>
+          <h1
+            className="text-fg leading-tight mb-3"
+            style={{
+              fontFamily: 'var(--font-display)',
+              fontSize: 'clamp(30px, 4.5vw, 52px)',
+              letterSpacing: '-0.5px',
+            }}
+          >
+            {title}
+          </h1>
+          <p className="text-sm text-fg/55 mb-5">
+            with {(host || []).join(', ')}
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {(tags || []).map((tag: string) => (
+              <span
+                key={tag}
+                className="text-[11px] tracking-[1px] uppercase px-2 py-1 border border-fg/20 text-fg/55"
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
+        </div>
 
-                <Flex sx={{ gap: "5px", marginTop: "10px", flexWrap: "wrap" }}>
-                  {(tags || []).map((tag: string, index: number) => (
-                    <Badge
-                      key={index}
-                      variant="primary"
-                      sx={{
-                        borderRadius: "0px",
-                        textTransform: "uppercase",
-                        fontSize: "13px",
-                      }}
-                    >
-                      {tag}
-                    </Badge>
-                  ))}
-                </Flex>
-              </Box>
-            </Flex>
-          </Box>
-        </Flex>
+        {/* Description */}
+        {description && (
+          <p
+            className="text-sm text-fg/75 leading-[1.8] mb-10"
+            style={{ maxWidth: '640px' }}
+          >
+            {description}
+          </p>
+        )}
 
-        <Container
-          sx={{
-            maxWidth: "800px",
-            mx: "auto",
-            marginTop: "20px",
-            paddingX: ["20px", 0, 0],
-          }}
-        >
+        {/* MDX content (audio player etc.) */}
+        <div className="mb-10">
           <MDXProvider
             components={{
-              // Make ShowCarousel available in MDX with pre-loaded carousel data
               ShowCarousel: () =>
                 carouselData.length > 0 ? (
-                  <Box sx={{ my: 4 }}>
+                  <div className="my-10">
                     <ImageCarousel images={carouselData} showThumbnails={true} />
-                  </Box>
+                  </div>
                 ) : null,
             }}
           >
             {children}
           </MDXProvider>
+        </div>
 
-          {tracklist && tracklist.length > 0 && (
-            <Box sx={{ mt: 3 }}>
-              <Text as="h3" sx={{ mb: 2 }}>
-                Tracklist
-              </Text>
-              <Grid columns={[1]} gap={2}>
-                {tracklist.map((t: any, idx: number) => (
-                  <TrackCard
-                    key={`${t.artist || "artist"}-${t.title || "title"}-${idx}`}
-                    track={t as any}
-                    index={idx}
+        {/* Tracklist */}
+        {tracklist && tracklist.length > 0 && (
+          <div className="mt-12">
+            <div className="border-t border-fg/12 pt-6 mb-4">
+              <span className="text-xs tracking-[2px] uppercase text-fg/55">Tracklist</span>
+            </div>
+            {tracklist.map((t: any, idx: number) => (
+              <div
+                key={`${t.artist}-${t.title}-${idx}`}
+                className="flex items-center gap-4 py-4 border-b border-fg/12 hover:bg-fg/[0.02] transition-colors -mx-4 px-4"
+              >
+                {/* Index */}
+                <span className="text-xs text-fg/30 w-6 shrink-0 tabular-nums">
+                  {String(idx + 1).padStart(2, '0')}
+                </span>
+
+                {/* Title / artist / album */}
+                <div className="flex-1 min-w-0">
+                  <p
+                    className="text-fg leading-snug truncate"
+                    style={{ fontFamily: 'var(--font-display)', fontSize: '15px' }}
+                  >
+                    {t.title}
+                  </p>
+                  <p className="text-xs text-fg/55 truncate mt-0.5">
+                    {t.artist}
+                    {t.album && (
+                      <span className="text-fg/35">
+                        {' — '}{t.album}{t.year ? ` (${t.year})` : ''}
+                      </span>
+                    )}
+                  </p>
+                </div>
+
+                {/* Duration */}
+                {!!t.duration_seconds && (
+                  <span className="text-xs text-fg/35 tabular-nums shrink-0">
+                    {formatDuration(t.duration_seconds)}
+                  </span>
+                )}
+
+                {/* Streaming links */}
+                <StreamingLinks
+                  discogs_url={t.discogs_url}
+                  apple_music_url={t.apple_music_url}
+                  spotify_url={t.spotify_url}
+                  soundcloud_url={t.soundcloud_url}
+                  youtube_url={t.youtube_url}
+                  trackingLocation="track_card"
+                  trackTitle={t.title}
+                  showSlug={slug}
+                />
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Photos carousel */}
+        {carouselData.length > 0 && (
+          <div className="mt-12">
+            <div className="border-t border-fg/12 pt-6 mb-4">
+              <span className="text-xs tracking-[2px] uppercase text-fg/55">Photos</span>
+            </div>
+            <div className="grid grid-cols-3 gap-px">
+              {carouselData.map((img: any, idx: number) => (
+                <div
+                  key={idx}
+                  className="overflow-hidden grayscale"
+                  style={{ aspectRatio: '1/1' }}
+                >
+                  <img
+                    src={img.original}
+                    alt={img.originalAlt}
+                    className="w-full h-full object-cover"
+                    loading="lazy"
                   />
-                ))}
-              </Grid>
-            </Box>
-          )}
-        </Container>
-      </Container>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
     </>
-  );
-};
+  )
+}
 
-export default ShowTemplate;
+export default ShowTemplate
 
 export const query = graphql`
   query Show($id: String!) {
@@ -259,10 +307,10 @@ export const query = graphql`
         spotifyId
         slug
         coverImage {
-          publicURL # ✅ Get direct URL for Open Graph images
+          publicURL
           childImageSharp {
             gatsbyImageData(
-              width: 700
+              width: 1400
               layout: CONSTRAINED
               formats: [AUTO, WEBP]
             )
@@ -271,14 +319,12 @@ export const query = graphql`
         carouselImages {
           publicURL
           childImageSharp {
-            # Main carousel image - optimized medium resolution
             gatsbyImageData(
               width: 1200
               quality: 85
               layout: CONSTRAINED
               formats: [AUTO, WEBP]
             )
-            # Small thumbnail for bottom navigation
             thumbnail: gatsbyImageData(
               width: 150
               height: 100
@@ -286,7 +332,6 @@ export const query = graphql`
               layout: FIXED
               formats: [AUTO, WEBP]
             )
-            # Fullscreen - larger high-quality version
             fullscreen: gatsbyImageData(
               width: 2400
               quality: 90
@@ -312,4 +357,4 @@ export const query = graphql`
       }
     }
   }
-`;
+`

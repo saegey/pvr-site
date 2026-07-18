@@ -36,7 +36,7 @@ export const PRODUCTS: Product[] = [
     tags: ["accessories"],
     variants: [
       { label: "Solid", stripePrice: "price_1TuhLmEV0X4rFJV7GwhKDI8s" },
-      { label: "Cutout", stripePrice: "price_1TuhLmEV0X4rFJV7GwhKDI8s" },
+      { label: "Cutout", stripePrice: "price_1TuhdfEV0X4rFJV7lGtmIOw1" },
     ],
   },
   {

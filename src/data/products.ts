@@ -35,8 +35,8 @@ export const PRODUCTS: Product[] = [
     ],
     tags: ["accessories"],
     variants: [
-      { label: "Solid", stripePrice: "price_PLACEHOLDER_DECAL_SOLID" },
-      { label: "Cutout", stripePrice: "price_PLACEHOLDER_DECAL_CUTOUT" },
+      { label: "Solid", stripePrice: "price_1TuhLmEV0X4rFJV7GwhKDI8s" },
+      { label: "Cutout", stripePrice: "price_1TuhLmEV0X4rFJV7GwhKDI8s" },
     ],
   },
   {
@@ -52,8 +52,8 @@ export const PRODUCTS: Product[] = [
     ],
     tags: ["accessories"],
     variants: [
-      { label: "Solid Logo", stripePrice: "price_PLACEHOLDER_SOLID" },
-      { label: "Hollow Logo", stripePrice: "price_PLACEHOLDER_HOLLOW" },
+      { label: "Solid Logo", stripePrice: "price_1TuhNREV0X4rFJV7RFtsQ0X8" },
+      { label: "Hollow Logo", stripePrice: "price_1TuhNREV0X4rFJV7RFtsQ0X8" },
     ],
   },
   {
@@ -67,7 +67,7 @@ export const PRODUCTS: Product[] = [
       "/images/shop/pvr-cyanotype/print-2.png",
     ],
     tags: ["art"],
-    stripePrice: "price_PLACEHOLDER_CYANOTYPE",
+    stripePrice: "price_1TuhOhEV0X4rFJV7mb5aPzIS",
   },
   {
     id: "pvr-cyanotype-2",
@@ -80,7 +80,7 @@ export const PRODUCTS: Product[] = [
       "/images/shop/pvr-cyanotype-2/print-2.png",
     ],
     tags: ["art"],
-    stripePrice: "price_PLACEHOLDER_CYANOTYPE_2",
+    stripePrice: "price_1TuhOhEV0X4rFJV7mb5aPzIS",
   },
   {
     id: "pvr-cyanotype-3",
@@ -93,6 +93,6 @@ export const PRODUCTS: Product[] = [
       "/images/shop/pvr-cyanotype-3/print-2.png",
     ],
     tags: ["art"],
-    stripePrice: "price_PLACEHOLDER_CYANOTYPE_3",
+    stripePrice: "price_1TuhOhEV0X4rFJV7mb5aPzIS",
   },
 ];

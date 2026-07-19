@@ -1,0 +1,17 @@
+[
+  {
+    "slug": "living-room-session-vol-1",
+    "title": "Living Room Session Vol. 1",
+    "date": "2026-07-28",
+    "dateLabel": "July 28, 2026",
+    "time": "7:00 PM",
+    "description": "An intimate evening of all-vinyl selections in a living room setting. No phones, no distractions — just the music and the people who love it.",
+    "capacity": 6,
+    "maxPlusOnes": 1,
+    "location": "Ballard · address shared once you RSVP",
+    "address": "Ballard, Seattle — full address & door code sent to confirmed guests. Text Adam if you get lost.",
+    "djs": ["Saegey"],
+    "isPrivate": true,
+    "isActive": true
+  }
+]

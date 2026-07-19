@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "@mdx-js/react": "^2.3.0",
+    "@netlify/blobs": "8.2.0",
     "co-body": "6.2.0",
     "date-fns": "^4.1.0",
     "gatsby": "^5.14.6",

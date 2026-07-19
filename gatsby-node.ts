@@ -102,6 +102,24 @@ exports.createPages = async ({
   const showTemplate = path.resolve(`src/templates/show-template.tsx`);
   // const blogTemplate = path.resolve(`src/templates/blog-template.tsx`);
 
+  // ── Event pages (RSVP) + admin ──
+  const eventTemplate = path.resolve(`src/templates/event-template.tsx`);
+  const adminTemplate = path.resolve(`src/templates/admin-template.tsx`);
+  const events = require("./src/data/events.data.json");
+  events.forEach((event: { slug: string }) => {
+    console.log(`Creating event page for ${event.slug}`);
+    createPage({
+      path: `/events/${event.slug}`,
+      component: eventTemplate,
+      context: { slug: event.slug, event },
+    });
+    createPage({
+      path: `/events/${event.slug}/admin`,
+      component: adminTemplate,
+      context: { slug: event.slug, event },
+    });
+  });
+
   result.data.allMdx.nodes
     // .filter(post => post.internal.contentFilePath.includes(dir))
     .map(

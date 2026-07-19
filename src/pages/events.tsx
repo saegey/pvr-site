@@ -1,5 +1,7 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { Link } from "gatsby";
 import SEO from "../components/seo";
+import { ACTIVE_EVENTS } from "../data/events";
 
 type PublicEvent = {
   date: string
@@ -37,21 +39,64 @@ const PUBLIC_EVENTS: PublicEvent[] = [
   // },
 ];
 
-const SESSION = {
-  title: "Home Listening Session Vol. 5",
-  date: "August 22, 2026",
-  time: "8:00 PM",
-  description:
-    "An intimate evening of all-vinyl selections in a living room setting. No phones, no distractions — just the music and the people who love it.",
-  capacity: 9,
-  confirmed: 5,
-  pending: 2,
-  guests: ["JR", "MK", "TP", "SG"],
+type Summary = {
+  capacity: number;
+  seatsTaken: number;
+  spotsLeft: number;
+  waitlistCount: number;
+  guests: { name: string; plusOnes: number }[];
+};
+
+const initials = (name: string) =>
+  name
+    .split(/\s+/)
+    .map((p) => p[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
+
+// Read the "already RSVP'd" cookie dropped on the event page
+const readRsvpCookie = (
+  slug: string
+): { status: "confirmed" | "waitlisted" } | null => {
+  const match = document.cookie
+    .split("; ")
+    .find((c) => c.startsWith(`pvr-rsvpd-${slug}=`));
+  if (!match) return null;
+  try {
+    return JSON.parse(decodeURIComponent(match.split("=").slice(1).join("=")));
+  } catch {
+    return null;
+  }
 };
 
 const EventsPage = () => {
-  const spotsLeft = SESSION.capacity - SESSION.confirmed - SESSION.pending;
-  const fillPct = Math.round((SESSION.confirmed / SESSION.capacity) * 100);
+  // Show the soonest active private session in the RSVP card
+  const session = ACTIVE_EVENTS.filter((e) => e.isPrivate).sort((a, b) =>
+    a.date.localeCompare(b.date)
+  )[0];
+
+  const [summary, setSummary] = useState<Summary | null>(null);
+  const [myStatus, setMyStatus] = useState<
+    "confirmed" | "waitlisted" | null
+  >(null);
+
+  useEffect(() => {
+    if (!session) return;
+    const mine = readRsvpCookie(session.slug);
+    setMyStatus(mine?.status ?? null);
+    fetch(`/api/rsvp?slug=${encodeURIComponent(session.slug)}`)
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => data && setSummary(data))
+      .catch(() => {});
+  }, [session?.slug]);
+
+  const capacity = summary?.capacity ?? session?.capacity ?? 0;
+  const seatsTaken = summary?.seatsTaken ?? 0;
+  const spotsLeft = summary?.spotsLeft ?? capacity;
+  const fillPct = capacity
+    ? Math.min(100, Math.round((seatsTaken / capacity) * 100))
+    : 0;
 
   return (
     <>
@@ -159,44 +204,74 @@ const EventsPage = () => {
         </div>
         <p className="text-sm text-fg/45 mb-10 max-w-[560px] leading-[1.7]">
           Monthly, at the house. All vinyl, no phones, 8–10 seats. Address
-          shared once you're approved.
+          shared once you RSVP.
         </p>
 
+        {!session && (
+          <div className="py-12 text-center border border-fg/12">
+            <p className="text-sm text-fg/35">
+              No sessions scheduled right now. Check back soon.
+            </p>
+          </div>
+        )}
+
         {/* Session card */}
+        {session && (
         <div className="border border-fg/16 p-6 md:p-10 flex flex-col md:flex-row gap-10 md:gap-12 items-start">
           {/* Info column */}
           <div className="flex-1 min-w-0 w-full">
             <p className="text-xs tracking-[2px] uppercase text-fg/40 mb-4">
-              {SESSION.date} · {SESSION.time}
+              {session.dateLabel} · {session.time}
             </p>
             <h2
-              className="text-fg leading-tight mb-5"
+              className="leading-tight mb-5"
               style={{
                 fontFamily: "var(--font-display)",
                 fontSize: "30px",
                 letterSpacing: "-0.5px",
               }}
             >
-              {SESSION.title}
+              <Link
+                to={`/events/${session.slug}`}
+                className="text-fg hover:text-fg/60 transition-colors"
+              >
+                {session.title}
+              </Link>
             </h2>
             <p className="text-sm text-fg/60 leading-[1.7] mb-8 max-w-[400px]">
-              {SESSION.description}
+              {session.description}
             </p>
 
-            {/* Avatars + attendance */}
-            <div className="flex items-center gap-3 mb-5">
-              <div className="flex -space-x-2">
-                {SESSION.guests.map((initial) => (
-                  <div
-                    key={initial}
-                    className="w-8 h-8 rounded-full border border-bg bg-fg/10 flex items-center justify-center text-[11px] tracking-wide text-fg/70"
-                  >
-                    {initial}
-                  </div>
-                ))}
-              </div>
+            {/* Guest list + attendance */}
+            <div className="mb-5">
+              {summary && summary.guests.length > 0 && (
+                <div className="flex flex-wrap gap-x-4 gap-y-2 mb-3">
+                  {summary.guests.map((g, i) => (
+                    <div
+                      key={`${g.name}-${i}`}
+                      className="flex items-center gap-2"
+                    >
+                      <div className="w-8 h-8 rounded-full border border-bg bg-fg/10 flex items-center justify-center text-[11px] tracking-wide text-fg/70 shrink-0">
+                        {initials(g.name)}
+                      </div>
+                      <span className="text-xs text-fg/60">
+                        {g.name}
+                        {g.plusOnes > 0 && (
+                          <span className="text-fg/35"> +{g.plusOnes}</span>
+                        )}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              )}
               <span className="text-xs text-fg/45">
-                {SESSION.confirmed} going · {SESSION.pending} pending
+                {summary
+                  ? `${seatsTaken} going${
+                      summary.waitlistCount
+                        ? ` · ${summary.waitlistCount} waitlisted`
+                        : ""
+                    }`
+                  : "Loading…"}
               </span>
             </div>
 
@@ -210,43 +285,43 @@ const EventsPage = () => {
               </div>
             </div>
             <p className="text-[11px] text-fg/35">
-              {spotsLeft} of {SESSION.capacity} spots left
+              {summary
+                ? spotsLeft > 0
+                  ? `${spotsLeft} of ${capacity} spots left`
+                  : "Full — join the waitlist"
+                : `${capacity} seats`}
             </p>
           </div>
 
           {/* RSVP panel */}
           <div className="w-full md:w-[300px] md:shrink-0 border-t border-fg/12 pt-8 md:border-t-0 md:border-l md:pt-0 md:pl-10">
             <p className="text-xs text-fg/50 leading-[1.7] mb-6">
-              Request an invite. You'll get the address once approved.
+              All vinyl, no phones. You'll get the address here once you RSVP.
             </p>
 
-            <div className="flex flex-col gap-3 mb-4">
-              <input
-                type="text"
-                placeholder="Your name"
-                disabled
-                className="w-full bg-transparent border border-fg/16 px-4 py-3 text-xs text-fg/50 placeholder:text-fg/25 outline-none cursor-not-allowed"
-              />
-              <input
-                type="email"
-                placeholder="Your email"
-                disabled
-                className="w-full bg-transparent border border-fg/16 px-4 py-3 text-xs text-fg/50 placeholder:text-fg/25 outline-none cursor-not-allowed"
-              />
-            </div>
-
-            <button
-              disabled
-              className="w-full py-3 text-xs tracking-[2px] uppercase border border-fg/16 text-fg/25 cursor-not-allowed mb-3"
+            <Link
+              to={`/events/${session.slug}`}
+              className="block w-full py-3 text-center text-xs tracking-[2px] uppercase border border-fg/30 text-fg hover:bg-fg hover:text-bg! transition-colors mb-3"
             >
-              Request Invite
-            </button>
+              {myStatus === "confirmed"
+                ? "You're going ✓"
+                : myStatus === "waitlisted"
+                ? "On the waitlist ✓"
+                : spotsLeft > 0
+                ? "RSVP · Free"
+                : "Join Waitlist"}
+            </Link>
 
             <p className="text-[11px] text-fg/30 leading-[1.6]">
-              RSVP requests opening soon.
+              {myStatus
+                ? "Tap to view your RSVP & details."
+                : session.maxPlusOnes > 0
+                ? "Bring a +1 if you like."
+                : "Just you on this one."}
             </p>
           </div>
         </div>
+        )}
       </div>
     </>
   );

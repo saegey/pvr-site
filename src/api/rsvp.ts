@@ -27,14 +27,30 @@ const getEvent = (slug: string): PVREvent | undefined =>
 // ── storage: Netlify Blobs in prod / `netlify dev`, in-memory under `gatsby develop` ──
 const memory: Record<string, Rsvp[]> = {};
 
+// The in-memory fallback is only acceptable for local `gatsby develop`.
+// In a deployed build it would silently drop data, so we fail loudly instead.
+const allowMemoryFallback = process.env.NODE_ENV !== "production";
+
+// The Netlify-Gatsby function runtime doesn't always get the automatic Blobs
+// context injected, so fall back to explicit siteID + token when provided.
+const rsvpStore = () => {
+  const siteID = process.env.NETLIFY_SITE_ID || process.env.SITE_ID;
+  const token = process.env.NETLIFY_BLOBS_TOKEN || process.env.NETLIFY_API_TOKEN;
+  if (siteID && token) {
+    return getStore({ name: "event-rsvps", siteID, token });
+  }
+  // Auto-configured context (works under `netlify dev` and native functions)
+  return getStore("event-rsvps");
+};
+
 const loadRsvps = async (slug: string): Promise<Rsvp[]> => {
   try {
-    const store = getStore("event-rsvps");
-    const data = (await store.get(slug, { type: "json" })) as {
+    const data = (await rsvpStore().get(slug, { type: "json" })) as {
       rsvps: Rsvp[];
     } | null;
     return data?.rsvps || [];
   } catch (err) {
+    if (!allowMemoryFallback) throw err;
     console.warn(
       `[rsvp] Blobs unavailable on load (${slug}), using in-memory:`,
       (err as Error).message
@@ -45,10 +61,10 @@ const loadRsvps = async (slug: string): Promise<Rsvp[]> => {
 
 const saveRsvps = async (slug: string, rsvps: Rsvp[]): Promise<void> => {
   try {
-    const store = getStore("event-rsvps");
-    await store.setJSON(slug, { rsvps });
+    await rsvpStore().setJSON(slug, { rsvps });
     console.log(`[rsvp] Saved ${rsvps.length} rsvp(s) to Blobs for ${slug}`);
   } catch (err) {
+    if (!allowMemoryFallback) throw err;
     console.warn(
       `[rsvp] Blobs unavailable on save (${slug}), using in-memory:`,
       (err as Error).message
@@ -115,6 +131,7 @@ export default async function handler(
   req: GatsbyFunctionRequest,
   res: GatsbyFunctionResponse
 ) {
+  try {
   // GET — live summary (or full list with admin key)
   if (req.method === "GET") {
     const slug = req.query.slug as string;
@@ -219,4 +236,10 @@ export default async function handler(
   }
 
   return res.status(405).json({ error: "Method not allowed" });
+  } catch (err) {
+    console.error(`[rsvp] Storage error:`, (err as Error).message);
+    return res.status(500).json({
+      error: "RSVP storage is temporarily unavailable. Please try again shortly.",
+    });
+  }
 }

@@ -12,8 +12,8 @@
     "packageJson": {
       "dependencies": [
         "npm:@mdx-js/react@^2.3.0",
+        "npm:@netlify/blobs@8.2.0",
         "npm:@tailwindcss/postcss@4.3.2",
-        "npm:@theme-ui/mdx@~0.17.1",
         "npm:@types/node@^20.11.19",
         "npm:@types/react-dom@^18.2.19",
         "npm:@types/react-helmet@^6.1.11",

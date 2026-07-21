@@ -17,10 +17,6 @@ const CartDrawer = () => {
           items: items.map(i => ({
             stripePrice: i.stripePrice,
             quantity: i.quantity,
-            productName: i.productName,
-            variantLabel: i.variantLabel,
-            price: i.price,
-            image: i.image,
           })),
         }),
       })

@@ -12,7 +12,7 @@ export type CartItem = {
   productId: string
   productName: string
   variantLabel?: string
-  stripePrice: string
+  priceLookupKey: string
   quantity: number
   price: number
   image?: string
@@ -36,7 +36,7 @@ type CartContextType = {
 
 const CartCtx = createContext<CartContextType | null>(null)
 
-const STORAGE_KEY = 'pvr-cart'
+const STORAGE_KEY = 'pvr-cart-v2'
 
 export const CartProvider = ({ children }: { children: ReactNode }) => {
   const [items, setItems] = useState<CartItem[]>([])

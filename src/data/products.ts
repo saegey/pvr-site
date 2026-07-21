@@ -1,6 +1,6 @@
 export type ProductVariant = {
   label: string;
-  stripePrice: string; // Stripe Price ID from dashboard: price_xxx
+  priceLookupKey: string; // Same Stripe Price lookup key in live and sandbox
   inStock?: boolean;
 };
 
@@ -10,14 +10,16 @@ export type Product = {
   description: string;
   price: number; // display price in USD
   images: string[]; // paths relative to site root — put files in static/images/shop/<id>/
-  variants?: ProductVariant[]; // e.g. sizes — each variant has its own Stripe Price
-  stripePrice?: string; // use this only if there are no variants
+  variants?: ProductVariant[]; // e.g. sizes — each variant has its own lookup key
+  priceLookupKey?: string; // use this only if there are no variants
   tags?: string[];
 };
 
 // ─── Add your products here ───────────────────────────────────────────────────
 // 1. Create a Stripe product + price for each variant (or one price if no variants)
-// 2. Copy the price ID (price_xxx) from the Stripe dashboard into stripePrice
+//    in both live mode and your sandbox.
+// 2. Give the matching prices the same lookup key (for example, pvr-decal-solid)
+//    and put that key here.
 // 3. Drop product images into static/images/shop/<product-id>/
 // ─────────────────────────────────────────────────────────────────────────────
 export const PRODUCTS: Product[] = [
@@ -35,8 +37,8 @@ export const PRODUCTS: Product[] = [
     ],
     tags: ["accessories"],
     variants: [
-      { label: "Solid", stripePrice: "price_1TuhLmEV0X4rFJV7GwhKDI8s" },
-      { label: "Cutout", stripePrice: "price_1TuhdfEV0X4rFJV7lGtmIOw1" },
+      { label: "Solid", priceLookupKey: "pvr-decal-solid" },
+      { label: "Cutout", priceLookupKey: "pvr-decal-cutout" },
     ],
   },
   {
@@ -52,8 +54,8 @@ export const PRODUCTS: Product[] = [
     ],
     tags: ["accessories"],
     variants: [
-      { label: "Solid Logo", stripePrice: "price_1TuhNREV0X4rFJV7RFtsQ0X8" },
-      { label: "Hollow Logo", stripePrice: "price_1TuhNREV0X4rFJV7RFtsQ0X8" },
+      { label: "Solid Logo", priceLookupKey: "pvr-coaster" },
+      { label: "Hollow Logo", priceLookupKey: "pvr-coaster" },
     ],
   },
   {
@@ -67,7 +69,7 @@ export const PRODUCTS: Product[] = [
       "/images/shop/pvr-cyanotype/print-2.png",
     ],
     tags: ["art"],
-    stripePrice: "price_1TuhOhEV0X4rFJV7mb5aPzIS",
+    priceLookupKey: "pvr-cyanotype-print",
   },
   {
     id: "pvr-cyanotype-2",
@@ -80,7 +82,7 @@ export const PRODUCTS: Product[] = [
       "/images/shop/pvr-cyanotype-2/print-2.png",
     ],
     tags: ["art"],
-    stripePrice: "price_1TuhOhEV0X4rFJV7mb5aPzIS",
+    priceLookupKey: "pvr-cyanotype-print",
   },
   {
     id: "pvr-cyanotype-3",
@@ -93,6 +95,6 @@ export const PRODUCTS: Product[] = [
       "/images/shop/pvr-cyanotype-3/print-2.png",
     ],
     tags: ["art"],
-    stripePrice: "price_1TuhOhEV0X4rFJV7mb5aPzIS",
+    priceLookupKey: "pvr-cyanotype-print",
   },
 ];

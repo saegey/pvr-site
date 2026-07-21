@@ -15,7 +15,7 @@ const CartDrawer = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           items: items.map(i => ({
-            stripePrice: i.stripePrice,
+            priceLookupKey: i.priceLookupKey,
             quantity: i.quantity,
           })),
         }),

@@ -5,11 +5,11 @@ const FIRST_ITEM_SHIPPING = 500
 const ADDITIONAL_ITEM_SHIPPING = 100
 // Keep this list in sync with src/data/products.ts. The Gatsby API route is the
 // storefront endpoint; this covers the legacy Netlify function endpoint too.
-const ALLOWED_PRICE_IDS = new Set([
-  'price_1TuhLmEV0X4rFJV7GwhKDI8s',
-  'price_1TuhdfEV0X4rFJV7lGtmIOw1',
-  'price_1TuhNREV0X4rFJV7RFtsQ0X8',
-  'price_1TuhOhEV0X4rFJV7mb5aPzIS',
+const ALLOWED_PRICE_LOOKUP_KEYS = new Set([
+  'pvr-decal-solid',
+  'pvr-decal-cutout',
+  'pvr-coaster',
+  'pvr-cyanotype-print',
 ])
 
 exports.handler = async ({ body }) => {
@@ -26,8 +26,8 @@ exports.handler = async ({ body }) => {
     }
 
     if (items.some(item =>
-      !item?.stripePrice?.startsWith('price_') ||
-      !ALLOWED_PRICE_IDS.has(item.stripePrice) ||
+      !item?.priceLookupKey ||
+      !ALLOWED_PRICE_LOOKUP_KEYS.has(item.priceLookupKey) ||
       !Number.isInteger(item.quantity) ||
       item.quantity < 1 ||
       item.quantity > 99
@@ -39,11 +39,14 @@ exports.handler = async ({ body }) => {
     }
 
     const baseUrl = process.env.URL || 'http://localhost:8888'
-    const prices = await Promise.all(
-      items.map(item => stripe.prices.retrieve(item.stripePrice))
+    const lookupKeys = [...new Set(items.map(item => item.priceLookupKey))]
+    const prices = await stripe.prices.list({ lookup_keys: lookupKeys, active: true, limit: 100 })
+    const pricesByLookupKey = new Map(
+      prices.data.map(price => [price.lookup_key, price])
     )
+    const resolvedPrices = items.map(item => pricesByLookupKey.get(item.priceLookupKey))
 
-    if (prices.some(price => !price.active || price.currency !== 'usd' || price.unit_amount === null)) {
+    if (resolvedPrices.some(price => !price || price.currency !== 'usd' || price.unit_amount === null)) {
       return {
         statusCode: 400,
         body: JSON.stringify({ error: 'Cart contains an unavailable item' }),
@@ -51,7 +54,7 @@ exports.handler = async ({ body }) => {
     }
 
     const itemCount = items.reduce((count, item) => count + item.quantity, 0)
-    const subtotal = prices.reduce(
+    const subtotal = resolvedPrices.reduce(
       (total, price, index) => total + price.unit_amount * items[index].quantity,
       0
     )
@@ -72,9 +75,21 @@ exports.handler = async ({ body }) => {
             display_name: shippingAmount === 0 ? 'Free shipping' : 'Shipping',
           },
         },
+        {
+          shipping_rate_data: {
+            type: 'fixed_amount',
+            fixed_amount: { amount: 0, currency: 'usd' },
+            display_name: 'Local pickup — Seattle',
+          },
+        },
       ],
+      custom_text: {
+        shipping_address: {
+          message: 'Choose Local pickup below if you would prefer to collect your order in Seattle. We will contact you to arrange pickup.',
+        },
+      },
       line_items: items.map(item => ({
-        price: item.stripePrice,
+        price: pricesByLookupKey.get(item.priceLookupKey).id,
         quantity: item.quantity,
       })),
       success_url: `${baseUrl}/shop?success=true`,

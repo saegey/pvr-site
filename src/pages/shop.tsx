@@ -126,15 +126,15 @@ const ProductCard = ({ product }: { product: Product }) => {
   const [added, setAdded] = useState(false)
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null)
 
-  const stripePrice = selectedVariant?.stripePrice ?? product.stripePrice ?? ''
+  const priceLookupKey = selectedVariant?.priceLookupKey ?? product.priceLookupKey ?? ''
 
   const handleAdd = () => {
-    if (!stripePrice) return
+    if (!priceLookupKey) return
     addItem({
       productId: product.id,
       productName: product.name,
       variantLabel: selectedVariant?.label,
-      stripePrice,
+      priceLookupKey,
       price: product.price,
       image: product.images[0],
     })
@@ -254,7 +254,7 @@ const ProductCard = ({ product }: { product: Product }) => {
           {/* Add to cart */}
           <button
             onClick={handleAdd}
-            disabled={!stripePrice?.startsWith('price_')}
+            disabled={!priceLookupKey}
             className="mt-auto py-3 text-xs tracking-[2px] uppercase border transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
             style={{
               borderColor: added ? 'rgb(var(--pvr-fg))' : 'rgb(var(--pvr-fg) / 0.3)',

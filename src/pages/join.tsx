@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { graphql } from 'gatsby'
 import SEO from '../components/seo'
 
 const NewsletterForm = () => {
@@ -73,3 +74,13 @@ const JoinPage = () => (
 )
 
 export default JoinPage
+
+export const query = graphql`
+  query JoinPageQuery {
+    site {
+      siteMetadata {
+        title
+      }
+    }
+  }
+`

@@ -1,6 +1,7 @@
 import type { GatsbyFunctionRequest, GatsbyFunctionResponse } from "gatsby";
 import { getStore } from "@netlify/blobs";
 import EVENTS from "../data/events.data.json";
+import PUBLIC_EVENTS from "../data/public-events.data.json";
 
 type Rsvp = {
   id: string;
@@ -15,21 +16,25 @@ type Rsvp = {
 
 type PVREvent = {
   slug: string;
-  capacity: number;
+  capacity?: number | null;
   maxPlusOnes: number;
   address?: string;
   isActive?: boolean;
+  rsvpEnabled?: boolean;
 };
 
 const getEvent = (slug: string): PVREvent | undefined =>
-  (EVENTS as PVREvent[]).find((e) => e.slug === slug);
+  ([...(EVENTS as PVREvent[]), ...(PUBLIC_EVENTS as PVREvent[])]).find(
+    (e) => e.slug === slug
+  );
 
 // ── storage: Netlify Blobs in prod / `netlify dev`, in-memory under `gatsby develop` ──
 const memory: Record<string, Rsvp[]> = {};
 
-// The in-memory fallback is only acceptable for local `gatsby develop`.
-// In a deployed build it would silently drop data, so we fail loudly instead.
-const allowMemoryFallback = process.env.NODE_ENV !== "production";
+// Local `gatsby serve` runs with NODE_ENV=production but has no Netlify Blobs
+// credentials. Keep its RSVP preview functional in memory; only deployed
+// Netlify requests must persist successfully to Blobs.
+const allowMemoryFallback = process.env.NETLIFY !== "true";
 
 // The Netlify-Gatsby function runtime doesn't always get the automatic Blobs
 // context injected, so fall back to explicit siteID + token when provided.
@@ -90,7 +95,11 @@ const seatsTaken = (rsvps: Rsvp[]) =>
 
 // Reassign confirmed/waitlisted first-come-first-served by createdAt.
 // Auto-promotes the waitlist whenever seats free up. Mutates in place.
-const assignStatuses = (rsvps: Rsvp[], capacity: number): Rsvp[] => {
+const assignStatuses = (rsvps: Rsvp[], capacity?: number | null): Rsvp[] => {
+  if (capacity == null) {
+    rsvps.forEach((r) => { r.status = "confirmed"; });
+    return rsvps;
+  }
   let taken = 0;
   [...rsvps]
     .sort((a, b) => a.createdAt.localeCompare(b.createdAt))
@@ -117,7 +126,7 @@ const summarize = (event: PVREvent, rsvps: Rsvp[]) => {
     slug: event.slug,
     capacity: event.capacity,
     seatsTaken: taken,
-    spotsLeft: Math.max(0, event.capacity - taken),
+    spotsLeft: event.capacity == null ? null : Math.max(0, event.capacity - taken),
     waitlistCount: waitlisted.length,
     guests: confirmed.map((r) => ({
       name: displayName(r.name),
@@ -163,6 +172,8 @@ export default async function handler(
     if (!ev) return res.status(404).json({ error: "Event not found" });
     if (ev.isActive === false)
       return res.status(403).json({ error: "RSVPs are closed" });
+    if (ev.rsvpEnabled === false)
+      return res.status(403).json({ error: "RSVPs are not available for this event" });
     if (!name || !name.trim())
       return res.status(400).json({ error: "Name is required" });
     if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email))

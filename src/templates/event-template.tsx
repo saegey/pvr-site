@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { Link } from "gatsby";
+import { graphql, Link } from "gatsby";
 import SEO from "../components/seo";
 import type { PVREvent } from "../data/events";
 
@@ -405,3 +405,13 @@ const EventTemplate: React.FC<{ pageContext: { event: PVREvent } }> = ({
 };
 
 export default EventTemplate;
+
+export const query = graphql`
+  query PrivateEventPageQuery {
+    site {
+      siteMetadata {
+        title
+      }
+    }
+  }
+`;

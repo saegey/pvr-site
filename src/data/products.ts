@@ -24,21 +24,21 @@ export type Product = {
 // ─────────────────────────────────────────────────────────────────────────────
 export const PRODUCTS: Product[] = [
   {
-    id: "pvr-cyanotype-logo",
+    id: "pvr-cyanotype-print-pvr-logo",
     name: "PVR Cyanotype Print",
     description:
       "8×10 cyanotype print on 280g/m² paper and hand-printed at home — each one is unique with its own natural variations.",
     price: 20,
     images: [
-      "/images/shop/pvr-cyanotype-logo/print-1.png",
-      "/images/shop/pvr-cyanotype-logo/print-2.png",
+      "/images/shop/pvr-cyanotype-print-pvr-logo/print-1.png",
+      "/images/shop/pvr-cyanotype-print-pvr-logo/print-2.png",
     ],
     tags: ["art"],
-    priceLookupKey: "pvr-cyanotype-print",
+    priceLookupKey: "pvr-cyanotype-print-pvr-logo",
   },
   {
     id: "pvr-5-panel-hat",
-    name: "PVR 5 Pannel Hat",
+    name: "PVR 5 Panel Hat",
     description:
       "5 panel hat. Waterproof nylon baseball cap ",
     price: 35,

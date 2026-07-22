@@ -3,14 +3,12 @@ import { graphql } from 'gatsby'
 import { Link as GatsbyLink } from 'gatsby'
 import { GatsbyImage, getImage, IGatsbyImageData } from 'gatsby-plugin-image'
 import InstagramIcon from '../icons/instagram.svg'
-import YouTubeIcon from '../icons/youtube.svg'
 import WebsiteIcon from '../icons/website.svg'
-import MixcloudIcon from '../icons/mixcloud.svg'
 import ShopIcon from '../icons/shop.svg'
-import PVRLogo from '../icons/heads.svg'
 import { format } from 'date-fns'
 import { trackLinkClickDeduped } from '../utils/analytics'
 import { youTubeMaxResThumb, youTubeHQThumb } from '../utils/youtube'
+import { PUBLIC_EVENTS } from '../data/public-events'
 
 type LinkItem = {
   title: string
@@ -34,21 +32,19 @@ type Show = {
 type DataProps = {
   allDataYaml: { nodes: Array<{ links: LinkItem[] }> }
   shows: { nodes: Show[] }
-  site: { siteMetadata: { description?: string } }
 }
 
 const iconMap: Record<string, React.ComponentType<React.SVGProps<SVGSVGElement>>> = {
   InstagramIcon,
-  YouTubeIcon,
   WebsiteIcon,
-  MixcloudIcon,
   ShopIcon,
 }
 
 export default function LinksPage({ data }: { data: DataProps }) {
   const items = data.allDataYaml.nodes?.[0]?.links ?? []
+  const latestPublicEvents = [...PUBLIC_EVENTS]
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
   const latest = (data.shows.nodes || []).slice(0, 6)
-  const bio = data.site?.siteMetadata?.description || ''
 
   return (
     <div
@@ -62,33 +58,13 @@ export default function LinksPage({ data }: { data: DataProps }) {
 
         {/* Logo */}
         <div className="flex justify-center mb-5">
-          <div style={{ background: 'rgb(236 236 230)', padding: '12px', display: 'inline-flex' }}>
-            <PVRLogo width={56} height={56} aria-label="Public Vinyl Radio" style={{ color: 'rgb(11 11 10)' }} />
-          </div>
+          <img
+            src="/images/pvr-logo-white.svg"
+            alt="Public Vinyl Radio"
+            width={180}
+            height={52}
+          />
         </div>
-
-        {/* Wordmark */}
-        <h1
-          className="text-center leading-tight mb-3"
-          style={{
-            fontFamily: 'var(--font-display)',
-            fontSize: '22px',
-            letterSpacing: '2px',
-            color: 'rgb(236 236 230)',
-          }}
-        >
-          PUBLIC VINYL RADIO
-        </h1>
-
-        {/* Bio */}
-        {bio && (
-          <p
-            className="text-center mb-8 leading-[1.7]"
-            style={{ fontSize: '13px', color: 'rgb(236 236 230 / 0.55)' }}
-          >
-            {bio}
-          </p>
-        )}
 
         {/* Link buttons */}
         <nav className="flex flex-col gap-2 mb-10">
@@ -139,6 +115,63 @@ export default function LinksPage({ data }: { data: DataProps }) {
             )
           })}
         </nav>
+
+        {/* Latest Public Events */}
+        {latestPublicEvents.length > 0 && (
+          <div className="mb-10">
+            <div
+              className="flex items-baseline justify-between pb-3 mb-0"
+              style={{ borderBottom: '1px solid rgb(236 236 230 / 0.12)' }}
+            >
+              <span style={{ fontSize: '10px', letterSpacing: '2px', textTransform: 'uppercase', color: 'rgb(236 236 230 / 0.4)' }}>
+                Public Events
+              </span>
+            </div>
+
+            {latestPublicEvents.map((event, i) => (
+              <GatsbyLink
+                key={event.slug}
+                to={`/events/${event.slug}`}
+                className="flex gap-3 py-4 -mx-1 px-1 transition-colors duration-150"
+                style={{ borderBottom: '1px solid rgb(236 236 230 / 0.08)' }}
+                onMouseDown={() =>
+                  trackLinkClickDeduped({
+                    linkText: event.title,
+                    linkUrl: `/events/${event.slug}`,
+                    linkType: 'internal',
+                    location: 'latest_public_events',
+                  })
+                }
+              >
+                <span
+                  className="shrink-0 tabular-nums pt-0.5"
+                  style={{ fontSize: '11px', color: 'rgb(236 236 230 / 0.25)', width: '18px' }}
+                >
+                  {String(i + 1).padStart(2, '0')}
+                </span>
+
+                <div className="flex-1 min-w-0 pt-0.5">
+                  <p
+                    className="leading-snug truncate"
+                    style={{
+                      fontFamily: 'var(--font-display)',
+                      fontSize: '14px',
+                      color: 'rgb(236 236 230)',
+                    }}
+                  >
+                    {event.title}
+                  </p>
+                  <p
+                    className="mt-0.5 truncate"
+                    style={{ fontSize: '11px', color: 'rgb(236 236 230 / 0.4)' }}
+                  >
+                    {event.date} · {event.venue}
+                  </p>
+                </div>
+              </GatsbyLink>
+            ))}
+          </div>
+        )}
 
         {/* Latest Shows */}
         {latest.length > 0 && (
@@ -242,11 +275,6 @@ export default function LinksPage({ data }: { data: DataProps }) {
 
 export const query = graphql`
   query LinksLinktreePageQuery {
-    site {
-      siteMetadata {
-        description
-      }
-    }
     allDataYaml {
       nodes {
         links {

@@ -344,7 +344,7 @@ const EventTemplate: React.FC<{ pageContext: { event: PVREvent } }> = ({
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Your name"
-                className="w-full bg-transparent border border-fg/16 px-4 py-3 text-sm text-fg placeholder:text-fg/30 outline-none focus:border-fg/40 transition-colors"
+                className="w-full bg-transparent border border-fg/16 px-4 py-3 text-base md:text-sm text-fg placeholder:text-fg/30 outline-none focus:border-fg/40 transition-colors"
               />
               <input
                 type="email"
@@ -352,7 +352,7 @@ const EventTemplate: React.FC<{ pageContext: { event: PVREvent } }> = ({
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Your email"
-                className="w-full bg-transparent border border-fg/16 px-4 py-3 text-sm text-fg placeholder:text-fg/30 outline-none focus:border-fg/40 transition-colors"
+                className="w-full bg-transparent border border-fg/16 px-4 py-3 text-base md:text-sm text-fg placeholder:text-fg/30 outline-none focus:border-fg/40 transition-colors"
               />
               <input
                 type="tel"
@@ -360,7 +360,7 @@ const EventTemplate: React.FC<{ pageContext: { event: PVREvent } }> = ({
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
                 placeholder="Phone number"
-                className="w-full bg-transparent border border-fg/16 px-4 py-3 text-sm text-fg placeholder:text-fg/30 outline-none focus:border-fg/40 transition-colors"
+                className="w-full bg-transparent border border-fg/16 px-4 py-3 text-base md:text-sm text-fg placeholder:text-fg/30 outline-none focus:border-fg/40 transition-colors"
               />
             </div>
 

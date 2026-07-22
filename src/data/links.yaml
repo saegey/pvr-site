@@ -1,17 +1,9 @@
 # src/data/links.yml
 links:
-  - title: "YouTube"
-    url: "https://youtube.com/@PublicVinylRadio"
-    subtitle: "Full vinyl sets"
-    svgIcon: "YouTubeIcon"
   - title: "Website"
     url: "https://publicvinylradio.com"
     subtitle: "Explore more about Public Vinyl Radio"
     svgIcon: "WebsiteIcon"
-  - title: "Mixcloud"
-    url: "https://mixcloud.com/public-vinyl-radio"
-    subtitle: "Listen to our mixes"
-    svgIcon: "MixcloudIcon"
   - title: "Shop"
     url: "https://publicvinylradio.com/shop"
     subtitle: "Gear from Public Vinyl Radio"

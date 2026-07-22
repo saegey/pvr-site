@@ -240,11 +240,6 @@ const ProductCard = ({ product }: { product: Product }) => {
             </div>
           )}
 
-          {product.images.length > 1 && (
-            <p className="absolute left-3 top-3 z-10 text-[10px] tracking-[1px] uppercase text-fg/55 md:hidden pointer-events-none">
-              Swipe photos
-            </p>
-          )}
         </div>
 
         {/* Info */}

@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import { useCart } from '../context/cart-context'
 
+const thumbnailSrc = (src: string) => src.replace(/\.(png|jpe?g)$/i, '-thumb.webp')
+
 const CartDrawer = () => {
   const { items, isOpen, closeCart, removeItem, updateQty, total, count, clearCart } = useCart()
   const [loading, setLoading] = useState(false)
@@ -78,9 +80,10 @@ const CartDrawer = () => {
                       className="w-16 h-16 shrink-0 bg-fg/5 overflow-hidden"
                     >
                       <img
-                        src={item.image}
+                        src={thumbnailSrc(item.image)}
                         alt={item.productName}
                         className="w-full h-full object-cover"
+                        decoding="async"
                       />
                     </div>
                   )}

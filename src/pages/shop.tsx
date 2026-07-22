@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useCallback } from 'react'
+import { graphql } from 'gatsby'
 import SEO from '../components/seo'
 import { PRODUCTS, Product, ProductVariant } from '../data/products'
 import { useCart } from '../context/cart-context'
 
 const formatPrice = (n: number) => `$${n.toFixed(2)}`
+const cardImageSrc = (src: string) => src.replace(/\.(png|jpe?g)$/i, '.webp')
 
 // ─── Lightbox ────────────────────────────────────────────────────────────────
 const Lightbox = ({
@@ -125,6 +127,8 @@ const ProductCard = ({ product }: { product: Product }) => {
   )
   const [added, setAdded] = useState(false)
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null)
+  const [loadedImages, setLoadedImages] = useState<Set<number>>(() => new Set())
+  const touchStartX = React.useRef<number | null>(null)
 
   const priceLookupKey = selectedVariant?.priceLookupKey ?? product.priceLookupKey ?? ''
 
@@ -142,17 +146,51 @@ const ProductCard = ({ product }: { product: Product }) => {
     setTimeout(() => setAdded(false), 1800)
   }
 
+  const handleImageTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX
+  }
+
+  const handleImageTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX.current === null) return
+    const distance = touchStartX.current - e.changedTouches[0].clientX
+    if (Math.abs(distance) > 40) {
+      setImageIndex((index) =>
+        distance > 0
+          ? (index + 1) % product.images.length
+          : (index - 1 + product.images.length) % product.images.length
+      )
+    }
+    touchStartX.current = null
+  }
+
   return (
     <>
       <article className="flex flex-col">
         {/* Image area */}
-        <div className="relative bg-fg/5 overflow-hidden group" style={{ aspectRatio: '5/4' }}>
+        <div
+          className="relative bg-fg/5 overflow-hidden group"
+          style={{ aspectRatio: '5/4', touchAction: 'pan-y' }}
+          onTouchStart={product.images.length > 1 ? handleImageTouchStart : undefined}
+          onTouchEnd={product.images.length > 1 ? handleImageTouchEnd : undefined}
+        >
           {product.images.length > 0 ? (
-            <img
-              src={product.images[imageIndex]}
-              alt={`${product.name} — image ${imageIndex + 1}`}
-              className="w-full h-full object-cover"
-            />
+            <>
+              {!loadedImages.has(imageIndex) && (
+                <div
+                  className="absolute inset-0 animate-pulse"
+                  aria-hidden="true"
+                  style={{ background: 'linear-gradient(110deg, rgba(236,236,230,0.04), rgba(236,236,230,0.12), rgba(236,236,230,0.04))' }}
+                />
+              )}
+              <img
+                src={cardImageSrc(product.images[imageIndex])}
+                alt={`${product.name} — image ${imageIndex + 1}`}
+                className="w-full h-full object-cover transition-opacity duration-300"
+                loading="lazy"
+                decoding="async"
+                onLoad={() => setLoadedImages((images) => new Set(images).add(imageIndex))}
+              />
+            </>
           ) : (
             <div
               className="w-full h-full"
@@ -202,14 +240,6 @@ const ProductCard = ({ product }: { product: Product }) => {
             </div>
           )}
 
-          {/* Click to cycle images */}
-          {product.images.length > 1 && (
-            <button
-              className="absolute inset-0 w-full h-full opacity-0"
-              aria-hidden="true"
-              onClick={() => setImageIndex(i => (i + 1) % product.images.length)}
-            />
-          )}
         </div>
 
         {/* Info */}
@@ -339,3 +369,13 @@ const ShopPage = () => {
 }
 
 export default ShopPage
+
+export const query = graphql`
+  query ShopPageQuery {
+    site {
+      siteMetadata {
+        title
+      }
+    }
+  }
+`

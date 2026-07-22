@@ -1,4 +1,5 @@
 import React from 'react'
+import { graphql } from 'gatsby'
 import { StaticImage } from 'gatsby-plugin-image'
 import SEO from '../components/seo'
 import { useOgImageFromPath } from '../hooks/useOgImage'
@@ -237,3 +238,13 @@ const AboutPage = () => {
 }
 
 export default AboutPage
+
+export const query = graphql`
+  query AboutPageQuery {
+    site {
+      siteMetadata {
+        title
+      }
+    }
+  }
+`

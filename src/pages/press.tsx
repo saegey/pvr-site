@@ -1,5 +1,5 @@
 import React from 'react'
-import { graphql, useStaticQuery } from 'gatsby'
+import { graphql } from 'gatsby'
 import SEO from '../components/seo'
 
 type AssetFile = {
@@ -111,25 +111,7 @@ const AssetRow = ({ group }: { group: { name: string; files: AssetFile[] } }) =>
   )
 }
 
-const PressPage = () => {
-  const data = useStaticQuery(graphql`
-    query PressKitQuery {
-      allFile(
-        filter: {
-          sourceInstanceName: { eq: "images" }
-          relativeDirectory: { eq: "press" }
-        }
-        sort: { name: ASC }
-      ) {
-        nodes {
-          id
-          name
-          extension
-          publicURL
-        }
-      }
-    }
-  `)
+const PressPage = ({ data }: { data: { allFile: { nodes: AssetFile[] } } }) => {
 
   const files: AssetFile[] = data.allFile.nodes
   const groups = groupByBasename(files)
@@ -202,3 +184,22 @@ const PressPage = () => {
 }
 
 export default PressPage
+
+export const query = graphql`
+  query PressPageQuery {
+    allFile(
+      filter: {
+        sourceInstanceName: { eq: "images" }
+        relativeDirectory: { eq: "press" }
+      }
+      sort: { name: ASC }
+    ) {
+      nodes {
+        id
+        name
+        extension
+        publicURL
+      }
+    }
+  }
+`

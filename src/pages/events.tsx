@@ -1,43 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "gatsby";
+import { graphql, Link } from "gatsby";
 import SEO from "../components/seo";
 import { ACTIVE_EVENTS } from "../data/events";
-
-type PublicEvent = {
-  date: string
-  title: string
-  venue: string
-  location: string
-  djs: string[]
-  rsvpUrl: string
-}
-
-const PUBLIC_EVENTS: PublicEvent[] = [
-  // {
-  //   date: 'Aug 3, 2026',
-  //   title: 'Rooftop Vinyl Sunset',
-  //   venue: 'Phinney Beer Co.',
-  //   location: 'Seattle',
-  //   djs: ['Saegey', 'TOPYEN'],
-  //   rsvpUrl: '#',
-  // },
-  // {
-  //   date: 'Sep 12, 2026',
-  //   title: 'Late Night Disco',
-  //   venue: 'The Vera Project',
-  //   location: 'Seattle',
-  //   djs: ['Saegey', 'Ben Schauland'],
-  //   rsvpUrl: '#',
-  // },
-  // {
-  //   date: 'Oct 4, 2026',
-  //   title: 'Analog Rhythms Vol. 3',
-  //   venue: 'King Street Station',
-  //   location: 'Seattle',
-  //   djs: ['Saegey'],
-  //   rsvpUrl: '#',
-  // },
-];
+import { PUBLIC_EVENTS } from '../data/public-events'
 
 type Summary = {
   capacity: number;
@@ -160,17 +125,20 @@ const EventsPage = () => {
                 {event.date}
               </span>
               {/* RSVP pill — right-aligned on mobile top row */}
-              <a
-                href={event.rsvpUrl}
-                className="ml-auto md:hidden text-xs tracking-[1px] uppercase text-fg/50 border border-fg/20 px-3 py-1.5 hover:border-fg/50 hover:text-fg transition-colors shrink-0"
-              >
-                Free · RSVP
-              </a>
+              {event.rsvpEnabled && (
+                <Link
+                  to={`/events/${event.slug}`}
+                  className="ml-auto md:hidden text-xs tracking-[1px] uppercase text-fg/50 border border-fg/20 px-3 py-1.5 hover:border-fg/50 hover:text-fg transition-colors shrink-0"
+                >
+                  Free · RSVP
+                </Link>
+              )}
             </div>
 
             {/* Title + venue/DJs */}
             <div className="flex-1 min-w-0">
-              <p
+              <Link
+                to={`/events/${event.slug}`}
                 className="text-fg leading-snug"
                 style={{
                   fontFamily: "var(--font-display)",
@@ -178,19 +146,31 @@ const EventsPage = () => {
                 }}
               >
                 {event.title}
-              </p>
+              </Link>
               <p className="text-xs text-fg/40 mt-1">
-                {event.venue}, {event.location} · with {event.djs.join(", ")}
+                {event.venue}, {event.location} · {event.time} · with {event.djs.join(", ")}
+              </p>
+              <p className="text-xs text-fg/50 mt-2 max-w-2xl leading-relaxed">
+                {event.description}
               </p>
             </div>
 
             {/* RSVP — desktop only */}
-            <a
-              href={event.rsvpUrl}
-              className="hidden md:inline text-xs tracking-[1px] uppercase text-fg/50 border border-fg/20 px-4 py-2 hover:border-fg/50 hover:text-fg transition-colors shrink-0"
-            >
-              Free · RSVP
-            </a>
+            {event.rsvpEnabled ? (
+              <Link
+                to={`/events/${event.slug}`}
+                className="hidden md:inline text-xs tracking-[1px] uppercase text-fg/50 border border-fg/20 px-4 py-2 hover:border-fg/50 hover:text-fg transition-colors shrink-0"
+              >
+                Free · RSVP
+              </Link>
+            ) : (
+              <Link
+                to={`/events/${event.slug}`}
+                className="hidden md:inline text-xs tracking-[1px] uppercase text-fg/50 border border-fg/20 px-4 py-2 hover:border-fg/50 hover:text-fg transition-colors shrink-0"
+              >
+                Details →
+              </Link>
+            )}
           </div>
         ))}
       </div>
@@ -328,3 +308,13 @@ const EventsPage = () => {
 };
 
 export default EventsPage;
+
+export const query = graphql`
+  query EventsPageQuery {
+    site {
+      siteMetadata {
+        title
+      }
+    }
+  }
+`;

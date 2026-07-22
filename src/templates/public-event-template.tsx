@@ -71,7 +71,7 @@ const PublicEventTemplate: React.FC<{ pageContext: { event: PublicEvent } }> = (
         url={`https://publicvinylradio.com/events/${event.slug}`}
       />
       <main className="min-h-screen bg-bg text-fg">
-        <div className="max-w-[960px] mx-auto px-4 md:px-12 py-10 md:py-16">
+        <div className="max-w-[960px] mx-auto px-4 md:px-12 py-8 md:py-16">
           <Link
             to="/events"
             className="inline-block text-xs tracking-[1px] uppercase text-fg/50 hover:text-fg transition-colors"
@@ -79,8 +79,8 @@ const PublicEventTemplate: React.FC<{ pageContext: { event: PublicEvent } }> = (
             ← All events
           </Link>
 
-          <section className="mt-8 border border-fg/15">
-            <div className="bg-black px-6 py-8 md:px-12 md:py-12">
+          <section className="mt-8 md:border md:border-fg/15">
+            <div className="bg-black px-5 py-7 md:px-12 md:py-12">
               <div className="flex items-center gap-4 md:gap-6">
                 <div className="flex h-16 flex-1 items-center justify-center border border-white/20 px-4 md:h-24">
                   <img
@@ -104,7 +104,7 @@ const PublicEventTemplate: React.FC<{ pageContext: { event: PublicEvent } }> = (
               </div>
             </div>
 
-            <div className="px-6 py-8 md:px-12 md:py-12">
+            <div className="px-5 py-7 md:px-12 md:py-12">
               <p className="text-xs tracking-[2px] uppercase text-fg/50">
                 Public event · {event.date} · {event.time}
               </p>
@@ -136,9 +136,9 @@ const PublicEventTemplate: React.FC<{ pageContext: { event: PublicEvent } }> = (
                   <form onSubmit={submit} className="max-w-xl border border-fg/16 p-6">
                     <p className="text-xs tracking-[1px] uppercase text-fg/45 mb-5">RSVP · free</p>
                     <div className="flex flex-col gap-3">
-                      <input required value={name} onChange={(e) => setName(e.target.value)} placeholder="Your name" className="w-full bg-transparent border border-fg/16 px-4 py-3 text-sm text-fg placeholder:text-fg/30 outline-none focus:border-fg/40" />
-                      <input required type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Your email" className="w-full bg-transparent border border-fg/16 px-4 py-3 text-sm text-fg placeholder:text-fg/30 outline-none focus:border-fg/40" />
-                      <input required type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="Phone number" className="w-full bg-transparent border border-fg/16 px-4 py-3 text-sm text-fg placeholder:text-fg/30 outline-none focus:border-fg/40" />
+                      <input required value={name} onChange={(e) => setName(e.target.value)} placeholder="Your name" className="w-full bg-transparent border border-fg/16 px-4 py-3 text-base md:text-sm text-fg placeholder:text-fg/30 outline-none focus:border-fg/40" />
+                      <input required type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Your email" className="w-full bg-transparent border border-fg/16 px-4 py-3 text-base md:text-sm text-fg placeholder:text-fg/30 outline-none focus:border-fg/40" />
+                      <input required type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="Phone number" className="w-full bg-transparent border border-fg/16 px-4 py-3 text-base md:text-sm text-fg placeholder:text-fg/30 outline-none focus:border-fg/40" />
                     </div>
                     {event.maxPlusOnes > 0 && (
                       <label className="mt-4 flex items-center gap-3 cursor-pointer text-sm text-fg/60">

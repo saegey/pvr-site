@@ -5,9 +5,9 @@ import { useCart } from '../context/cart-context'
 import CartDrawer from './cart-drawer'
 
 const NAV_LINKS = [
-  { label: 'Archive', to: '/' },
   { label: 'Events', to: '/events' },
   { label: 'Shop', to: '/shop' },
+  { label: 'Archive', to: '/shows' },
   { label: 'About', to: '/about' },
 ]
 
@@ -72,49 +72,49 @@ const Layout = ({ children }: { children: ReactNode }) => {
           </nav>
 
           {/* Cart icon */}
-          <button
-            onClick={openCart}
-            className="relative text-xs tracking-[1px] uppercase text-fg/60 hover:text-fg transition-colors hidden md:flex items-center gap-1.5"
-            aria-label="Open cart"
-          >
-            Cart
-            {count > 0 && (
-              <span className="w-4 h-4 rounded-full bg-fg text-bg text-[10px] flex items-center justify-center tabular-nums">
-                {count}
-              </span>
-            )}
-          </button>
-
-          {/* Mobile: cart + hamburger */}
-          <div className="flex items-center gap-4 md:hidden">
+          {count > 0 && (
             <button
               onClick={openCart}
-              className="relative text-xs tracking-[1px] uppercase text-fg/60 hover:text-fg transition-colors flex items-center gap-1.5"
+              className="relative text-xs tracking-[1px] uppercase text-fg/60 hover:text-fg transition-colors hidden md:flex items-center gap-1.5"
               aria-label="Open cart"
             >
               Cart
-              {count > 0 && (
+              <span className="w-4 h-4 rounded-full bg-fg text-bg text-[10px] flex items-center justify-center tabular-nums">
+                {count}
+              </span>
+            </button>
+          )}
+
+          {/* Mobile: cart + hamburger */}
+          <div className="flex items-center gap-4 md:hidden">
+            {count > 0 && (
+              <button
+                onClick={openCart}
+                className="relative text-xs tracking-[1px] uppercase text-fg/60 hover:text-fg transition-colors flex items-center gap-1.5"
+                aria-label="Open cart"
+              >
+                Cart
                 <span className="w-4 h-4 rounded-full bg-fg text-bg text-[10px] flex items-center justify-center tabular-nums">
                   {count}
                 </span>
-              )}
-            </button>
+              </button>
+            )}
           <button
-            className="flex flex-col justify-center gap-[5px] w-8 h-8 shrink-0"
+            className="relative flex w-8 h-8 shrink-0 items-center justify-center"
             onClick={() => setMenuOpen((v) => !v)}
             aria-label={menuOpen ? 'Close menu' : 'Open menu'}
           >
             <span
-              className="block h-px bg-fg transition-all duration-200 origin-center"
-              style={menuOpen ? { transform: 'translateY(6px) rotate(45deg)' } : {}}
+              className="absolute h-px w-8 bg-fg transition-transform duration-200"
+              style={{ transform: menuOpen ? 'rotate(45deg)' : 'translateY(-6px)' }}
             />
             <span
-              className="block h-px bg-fg transition-all duration-200"
-              style={menuOpen ? { opacity: 0 } : {}}
+              className="absolute h-px w-8 bg-fg transition-opacity duration-200"
+              style={{ opacity: menuOpen ? 0 : 1 }}
             />
             <span
-              className="block h-px bg-fg transition-all duration-200 origin-center"
-              style={menuOpen ? { transform: 'translateY(-6px) rotate(-45deg)' } : {}}
+              className="absolute h-px w-8 bg-fg transition-transform duration-200"
+              style={{ transform: menuOpen ? 'rotate(-45deg)' : 'translateY(6px)' }}
             />
           </button>
           </div>

@@ -1,12 +1,11 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { graphql, Link, PageProps } from 'gatsby'
 import { GatsbyImage, getImage, IGatsbyImageData } from 'gatsby-plugin-image'
 import { Helmet } from 'react-helmet'
 import SEO from '../components/seo'
 import { formatDate } from '../utils/date'
 import { youTubeHQThumb, youTubeMaxResThumb } from '../utils/youtube'
-
-const PAGE_SIZE = 6
+import { PUBLIC_EVENTS } from '../data/public-events'
 
 interface Show {
   id: string
@@ -38,19 +37,13 @@ interface DataProps {
 }
 
 const ShowsPage: React.FC<PageProps<DataProps>> = ({ data }) => {
-  const [visible, setVisible] = useState(PAGE_SIZE)
-
-  const shows = [...data.allMdx.nodes]
-    .filter((s) => s.frontmatter.isActive !== false)
-    .sort(
-      (a, b) =>
-        new Date(b.frontmatter.date).getTime() -
-        new Date(a.frontmatter.date).getTime()
-    )
-
-  const visibleShows = shows.slice(0, visible)
-  const hasMore = visible < shows.length
-
+  const featuredShow = data.allMdx.nodes[0]
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+  const upcomingEvents = [...PUBLIC_EVENTS]
+    .filter((event) => new Date(event.date) >= today)
+    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+    .slice(0, 2)
   const { siteMetadata } = data.site
 
   return (
@@ -119,111 +112,69 @@ const ShowsPage: React.FC<PageProps<DataProps>> = ({ data }) => {
         </div>
       </section>
 
-      {/* ── Show archive ── */}
-      <section className="max-w-[1320px] mx-auto px-4 md:px-12 py-16">
-        {/* Archive header */}
-        <div className="flex items-baseline justify-between border-t border-b border-fg/12 py-4 mb-0">
-          <span className="text-xs tracking-[2px] uppercase text-fg/55">Recent Shows</span>
-          <span className="text-xs tracking-[1px] text-fg/40">
-            {Math.min(visible, shows.length)} of {shows.length}
-          </span>
-        </div>
-
-        {/* Show rows */}
-        <div>
-          {visibleShows.map((show, i) => {
-            const coverImageData = show.frontmatter.coverImage
-              ? getImage(show.frontmatter.coverImage as any)
-              : null
-
-            return (
-              <Link
-                key={show.id}
-                to={`/shows/${show.frontmatter.slug || '#'}`}
-                className="flex flex-col md:flex-row md:items-start gap-4 md:gap-6 py-6 border-b border-fg/12 hover:bg-fg/[0.03] transition-colors duration-150 -mx-4 px-4"
-              >
-                {/* Thumbnail — full width on mobile, fixed 160px on desktop */}
-                <div className="w-full md:w-40 md:shrink-0 overflow-hidden bg-fg/5 flex items-center justify-center" style={{ aspectRatio: '16/9' }}>
-                  {show.frontmatter.youtubeId ? (
-                    <img
-                      src={youTubeMaxResThumb(show.frontmatter.youtubeId)}
-                      alt={show.frontmatter.title}
-                      className="w-full h-full object-contain"
-                      loading="lazy"
-                      onError={(e) => {
-                        const t = e.currentTarget as HTMLImageElement
-                        t.onerror = null
-                        t.src = youTubeHQThumb(show.frontmatter.youtubeId)
-                      }}
-                    />
-                  ) : coverImageData ? (
-                    <GatsbyImage
-                      image={coverImageData}
-                      alt={show.frontmatter.title}
-                      className="w-full h-full"
-                      imgStyle={{ objectFit: 'contain' }}
-                    />
-                  ) : (
-                    <div
-                      className="w-full h-full"
-                      style={{
-                        background:
-                          'repeating-linear-gradient(135deg, #141412, #141412 4px, #1a1a17 4px, #1a1a17 8px)',
-                      }}
-                    />
-                  )}
+      <section className="max-w-[1320px] mx-auto px-4 md:px-12 py-16 md:py-24 space-y-20 md:space-y-28">
+        {/* ── Upcoming events ── */}
+        {upcomingEvents.length > 0 && (
+          <div>
+            <div className="flex items-baseline justify-between border-t border-b border-fg/12 py-4">
+              <span className="text-xs tracking-[2px] uppercase text-fg/55">Upcoming</span>
+              <Link to="/events" className="text-xs tracking-[1px] uppercase text-fg/40 hover:text-fg transition-colors">All events →</Link>
+            </div>
+            {upcomingEvents.map((event) => (
+              <Link key={event.slug} to={`/events/${event.slug}`} className="group flex flex-col md:flex-row md:items-center gap-3 md:gap-10 py-7 border-b border-fg/12 hover:bg-fg/[0.03] transition-colors -mx-4 px-4">
+                <p className="text-xs tracking-[2px] uppercase text-fg/45 md:w-36 shrink-0">{event.date}</p>
+                <div className="flex-1">
+                  <h2 className="text-fg leading-snug" style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(24px, 4vw, 34px)' }}>{event.title}</h2>
+                  <p className="mt-1 text-sm text-fg/55">{event.venue} · {event.time}</p>
                 </div>
-
-                {/* Content */}
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-baseline gap-3 mb-2">
-                    <span className="text-xs text-fg/30 tabular-nums hidden md:inline">
-                      {String(i + 1).padStart(2, '0')}
-                    </span>
-                    <p className="text-xs tracking-[2px] uppercase text-fg/40">
-                      {formatDate(show.frontmatter.date)}
-                    </p>
-                  </div>
-                  <h2
-                    className="text-fg mb-1 leading-snug"
-                    style={{
-                      fontFamily: 'var(--font-display)',
-                      fontSize: 'clamp(20px, 4vw, 26px)',
-                      letterSpacing: '-0.5px',
-                    }}
-                  >
-                    {show.frontmatter.title || 'Untitled Show'}
-                  </h2>
-                  <p className="text-sm text-fg/55 mb-4">
-                    with {(show.frontmatter.host || []).join(', ')}
-                  </p>
-                  <div className="flex flex-wrap gap-2">
-                    {(show.frontmatter.tags || []).map((tag) => (
-                      <span
-                        key={tag}
-                        className="text-[11px] tracking-[1px] uppercase px-2 py-1 border border-fg/20 text-fg/55"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                </div>
+                <span className="text-xs tracking-[1px] uppercase text-fg/45 group-hover:text-fg transition-colors">Details →</span>
               </Link>
-            )
-          })}
-        </div>
-
-        {/* Load more */}
-        {hasMore && (
-          <div className="flex justify-center mt-12">
-            <button
-              onClick={() => setVisible((v) => v + PAGE_SIZE)}
-              className="text-xs tracking-[2px] uppercase px-8 py-4 border border-fg/20 text-fg/65 hover:border-fg/50 hover:text-fg transition-colors duration-150"
-            >
-              Load More Shows
-            </button>
+            ))}
           </div>
         )}
+
+        {/* ── Featured archive show ── */}
+        {featuredShow && (() => {
+          const coverImageData = featuredShow.frontmatter.coverImage ? getImage(featuredShow.frontmatter.coverImage as any) : null
+          return (
+            <div>
+              <div className="flex items-baseline justify-between border-t border-b border-fg/12 py-4 mb-6">
+                <span className="text-xs tracking-[2px] uppercase text-fg/55">From the archive</span>
+                <Link to="/shows" className="text-xs tracking-[1px] uppercase text-fg/40 hover:text-fg transition-colors">All shows →</Link>
+              </div>
+              <Link to={`/shows/${featuredShow.frontmatter.slug}`} className="group grid md:grid-cols-2 border border-fg/12 hover:border-fg/30 transition-colors">
+                <div className="aspect-video bg-fg/5 overflow-hidden">
+                  {featuredShow.frontmatter.youtubeId ? (
+                    <img src={youTubeMaxResThumb(featuredShow.frontmatter.youtubeId)} alt={featuredShow.frontmatter.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.02]" onError={(e) => { const image = e.currentTarget; image.onerror = null; image.src = youTubeHQThumb(featuredShow.frontmatter.youtubeId) }} />
+                  ) : coverImageData ? (
+                    <GatsbyImage image={coverImageData} alt={featuredShow.frontmatter.title} className="w-full h-full" imgStyle={{ objectFit: 'cover' }} />
+                  ) : null}
+                </div>
+                <div className="p-6 md:p-10 flex flex-col justify-between">
+                  <div>
+                    <p className="text-xs tracking-[2px] uppercase text-fg/45 mb-5">{formatDate(featuredShow.frontmatter.date)}</p>
+                    <h2 className="text-fg leading-none" style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(30px, 4vw, 48px)', letterSpacing: '-0.5px' }}>{featuredShow.frontmatter.title}</h2>
+                    <p className="mt-4 text-sm leading-relaxed text-fg/60">{featuredShow.frontmatter.description}</p>
+                  </div>
+                  <p className="mt-8 text-xs tracking-[1px] uppercase text-fg/55 group-hover:text-fg transition-colors">Listen to the set →</p>
+                </div>
+              </Link>
+            </div>
+          )
+        })()}
+
+        {/* ── PVR approach ── */}
+        <div className="grid md:grid-cols-[1fr_2fr] gap-6 md:gap-12 border-t border-fg/12 pt-6">
+          <p className="text-xs tracking-[2px] uppercase text-fg/55">The PVR approach</p>
+          <div>
+            <p className="text-fg leading-tight" style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(28px, 4vw, 46px)' }}>Built for listening rooms, bike houses, and late nights.</p>
+            <p className="mt-6 max-w-2xl text-sm leading-relaxed text-fg/60">Every PVR set is selected and mixed on vinyl: deep cuts, worldwide rhythms, and the kind of sequencing that rewards staying through the last record. We build custom setups for spaces where the music can take over.</p>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Link to="/about" className="text-xs tracking-[1px] uppercase px-5 py-3 border border-fg/25 text-fg/70 hover:border-fg hover:text-fg transition-colors">About PVR →</Link>
+              <Link to="/shop" className="text-xs tracking-[1px] uppercase px-5 py-3 border border-fg/25 text-fg/70 hover:border-fg hover:text-fg transition-colors">Visit the shop →</Link>
+            </div>
+          </div>
+        </div>
       </section>
     </>
   )
@@ -244,9 +195,10 @@ export const query = graphql`
     allMdx(
       sort: { frontmatter: { date: DESC } }
       filter: {
-        frontmatter: { isActive: { eq: true } }
+        frontmatter: { isActive: { eq: true }, slug: { eq: "tropical-sunsets" } }
         parent: { internal: { description: { regex: "/content/shows/" } } }
       }
+      limit: 1
     ) {
       nodes {
         id
@@ -261,7 +213,7 @@ export const query = graphql`
           coverImage {
             childImageSharp {
               gatsbyImageData(
-                width: 320
+                width: 900
                 layout: CONSTRAINED
                 formats: [AUTO, WEBP]
               )

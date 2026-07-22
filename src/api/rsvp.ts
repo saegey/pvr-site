@@ -36,16 +36,33 @@ const memory: Record<string, Rsvp[]> = {};
 // Netlify requests must persist successfully to Blobs.
 const allowMemoryFallback = process.env.NETLIFY !== "true";
 
+// Blobs are scoped to a Netlify site, not a deploy. Keep RSVP data isolated
+// between production, branch/deploy previews, and local Netlify development.
+// Production intentionally has a stable name so it persists across deploys.
+const blobScope = () => {
+  const context = process.env.CONTEXT || process.env.NETLIFY_CONTEXT || "development";
+  if (context === "production") return "production";
+
+  const branch = (process.env.BRANCH || "local")
+    .toLowerCase()
+    .replace(/[^a-z0-9-]/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "");
+  return `${context}-${branch || "local"}`;
+};
+
+const RSVP_STORE_NAME = `event-rsvps-${blobScope()}`;
+
 // The Netlify-Gatsby function runtime doesn't always get the automatic Blobs
 // context injected, so fall back to explicit siteID + token when provided.
 const rsvpStore = () => {
   const siteID = process.env.NETLIFY_SITE_ID || process.env.SITE_ID;
   const token = process.env.NETLIFY_BLOBS_TOKEN || process.env.NETLIFY_API_TOKEN;
   if (siteID && token) {
-    return getStore({ name: "event-rsvps", siteID, token });
+    return getStore({ name: RSVP_STORE_NAME, siteID, token });
   }
   // Auto-configured context (works under `netlify dev` and native functions)
-  return getStore("event-rsvps");
+  return getStore(RSVP_STORE_NAME);
 };
 
 const loadRsvps = async (slug: string): Promise<Rsvp[]> => {

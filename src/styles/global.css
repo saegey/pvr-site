@@ -24,7 +24,9 @@
   src: url('/fonts/ITC-Lubalin-Graph-Std-Demi.otf') format('opentype');
   font-weight: 600;
   font-style: normal;
-  font-display: swap;
+  /* The font is preloaded in gatsby-ssr. Avoid a distracting late swap if a
+     connection still hasn't delivered it by first paint. */
+  font-display: optional;
 }
 
 /* ─── CSS variables for inline style references ─── */

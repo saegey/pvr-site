@@ -63,8 +63,8 @@ export const PRODUCTS: Product[] = [
     ],
     tags: ["accessories"],
     variants: [
-      { label: "Solid", priceLookupKey: "pvr-decal-solid" },
-      { label: "Cutout", priceLookupKey: "pvr-decal-cutout" },
+      { label: "Solid", priceLookupKey: "pvr-decal--solid" },
+      { label: "Cutout", priceLookupKey: "pvr-decal--cutout" },
     ],
   },
   {
@@ -72,7 +72,7 @@ export const PRODUCTS: Product[] = [
     name: "PVR Cork Coaster",
     description:
       "Hand-made cork coaster with PVR logo heat transfer. Available with a solid or hollow logo. Made by us in Seattle.",
-    price: 6,
+    price: 7,
     images: [
       "/images/shop/pvr-coaster/solid-logo.png",
       "/images/shop/pvr-coaster/hollow-logo.png",
@@ -80,8 +80,8 @@ export const PRODUCTS: Product[] = [
     ],
     tags: ["accessories"],
     variants: [
-      { label: "Solid Logo", priceLookupKey: "pvr-coaster" },
-      { label: "Hollow Logo", priceLookupKey: "pvr-coaster" },
+      { label: "Solid Logo", priceLookupKey: "pvr-coaster--solid" },
+      { label: "Hollow Logo", priceLookupKey: "pvr-coaster--hollow" },
     ],
   },
   {

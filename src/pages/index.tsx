@@ -50,6 +50,7 @@ const ShowsPage: React.FC<PageProps<DataProps>> = ({ data }) => {
     <>
       <SEO title="Public Vinyl Radio" url={siteMetadata.siteUrl} />
       <Helmet>
+        <link rel="preload" as="image" href="/images/hero-bg.webp" type="image/webp" />
         <script type="application/ld+json">
           {JSON.stringify({
             '@context': 'https://schema.org',
@@ -67,7 +68,7 @@ const ShowsPage: React.FC<PageProps<DataProps>> = ({ data }) => {
         <div
           className="absolute inset-0 bg-cover bg-center grayscale"
           style={{
-            backgroundImage: 'url(/images/hero-bg.png)',
+            backgroundImage: 'url(/images/hero-bg.webp)',
             opacity: 0.2,
           }}
         />

@@ -5,7 +5,7 @@ const NotFoundPage = () => (
   <main className="relative min-h-screen overflow-hidden bg-bg text-fg">
     <div
       className="absolute inset-0 opacity-[0.10] bg-cover bg-center grayscale"
-      style={{ backgroundImage: 'url(/images/hero-bg.png)' }}
+      style={{ backgroundImage: 'url(/images/hero-bg.webp)' }}
     />
     <div
       className="absolute inset-0 grain-overlay pointer-events-none opacity-[0.07]"

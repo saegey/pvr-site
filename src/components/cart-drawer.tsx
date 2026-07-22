@@ -54,10 +54,11 @@ const CartDrawer = () => {
           </span>
           <button
             onClick={closeCart}
-            className="text-fg/40 hover:text-fg transition-colors text-xl leading-none"
+            className="relative flex w-8 h-8 shrink-0 items-center justify-center text-fg/60 hover:text-fg transition-colors"
             aria-label="Close cart"
           >
-            ×
+            <span className="absolute h-px w-8 bg-current rotate-45" />
+            <span className="absolute h-px w-8 bg-current -rotate-45" />
           </button>
         </div>
 

@@ -1,0 +1,16 @@
+[
+  {
+    "slug": "sound-breaks-with-pvr",
+    "date": "Aug 8, 2026",
+    "title": "Sound Breaks with PVR",
+    "venue": "Sound Break Bike House",
+    "location": "115 S. Jackson St., Pioneer Square",
+    "time": "4–8 PM",
+    "description": "Sound Break Bike House grand opening party. Channel summer vibes with sounds from the water: cumbia, surf rock, tropic, afrobeats, and more.",
+    "djs": ["Public Vinyl Radio"],
+    "maxPlusOnes": 1,
+    "rsvpEnabled": true,
+    "partnerLogo": "/images/soundbreak-logo.png",
+    "partnerLogoAlt": "Sound Break Bike House"
+  }
+]

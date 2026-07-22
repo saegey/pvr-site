@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import { useCart } from '../context/cart-context'
 
+const thumbnailSrc = (src: string) => src.replace(/\.(png|jpe?g)$/i, '-thumb.webp')
+
 const CartDrawer = () => {
   const { items, isOpen, closeCart, removeItem, updateQty, total, count, clearCart } = useCart()
   const [loading, setLoading] = useState(false)
@@ -52,10 +54,11 @@ const CartDrawer = () => {
           </span>
           <button
             onClick={closeCart}
-            className="text-fg/40 hover:text-fg transition-colors text-xl leading-none"
+            className="relative flex w-8 h-8 shrink-0 items-center justify-center text-fg/60 hover:text-fg transition-colors"
             aria-label="Close cart"
           >
-            ×
+            <span className="absolute h-px w-8 bg-current rotate-45" />
+            <span className="absolute h-px w-8 bg-current -rotate-45" />
           </button>
         </div>
 
@@ -78,9 +81,10 @@ const CartDrawer = () => {
                       className="w-16 h-16 shrink-0 bg-fg/5 overflow-hidden"
                     >
                       <img
-                        src={item.image}
+                        src={thumbnailSrc(item.image)}
                         alt={item.productName}
                         className="w-full h-full object-cover"
+                        decoding="async"
                       />
                     </div>
                   )}

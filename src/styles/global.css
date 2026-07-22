@@ -15,7 +15,9 @@
   src: url('/fonts/JetBrainsMono-Regular.woff2') format('woff2');
   font-weight: 400;
   font-style: normal;
-  font-display: swap;
+  /* Both local font files are preloaded. Block briefly instead of painting a
+     fallback face first, which prevents a visible typeface swap on reload. */
+  font-display: block;
 }
 
 /* ─── Font: ITC Lubalin Graph Std Demi ─── */
@@ -24,7 +26,9 @@
   src: url('/fonts/ITC-Lubalin-Graph-Std-Demi.otf') format('opentype');
   font-weight: 600;
   font-style: normal;
-  font-display: swap;
+  /* Keep the display face from visibly changing from Georgia after first
+     paint. The file is local and preloaded in gatsby-ssr. */
+  font-display: block;
 }
 
 /* ─── CSS variables for inline style references ─── */

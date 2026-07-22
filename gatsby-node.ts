@@ -105,7 +105,9 @@ exports.createPages = async ({
   // ── Event pages (RSVP) + admin ──
   const eventTemplate = path.resolve(`src/templates/event-template.tsx`);
   const adminTemplate = path.resolve(`src/templates/admin-template.tsx`);
+  const publicEventTemplate = path.resolve(`src/templates/public-event-template.tsx`);
   const events = require("./src/data/events.data.json");
+  const publicEvents = require("./src/data/public-events.data.json");
   events.forEach((event: { slug: string }) => {
     console.log(`Creating event page for ${event.slug}`);
     createPage({
@@ -117,6 +119,15 @@ exports.createPages = async ({
       path: `/events/${event.slug}/admin`,
       component: adminTemplate,
       context: { slug: event.slug, event },
+    });
+  });
+
+  publicEvents.forEach((event: { slug: string }) => {
+    console.log(`Creating public event page for ${event.slug}`);
+    createPage({
+      path: `/events/${event.slug}`,
+      component: publicEventTemplate,
+      context: { event },
     });
   });
 

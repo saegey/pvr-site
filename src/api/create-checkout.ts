@@ -100,6 +100,14 @@ export default async function handler(
         quantity: item.quantity,
         price: pricesByLookupKey.get(item.priceLookupKey)!.id,
       })),
+      metadata: {
+        items: JSON.stringify(
+          items.map(item => ({
+            priceLookupKey: item.priceLookupKey,
+            quantity: item.quantity,
+          }))
+        ),
+      },
       success_url: `${baseUrl}/shop?success=true`,
       cancel_url: `${baseUrl}/shop`,
     })

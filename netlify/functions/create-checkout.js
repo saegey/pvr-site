@@ -92,6 +92,14 @@ exports.handler = async ({ body }) => {
         price: pricesByLookupKey.get(item.priceLookupKey).id,
         quantity: item.quantity,
       })),
+      metadata: {
+        items: JSON.stringify(
+          items.map(item => ({
+            priceLookupKey: item.priceLookupKey,
+            quantity: item.quantity,
+          }))
+        ),
+      },
       success_url: `${baseUrl}/shop?success=true`,
       cancel_url: `${baseUrl}/shop`,
     })

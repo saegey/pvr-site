@@ -24,6 +24,32 @@ export type Product = {
 // ─────────────────────────────────────────────────────────────────────────────
 export const PRODUCTS: Product[] = [
   {
+    id: "pvr-cyanotype-print-pvr-logo",
+    name: "PVR Cyanotype Print",
+    description:
+      "8×10 cyanotype print on 280g/m² paper and hand-printed at home — each one is unique with its own natural variations.",
+    price: 20,
+    images: [
+      "/images/shop/pvr-cyanotype-print-pvr-logo/print-1.png",
+      "/images/shop/pvr-cyanotype-print-pvr-logo/print-2.png",
+    ],
+    tags: ["art"],
+    priceLookupKey: "pvr-cyanotype-print-pvr-logo",
+  },
+  {
+    id: "pvr-5-panel-hat",
+    name: "PVR 5 Panel Hat",
+    description:
+      "5 panel hat. Waterproof nylon baseball cap ",
+    price: 35,
+    images: [
+      "/images/shop/pvr-5-panel-hat/hat-1.png",
+      "/images/shop/pvr-5-panel-hat/hat-2.png",
+    ],
+    tags: ["art"],
+    priceLookupKey: "pvr-5-panel-hat",
+  },
+  {
     id: "pvr-decal",
     name: "PVR Vinyl Decal",
     description:
@@ -37,8 +63,8 @@ export const PRODUCTS: Product[] = [
     ],
     tags: ["accessories"],
     variants: [
-      { label: "Solid", priceLookupKey: "pvr-decal-solid" },
-      { label: "Cutout", priceLookupKey: "pvr-decal-cutout" },
+      { label: "Solid", priceLookupKey: "pvr-decal--solid" },
+      { label: "Cutout", priceLookupKey: "pvr-decal--cutout" },
     ],
   },
   {
@@ -46,7 +72,7 @@ export const PRODUCTS: Product[] = [
     name: "PVR Cork Coaster",
     description:
       "Hand-made cork coaster with PVR logo heat transfer. Available with a solid or hollow logo. Made by us in Seattle.",
-    price: 6,
+    price: 7,
     images: [
       "/images/shop/pvr-coaster/solid-logo.png",
       "/images/shop/pvr-coaster/hollow-logo.png",
@@ -54,8 +80,8 @@ export const PRODUCTS: Product[] = [
     ],
     tags: ["accessories"],
     variants: [
-      { label: "Solid Logo", priceLookupKey: "pvr-coaster" },
-      { label: "Hollow Logo", priceLookupKey: "pvr-coaster" },
+      { label: "Solid Logo", priceLookupKey: "pvr-coaster--solid" },
+      { label: "Hollow Logo", priceLookupKey: "pvr-coaster--hollow" },
     ],
   },
   {

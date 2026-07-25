@@ -137,12 +137,12 @@ const AdminTemplate: React.FC<{ pageContext: { event: PVREvent } }> = ({
       <div className="max-w-[900px] mx-auto px-5 pt-10 pb-24">
         <Link
           to={`/events/${event.slug}`}
-          className="text-xs tracking-[1px] uppercase text-fg/40 hover:text-fg transition-colors"
+          className="text-xs tracking-[1px] uppercase text-fg/55 hover:text-fg transition-colors"
         >
           ← Event page
         </Link>
 
-        <p className="text-xs tracking-[2px] uppercase text-fg/40 mt-8 mb-2">
+        <p className="text-xs tracking-[2px] uppercase text-fg/55 mt-8 mb-2">
           Guest list · Admin
         </p>
         <h1
@@ -160,7 +160,7 @@ const AdminTemplate: React.FC<{ pageContext: { event: PVREvent } }> = ({
             }}
             className="border border-fg/16 p-6 max-w-[360px]"
           >
-            <p className="text-xs tracking-[1px] uppercase text-fg/45 mb-4">
+            <p className="text-xs tracking-[1px] uppercase text-fg/55 mb-4">
               Enter admin password
             </p>
             <input
@@ -213,7 +213,7 @@ const AdminTemplate: React.FC<{ pageContext: { event: PVREvent } }> = ({
                     <div className="flex items-center gap-2">
                       <span className="text-sm text-fg">{r.name}</span>
                       {r.plusOnes > 0 && (
-                        <span className="text-[11px] text-fg/40">+{r.plusOnes}</span>
+                        <span className="text-[11px] text-fg/55">+{r.plusOnes}</span>
                       )}
                       <span
                         className={`text-[10px] tracking-[1px] uppercase px-2 py-0.5 border ${
@@ -225,7 +225,7 @@ const AdminTemplate: React.FC<{ pageContext: { event: PVREvent } }> = ({
                         {r.status === "confirmed" ? "Going" : "Waitlist"}
                       </span>
                     </div>
-                    <div className="text-xs text-fg/45 mt-1 break-all">
+                    <div className="text-xs text-fg/55 mt-1 break-all">
                       <a
                         href={`mailto:${r.email}`}
                         className="hover:text-fg transition-colors"
@@ -247,7 +247,7 @@ const AdminTemplate: React.FC<{ pageContext: { event: PVREvent } }> = ({
                   </div>
                   <button
                     onClick={() => cancelRsvp(r)}
-                    className="self-start sm:self-auto text-[11px] tracking-[1px] uppercase text-fg/40 border border-fg/15 px-3 py-1.5 hover:border-red-400/60 hover:text-red-400 transition-colors shrink-0"
+                    className="self-start sm:self-auto text-[11px] tracking-[1px] uppercase text-fg/55 border border-fg/15 px-3 py-1.5 hover:border-red-400/60 hover:text-red-400 transition-colors shrink-0"
                   >
                     Cancel
                   </button>
@@ -264,7 +264,7 @@ const AdminTemplate: React.FC<{ pageContext: { event: PVREvent } }> = ({
                 setData(null);
                 setKey("");
               }}
-              className="mt-8 text-xs tracking-[1px] uppercase text-fg/40 hover:text-fg transition-colors"
+              className="mt-8 text-xs tracking-[1px] uppercase text-fg/55 hover:text-fg transition-colors"
             >
               Lock
             </button>

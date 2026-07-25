@@ -4,7 +4,8 @@ import rootWrapper from './rootWrapper'
 
 export const wrapPageElement = rootWrapper
 
-export const onRenderBody = ({ setHeadComponents }: { setHeadComponents: (components: React.ReactNode[]) => void }) => {
+export const onRenderBody = ({ setHeadComponents, setHtmlAttributes }: { setHeadComponents: (components: React.ReactNode[]) => void; setHtmlAttributes: (attrs: Record<string, string>) => void }) => {
+  setHtmlAttributes({ lang: 'en' })
   setHeadComponents([
     <link
       key="font-jetbrains"

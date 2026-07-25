@@ -1,8 +1,9 @@
-import React, { ReactNode, useState, useEffect } from 'react'
+import React, { ReactNode, useState, useEffect, lazy, Suspense } from 'react'
 import { Link } from 'gatsby'
 import HeadIcon from '../icons/head.svg'
 import { useCart } from '../context/cart-context'
-import CartDrawer from './cart-drawer'
+
+const CartDrawer = lazy(() => import('./cart-drawer'))
 
 const NAV_LINKS = [
   { label: 'Events', to: '/events' },
@@ -18,7 +19,10 @@ const EXTERNAL_LINKS = [
 
 const Layout = ({ children }: { children: ReactNode }) => {
   const [menuOpen, setMenuOpen] = useState(false)
+  const [mounted, setMounted] = useState(false)
   const { count, openCart } = useCart()
+
+  useEffect(() => { setMounted(true) }, [])
 
   // Lock body scroll when menu is open
   useEffect(() => {
@@ -64,7 +68,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
                 href={href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-xs tracking-[1px] uppercase text-fg/40 border-b border-transparent pb-px hover:text-fg/60 transition-colors duration-150"
+                className="text-xs tracking-[1px] uppercase text-fg/55 border-b border-transparent pb-px hover:text-fg/60 transition-colors duration-150"
               >
                 {label}
               </a>
@@ -121,7 +125,11 @@ const Layout = ({ children }: { children: ReactNode }) => {
         </div>
       </header>
 
-      <CartDrawer />
+      {mounted && (
+        <Suspense fallback={null}>
+          <CartDrawer />
+        </Suspense>
+      )}
 
       {/* Mobile full-screen overlay */}
       {menuOpen && (
@@ -152,7 +160,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
                 href={href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-xs tracking-[2px] uppercase text-fg/40 hover:text-fg/70 transition-colors"
+                className="text-xs tracking-[2px] uppercase text-fg/55 hover:text-fg/70 transition-colors"
               >
                 {label}
               </a>
@@ -164,7 +172,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
       <main>{children}</main>
 
       <footer className="border-t border-fg/12 mt-24 px-6 md:px-12 py-8 max-w-[1320px] mx-auto flex items-center justify-between">
-        <span className="text-xs tracking-[1px] uppercase text-fg/40">
+        <span className="text-xs tracking-[1px] uppercase text-fg/55">
           &copy; {new Date().getFullYear()} Public Vinyl Radio
         </span>
         <div className="flex gap-6">
@@ -174,7 +182,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
               href={href}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-xs tracking-[1px] uppercase text-fg/40 hover:text-fg/70 transition-colors duration-150"
+              className="text-xs tracking-[1px] uppercase text-fg/55 hover:text-fg/70 transition-colors duration-150"
             >
               {label}
             </a>

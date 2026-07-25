@@ -155,7 +155,7 @@ const R2AudioPlayer = ({ url, title, showDownload = true }: R2AudioPlayerProps) 
         {showDownload && (
           <button
             onClick={handleDownload}
-            className="text-fg/40 hover:text-fg transition-colors"
+            className="text-fg/55 hover:text-fg transition-colors"
             title="Download"
             aria-label="Download"
           >

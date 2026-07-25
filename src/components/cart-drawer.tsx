@@ -50,7 +50,7 @@ const CartDrawer = () => {
             className="text-fg"
             style={{ fontFamily: 'var(--font-display)', fontSize: '18px' }}
           >
-            Cart {count > 0 && <span className="text-fg/40 text-sm">({count})</span>}
+            Cart {count > 0 && <span className="text-fg/55 text-sm">({count})</span>}
           </span>
           <button
             onClick={closeCart}
@@ -66,7 +66,7 @@ const CartDrawer = () => {
         <div className="flex-1 overflow-y-auto">
           {items.length === 0 ? (
             <div className="px-6 py-16 text-center">
-              <p className="text-sm text-fg/40">Your cart is empty.</p>
+              <p className="text-sm text-fg/55">Your cart is empty.</p>
             </div>
           ) : (
             <ul>
@@ -98,7 +98,7 @@ const CartDrawer = () => {
                       {item.productName}
                     </p>
                     {item.variantLabel && (
-                      <p className="text-xs text-fg/40 mt-0.5">{item.variantLabel}</p>
+                      <p className="text-xs text-fg/55 mt-0.5">{item.variantLabel}</p>
                     )}
                     <p className="text-xs text-fg/55 mt-1">
                       ${item.price.toFixed(2)}

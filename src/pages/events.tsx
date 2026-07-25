@@ -73,7 +73,7 @@ const EventsPage = () => {
 
       {/* ── Header band ── */}
       <div className="max-w-[1320px] mx-auto px-4 md:px-12 pt-16 pb-12">
-        <p className="text-xs tracking-[2px] uppercase text-fg/40 mb-6">
+        <p className="text-xs tracking-[2px] uppercase text-fg/55 mb-6">
           Events
         </p>
         <h1
@@ -121,7 +121,7 @@ const EventsPage = () => {
               <span className="text-xs text-fg/30 w-6 shrink-0 tabular-nums hidden md:inline">
                 {String(i + 1).padStart(2, "0")}
               </span>
-              <span className="text-xs tracking-[1px] uppercase text-fg/40 md:w-28 md:shrink-0">
+              <span className="text-xs tracking-[1px] uppercase text-fg/55 md:w-28 md:shrink-0">
                 {event.date}
               </span>
               {/* RSVP pill — right-aligned on mobile top row */}
@@ -147,7 +147,7 @@ const EventsPage = () => {
               >
                 {event.title}
               </Link>
-              <p className="text-xs text-fg/40 mt-1">
+              <p className="text-xs text-fg/55 mt-1">
                 {event.venue}, {event.location} · {event.time} · with {event.djs.join(", ")}
               </p>
               <p className="text-xs text-fg/50 mt-2 max-w-2xl leading-relaxed">
@@ -182,7 +182,7 @@ const EventsPage = () => {
             Private Listening Sessions
           </span>
         </div>
-        <p className="text-sm text-fg/45 mb-10 max-w-[560px] leading-[1.7]">
+        <p className="text-sm text-fg/55 mb-10 max-w-[560px] leading-[1.7]">
           Monthly, at the house. All vinyl, no phones, 8–10 seats. Address
           shared once you RSVP.
         </p>
@@ -200,7 +200,7 @@ const EventsPage = () => {
         <div className="border border-fg/16 p-6 md:p-10 flex flex-col md:flex-row gap-10 md:gap-12 items-start">
           {/* Info column */}
           <div className="flex-1 min-w-0 w-full">
-            <p className="text-xs tracking-[2px] uppercase text-fg/40 mb-4">
+            <p className="text-xs tracking-[2px] uppercase text-fg/55 mb-4">
               {session.dateLabel} · {session.time}
             </p>
             <h2
@@ -244,7 +244,7 @@ const EventsPage = () => {
                   ))}
                 </div>
               )}
-              <span className="text-xs text-fg/45">
+              <span className="text-xs text-fg/55">
                 {summary
                   ? `${seatsTaken} going${
                       summary.waitlistCount

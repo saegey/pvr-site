@@ -9,7 +9,7 @@ const NotFoundPage = () => (
     />
     <div
       className="absolute inset-0 grain-overlay pointer-events-none opacity-[0.07]"
-      style={{ backgroundImage: 'url(/images/grain.png)', backgroundRepeat: 'repeat', backgroundSize: '256px 256px' }}
+      style={{ backgroundImage: 'url(/images/grain.webp)', backgroundRepeat: 'repeat', backgroundSize: '256px 256px' }}
     />
 
     <section className="relative z-10 min-h-screen max-w-[1320px] mx-auto px-5 md:px-12 py-10 md:py-14 flex flex-col">

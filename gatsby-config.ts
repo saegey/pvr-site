@@ -61,8 +61,10 @@ const config: GatsbyConfig = {
         theme_color: `#000000`,
         display: `standalone`,
         icon: `src/images/favicon.png`,
+        icon_options: { purpose: `any maskable` },
       },
     },
+    `gatsby-plugin-offline`,
 
     // content sources
     {

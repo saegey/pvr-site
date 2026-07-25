@@ -131,7 +131,7 @@ const PressPage = ({ data }: { data: { allFile: { nodes: AssetFile[] } } }) => {
 
       <div className="max-w-[860px] mx-auto px-4 md:px-12 pt-16 pb-24">
         {/* Header */}
-        <p className="text-xs tracking-[2px] uppercase text-fg/40 mb-6">Press</p>
+        <p className="text-xs tracking-[2px] uppercase text-fg/55 mb-6">Press</p>
         <h1
           className="text-fg leading-tight mb-3"
           style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(28px, 4vw, 48px)', letterSpacing: '-0.5px' }}

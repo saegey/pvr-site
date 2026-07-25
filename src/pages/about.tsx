@@ -78,7 +78,7 @@ const AboutPage = () => {
         <div className="flex flex-col-reverse md:grid md:gap-12" style={{ gridTemplateColumns: 'minmax(0,1.2fr) minmax(0,1fr)' }}>
           {/* Left: eyebrow + h1 */}
           <div className="flex flex-col justify-end mt-8 md:mt-0">
-            <p className="text-xs tracking-[2px] uppercase text-fg/40 mb-6">About</p>
+            <p className="text-xs tracking-[2px] uppercase text-fg/55 mb-6">About</p>
             <h1
               className="text-fg leading-tight"
               style={{
@@ -116,7 +116,7 @@ const AboutPage = () => {
       {/* ── Why Vinyl / What PVR Is ── */}
       <div className="max-w-[820px] mx-auto px-4 md:px-12">
         <div className="border-t border-fg/12 py-12">
-          <p className="text-xs tracking-[2px] uppercase text-fg/40 mb-4">Why Vinyl?</p>
+          <p className="text-xs tracking-[2px] uppercase text-fg/55 mb-4">Why Vinyl?</p>
           <p className="text-sm text-fg/65 leading-[1.8]">
             Vinyl isn't just a format — it's a philosophy. The ritual of selecting, cueing, and
             mixing records creates a tactile connection to the music. Every set has its own
@@ -125,7 +125,7 @@ const AboutPage = () => {
         </div>
 
         <div className="border-t border-fg/12 py-12">
-          <p className="text-xs tracking-[2px] uppercase text-fg/40 mb-4">What PVR Is</p>
+          <p className="text-xs tracking-[2px] uppercase text-fg/55 mb-4">What PVR Is</p>
           <p className="text-sm text-fg/65 leading-[1.8]">
             Public Vinyl Radio is a channel for vinyl selectors. Adam and Ben both record and edit
             their own sets, and the platform exists to collaborate with other crate diggers and
@@ -137,7 +137,7 @@ const AboutPage = () => {
       {/* ── The People Behind It ── */}
       <div className="max-w-[1320px] mx-auto px-4 md:px-12 mt-4 mb-24">
         <div className="border-t border-fg/12 pt-6 mb-2">
-          <p className="text-xs tracking-[2px] uppercase text-fg/40">The People Behind It</p>
+          <p className="text-xs tracking-[2px] uppercase text-fg/55">The People Behind It</p>
         </div>
 
         {TEAM.map((person) => (
@@ -157,7 +157,7 @@ const AboutPage = () => {
                 >
                   {person.name}
                 </p>
-                <p className="text-xs tracking-[1px] uppercase text-fg/40 mt-1">{person.role}</p>
+                <p className="text-xs tracking-[1px] uppercase text-fg/55 mt-1">{person.role}</p>
               </div>
             </div>
             <p className="text-sm text-fg/60 leading-[1.7] mb-3 md:hidden">{person.bio}</p>
@@ -166,7 +166,7 @@ const AboutPage = () => {
                 href={person.website}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-xs tracking-[1px] uppercase text-fg/40 hover:text-fg transition-colors md:hidden"
+                className="text-xs tracking-[1px] uppercase text-fg/55 hover:text-fg transition-colors md:hidden"
               >
                 Website →
               </a>
@@ -187,7 +187,7 @@ const AboutPage = () => {
                 >
                   {person.name}
                 </p>
-                <p className="text-xs tracking-[1px] uppercase text-fg/40 mt-1">{person.role}</p>
+                <p className="text-xs tracking-[1px] uppercase text-fg/55 mt-1">{person.role}</p>
               </div>
               <p className="text-sm text-fg/60 leading-[1.7] pt-1">{person.bio}</p>
               <div className="pt-1">
@@ -196,7 +196,7 @@ const AboutPage = () => {
                     href={person.website}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-xs tracking-[1px] uppercase text-fg/40 hover:text-fg transition-colors whitespace-nowrap"
+                    className="text-xs tracking-[1px] uppercase text-fg/55 hover:text-fg transition-colors whitespace-nowrap"
                   >
                     Website →
                   </a>
@@ -210,7 +210,7 @@ const AboutPage = () => {
       {/* ── Collaborate CTA ── */}
       <div className="max-w-[820px] mx-auto px-4 md:px-12 mb-24">
         <div className="border border-fg/16 p-8 md:p-12">
-          <p className="text-xs tracking-[2px] uppercase text-fg/40 mb-4">Collaborate</p>
+          <p className="text-xs tracking-[2px] uppercase text-fg/55 mb-4">Collaborate</p>
           <h2
             className="text-fg mb-4 leading-tight"
             style={{

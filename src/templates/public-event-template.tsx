@@ -134,7 +134,7 @@ const PublicEventTemplate: React.FC<{ pageContext: { event: PublicEvent } }> = (
                   </div>
                 ) : (
                   <form onSubmit={submit} className="max-w-xl border border-fg/16 p-6">
-                    <p className="text-xs tracking-[1px] uppercase text-fg/45 mb-5">RSVP · free</p>
+                    <p className="text-xs tracking-[1px] uppercase text-fg/55 mb-5">RSVP · free</p>
                     <div className="flex flex-col gap-3">
                       <input required value={name} onChange={(e) => setName(e.target.value)} placeholder="Your name" className="w-full bg-transparent border border-fg/16 px-4 py-3 text-base md:text-sm text-fg placeholder:text-fg/30 outline-none focus:border-fg/40" />
                       <input required type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Your email" className="w-full bg-transparent border border-fg/16 px-4 py-3 text-base md:text-sm text-fg placeholder:text-fg/30 outline-none focus:border-fg/40" />
@@ -158,7 +158,7 @@ const PublicEventTemplate: React.FC<{ pageContext: { event: PublicEvent } }> = (
 
               {summary && summary.guests.length > 0 && (
                 <div className="mt-10 border-t border-fg/12 pt-8">
-                  <p className="text-xs tracking-[1px] uppercase text-fg/45">
+                  <p className="text-xs tracking-[1px] uppercase text-fg/55">
                     On the list · {summary.seatsTaken} {summary.seatsTaken === 1 ? 'person' : 'people'}
                   </p>
                   <div className="mt-5 flex flex-wrap gap-x-6 gap-y-4">
@@ -169,7 +169,7 @@ const PublicEventTemplate: React.FC<{ pageContext: { event: PublicEvent } }> = (
                         </div>
                         <span className="text-sm text-fg/65">
                           {guest.name}
-                          {guest.plusOnes > 0 && <span className="text-fg/40"> +{guest.plusOnes}</span>}
+                          {guest.plusOnes > 0 && <span className="text-fg/55"> +{guest.plusOnes}</span>}
                         </span>
                       </div>
                     ))}

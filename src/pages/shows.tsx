@@ -3,7 +3,7 @@ import { graphql, Link, PageProps } from 'gatsby'
 import { GatsbyImage, getImage, IGatsbyImageData } from 'gatsby-plugin-image'
 import SEO from '../components/seo'
 import { formatDate } from '../utils/date'
-import { youTubeHQThumb, youTubeMaxResThumb } from '../utils/youtube'
+import { youTubeHQThumb } from '../utils/youtube'
 
 const PAGE_SIZE = 12
 
@@ -35,13 +35,13 @@ export default function ShowsArchivePage({ data }: PageProps<DataProps>) {
     <>
       <SEO title="Show Archive" url={`${data.site.siteMetadata.siteUrl}/shows`} />
       <section className="max-w-[1320px] mx-auto px-4 md:px-12 pt-28 pb-20 md:pt-40">
-        <p className="text-xs tracking-[2px] uppercase text-fg/45 mb-5">Public Vinyl Radio</p>
+        <p className="text-xs tracking-[2px] uppercase text-fg/55 mb-5">Public Vinyl Radio</p>
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 border-b border-fg/12 pb-8">
           <h1 className="text-fg leading-none" style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(44px, 7vw, 82px)' }}>Show archive</h1>
           <p className="max-w-sm text-sm leading-relaxed text-fg/55">Recorded vinyl sets, track-by-track journeys, and live selections from PVR.</p>
         </div>
 
-        <div className="mt-4 border-t border-b border-fg/12 py-4 flex justify-between text-xs tracking-[1px] text-fg/40">
+        <div className="mt-4 border-t border-b border-fg/12 py-4 flex justify-between text-xs tracking-[1px] text-fg/55">
           <span className="uppercase">All shows</span>
           <span>{Math.min(visible, shows.length)} of {shows.length}</span>
         </div>
@@ -50,16 +50,16 @@ export default function ShowsArchivePage({ data }: PageProps<DataProps>) {
           const coverImageData = show.frontmatter.coverImage ? getImage(show.frontmatter.coverImage as any) : null
           return (
             <Link key={show.id} to={`/shows/${show.frontmatter.slug}`} className="group grid md:grid-cols-[40px_220px_1fr] gap-4 md:gap-8 py-6 border-b border-fg/12 hover:bg-fg/[0.03] transition-colors -mx-4 px-4">
-              <span className="hidden md:block text-xs tabular-nums text-fg/30 pt-1">{String(index + 1).padStart(2, '0')}</span>
+              <span className="hidden md:block text-xs tabular-nums text-fg/55 pt-1">{String(index + 1).padStart(2, '0')}</span>
               <div className="aspect-video bg-fg/5 overflow-hidden">
                 {show.frontmatter.youtubeId ? (
-                  <img src={youTubeMaxResThumb(show.frontmatter.youtubeId)} alt={show.frontmatter.title} className="w-full h-full object-cover" loading="lazy" onError={(e) => { const image = e.currentTarget; image.onerror = null; image.src = youTubeHQThumb(show.frontmatter.youtubeId!) }} />
+                  <img src={youTubeHQThumb(show.frontmatter.youtubeId)} alt={show.frontmatter.title} className="w-full h-full object-cover" loading="lazy" decoding="async" onError={(e) => { const image = e.currentTarget; image.onerror = null; image.src = `https://img.youtube.com/vi/${show.frontmatter.youtubeId}/mqdefault.jpg` }} />
                 ) : coverImageData ? (
                   <GatsbyImage image={coverImageData} alt={show.frontmatter.title} className="w-full h-full" imgStyle={{ objectFit: 'cover' }} />
                 ) : null}
               </div>
               <div>
-                <p className="text-xs tracking-[2px] uppercase text-fg/40">{formatDate(show.frontmatter.date)}</p>
+                <p className="text-xs tracking-[2px] uppercase text-fg/55">{formatDate(show.frontmatter.date)}</p>
                 <h2 className="mt-3 text-fg leading-snug" style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(24px, 3vw, 34px)' }}>{show.frontmatter.title}</h2>
                 {show.frontmatter.host?.length > 0 && <p className="mt-1 text-sm text-fg/55">with {show.frontmatter.host.join(', ')}</p>}
                 <p className="mt-4 max-w-2xl text-sm leading-relaxed text-fg/50">{show.frontmatter.description}</p>

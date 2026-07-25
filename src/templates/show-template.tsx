@@ -99,24 +99,26 @@ const ShowTemplate: React.FC<PageProps<DataProps>> = ({ data, children }) => {
 
       {/* ── Full-bleed cover band ── */}
       {youtubeId ? (
-        <div className="w-full border-b border-fg/12" style={{ position: 'relative', paddingBottom: '56.25%', height: 0 }}>
-          <iframe
-            src={`https://www.youtube.com/embed/${youtubeId}?si=EaheM0eWWNF_J6-x`}
-            title={title}
-            frameBorder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            referrerPolicy="strict-origin-when-cross-origin"
-            allowFullScreen
-            style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}
-          />
+        <div className="w-full border-b border-fg/12">
+          <div className="max-w-[960px] mx-auto aspect-video">
+            <iframe
+              src={`https://www.youtube.com/embed/${youtubeId}?si=EaheM0eWWNF_J6-x`}
+              title={title}
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              referrerPolicy="strict-origin-when-cross-origin"
+              allowFullScreen
+              className="w-full h-full"
+            />
+          </div>
         </div>
       ) : coverImageData ? (
-        <div className="w-full border-b border-fg/12 grayscale">
+        <div className="w-full border-b border-fg/12 grayscale overflow-hidden" style={{ maxHeight: '560px' }}>
           <GatsbyImage
             image={coverImageData}
             alt={title || 'Show cover'}
             className="w-full"
-            imgStyle={{ objectFit: 'contain', maxHeight: '560px' }}
+            imgStyle={{ objectFit: 'cover' }}
           />
         </div>
       ) : (
@@ -134,14 +136,14 @@ const ShowTemplate: React.FC<PageProps<DataProps>> = ({ data, children }) => {
         {/* Back link */}
         <Link
           to="/"
-          className="text-xs tracking-[1px] uppercase text-fg/40 hover:text-fg/70 transition-colors mb-10 inline-block"
+          className="text-xs tracking-[1px] uppercase text-fg/55 hover:text-fg/70 transition-colors mb-10 inline-block"
         >
           ← Back to archive
         </Link>
 
         {/* Meta + title */}
         <div className="mb-8">
-          <p className="text-xs tracking-[2px] uppercase text-fg/40 mb-4">
+          <p className="text-xs tracking-[2px] uppercase text-fg/55 mb-4">
             {formatDate(date)}
           </p>
           <h1

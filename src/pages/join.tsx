@@ -58,7 +58,7 @@ const JoinPage = () => (
       url="https://publicvinylradio.com/join"
     />
     <div className="max-w-[540px] mx-auto px-4 md:px-12 pt-16 pb-24">
-      <p className="text-xs tracking-[2px] uppercase text-fg/40 mb-6">Newsletter</p>
+      <p className="text-xs tracking-[2px] uppercase text-fg/55 mb-6">Newsletter</p>
       <h1
         className="text-fg leading-tight mb-4"
         style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(30px, 4vw, 48px)', letterSpacing: '-0.5px' }}

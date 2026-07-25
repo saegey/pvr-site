@@ -195,13 +195,13 @@ const EventTemplate: React.FC<{ pageContext: { event: PVREvent } }> = ({
       <div className="max-w-[600px] mx-auto px-5 pt-10 pb-24">
         <Link
           to="/events"
-          className="text-xs tracking-[1px] uppercase text-fg/40 hover:text-fg transition-colors"
+          className="text-xs tracking-[1px] uppercase text-fg/55 hover:text-fg transition-colors"
         >
           ← All events
         </Link>
 
         {/* ── Header ── */}
-        <p className="text-xs tracking-[2px] uppercase text-fg/40 mt-10 mb-4">
+        <p className="text-xs tracking-[2px] uppercase text-fg/55 mt-10 mb-4">
           {event.isPrivate ? "Private session" : "Event"} · {event.dateLabel} ·{" "}
           {event.time}
         </p>
@@ -218,14 +218,14 @@ const EventTemplate: React.FC<{ pageContext: { event: PVREvent } }> = ({
         <p className="text-sm text-fg/60 leading-[1.7] mb-6">
           {event.description}
         </p>
-        <p className="text-xs text-fg/45 mb-10">
+        <p className="text-xs text-fg/55 mb-10">
           {event.location}
           {event.djs?.length ? ` · with ${event.djs.join(", ")}` : ""}
         </p>
 
         {/* ── Capacity ── */}
         <div className="mb-2 flex items-center justify-between">
-          <span className="text-xs tracking-[1px] uppercase text-fg/45">
+          <span className="text-xs tracking-[1px] uppercase text-fg/55">
             {summary ? `${seatsTaken} going` : "Loading…"}
           </span>
           <span className="text-xs text-fg/35">
@@ -279,7 +279,7 @@ const EventTemplate: React.FC<{ pageContext: { event: PVREvent } }> = ({
                 </p>
                 {stored.address && (
                   <div className="border-t border-fg/12 pt-5">
-                    <p className="text-xs tracking-[1px] uppercase text-fg/40 mb-2">
+                    <p className="text-xs tracking-[1px] uppercase text-fg/55 mb-2">
                       Address
                     </p>
                     <p className="text-sm text-fg/75 leading-[1.7]">
@@ -310,7 +310,7 @@ const EventTemplate: React.FC<{ pageContext: { event: PVREvent } }> = ({
                 <button
                   onClick={cancelMyRsvp}
                   disabled={submitting}
-                  className="self-start text-xs tracking-[1px] uppercase text-fg/45 hover:text-red-400 transition-colors disabled:opacity-40"
+                  className="self-start text-xs tracking-[1px] uppercase text-fg/55 hover:text-red-400 transition-colors disabled:opacity-40"
                 >
                   {submitting ? "Cancelling…" : "Can't make it? Cancel RSVP"}
                 </button>
@@ -333,7 +333,7 @@ const EventTemplate: React.FC<{ pageContext: { event: PVREvent } }> = ({
           </div>
         ) : (
           <form onSubmit={submit} className="border border-fg/16 p-6">
-            <p className="text-xs tracking-[1px] uppercase text-fg/45 mb-5">
+            <p className="text-xs tracking-[1px] uppercase text-fg/55 mb-5">
               {isFull ? "Join the waitlist" : "RSVP · free"}
             </p>
 

@@ -65,7 +65,7 @@ const Lightbox = ({
       {/* Prev */}
       {images.length > 1 && (
         <button
-          className="absolute left-4 text-fg/40 hover:text-fg transition-colors"
+          className="absolute left-4 text-fg/55 hover:text-fg transition-colors"
           onClick={e => { e.stopPropagation(); prev() }}
           aria-label="Previous"
           style={{ fontSize: '28px', background: 'none', border: 'none', cursor: 'pointer', padding: '16px' }}
@@ -90,7 +90,7 @@ const Lightbox = ({
       {/* Next */}
       {images.length > 1 && (
         <button
-          className="absolute right-4 text-fg/40 hover:text-fg transition-colors"
+          className="absolute right-4 text-fg/55 hover:text-fg transition-colors"
           onClick={e => { e.stopPropagation(); next() }}
           aria-label="Next"
           style={{ fontSize: '28px', background: 'none', border: 'none', cursor: 'pointer', padding: '16px' }}
@@ -251,7 +251,7 @@ const ProductCard = ({ product }: { product: Product }) => {
             >
               {product.name}
             </h2>
-            <p className="text-xs text-fg/40 mt-1">{formatPrice(product.price)}</p>
+            <p className="text-xs text-fg/55 mt-1">{formatPrice(product.price)}</p>
           </div>
 
           <p className="text-xs text-fg/55 leading-[1.7]">{product.description}</p>
@@ -334,7 +334,7 @@ const ShopPage = () => {
       />
 
       <div className="max-w-[1320px] mx-auto px-4 md:px-12 pt-16 pb-12">
-        <p className="text-xs tracking-[2px] uppercase text-fg/40 mb-6">Shop</p>
+        <p className="text-xs tracking-[2px] uppercase text-fg/55 mb-6">Shop</p>
         <h1
           className="text-fg leading-tight"
           style={{

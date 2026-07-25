@@ -50,7 +50,8 @@ const ShowsPage: React.FC<PageProps<DataProps>> = ({ data }) => {
     <>
       <SEO title="Public Vinyl Radio" url={siteMetadata.siteUrl} />
       <Helmet>
-        <link rel="preload" as="image" href="/images/hero-bg.webp" type="image/webp" />
+        <link rel="preload" as="image" href="/images/hero-bg-mobile.webp" type="image/webp" media="(max-width: 768px)" />
+        <link rel="preload" as="image" href="/images/hero-bg.webp" type="image/webp" media="(min-width: 769px)" />
         <script type="application/ld+json">
           {JSON.stringify({
             '@context': 'https://schema.org',
@@ -66,21 +67,18 @@ const ShowsPage: React.FC<PageProps<DataProps>> = ({ data }) => {
       <section className="relative min-h-[520px] flex flex-col justify-end overflow-hidden">
         {/* Background image */}
         <div
-          className="absolute inset-0 bg-cover bg-center grayscale"
-          style={{
-            backgroundImage: 'url(/images/hero-bg.webp)',
-            opacity: 0.2,
-          }}
+          className="hero-bg absolute inset-0 bg-cover bg-center grayscale"
+          style={{ opacity: 0.2 }}
         />
         {/* Grain overlay */}
         <div
-          className="absolute inset-0 grain-overlay pointer-events-none"
+          className="hidden md:block absolute inset-0 grain-overlay pointer-events-none"
           style={{
-            backgroundImage: 'url(/images/grain.png)',
+            backgroundImage: 'url(/images/grain.webp)',
             backgroundRepeat: 'repeat',
             backgroundSize: '256px 256px',
             mixBlendMode: 'overlay',
-            opacity: 0.06,
+            opacity: 0.3,
           }}
         />
         {/* Hero text */}
@@ -119,16 +117,16 @@ const ShowsPage: React.FC<PageProps<DataProps>> = ({ data }) => {
           <div>
             <div className="flex items-baseline justify-between border-t border-b border-fg/12 py-4">
               <span className="text-xs tracking-[2px] uppercase text-fg/55">Upcoming</span>
-              <Link to="/events" className="text-xs tracking-[1px] uppercase text-fg/40 hover:text-fg transition-colors">All events →</Link>
+              <Link to="/events" className="text-xs tracking-[1px] uppercase text-fg/55 hover:text-fg transition-colors">All events →</Link>
             </div>
             {upcomingEvents.map((event) => (
               <Link key={event.slug} to={`/events/${event.slug}`} className="group flex flex-col md:flex-row md:items-center gap-3 md:gap-10 py-7 border-b border-fg/12 hover:bg-fg/[0.03] transition-colors -mx-4 px-4">
-                <p className="text-xs tracking-[2px] uppercase text-fg/45 md:w-36 shrink-0">{event.date}</p>
+                <p className="text-xs tracking-[2px] uppercase text-fg/55 md:w-36 shrink-0">{event.date}</p>
                 <div className="flex-1">
                   <h2 className="text-fg leading-snug" style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(24px, 4vw, 34px)' }}>{event.title}</h2>
                   <p className="mt-1 text-sm text-fg/55">{event.venue} · {event.time}</p>
                 </div>
-                <span className="text-xs tracking-[1px] uppercase text-fg/45 group-hover:text-fg transition-colors">Details →</span>
+                <span className="text-xs tracking-[1px] uppercase text-fg/55 group-hover:text-fg transition-colors">Details →</span>
               </Link>
             ))}
           </div>
@@ -141,19 +139,22 @@ const ShowsPage: React.FC<PageProps<DataProps>> = ({ data }) => {
             <div>
               <div className="flex items-baseline justify-between border-t border-b border-fg/12 py-4 mb-6">
                 <span className="text-xs tracking-[2px] uppercase text-fg/55">From the archive</span>
-                <Link to="/shows" className="text-xs tracking-[1px] uppercase text-fg/40 hover:text-fg transition-colors">All shows →</Link>
+                <Link to="/shows" className="text-xs tracking-[1px] uppercase text-fg/55 hover:text-fg transition-colors">All shows →</Link>
               </div>
               <Link to={`/shows/${featuredShow.frontmatter.slug}`} className="group grid md:grid-cols-2 border border-fg/12 hover:border-fg/30 transition-colors">
                 <div className="aspect-video bg-fg/5 overflow-hidden">
                   {featuredShow.frontmatter.youtubeId ? (
-                    <img src={youTubeMaxResThumb(featuredShow.frontmatter.youtubeId)} alt={featuredShow.frontmatter.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.02]" onError={(e) => { const image = e.currentTarget; image.onerror = null; image.src = youTubeHQThumb(featuredShow.frontmatter.youtubeId) }} />
+                    <picture>
+                      <source media="(max-width: 768px)" srcSet={youTubeHQThumb(featuredShow.frontmatter.youtubeId)} />
+                      <img src={youTubeMaxResThumb(featuredShow.frontmatter.youtubeId)} alt={featuredShow.frontmatter.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.02]" loading="lazy" decoding="async" onError={(e) => { const image = e.currentTarget; image.onerror = null; image.src = youTubeHQThumb(featuredShow.frontmatter.youtubeId) }} />
+                    </picture>
                   ) : coverImageData ? (
                     <GatsbyImage image={coverImageData} alt={featuredShow.frontmatter.title} className="w-full h-full" imgStyle={{ objectFit: 'cover' }} />
                   ) : null}
                 </div>
                 <div className="p-6 md:p-10 flex flex-col justify-between">
                   <div>
-                    <p className="text-xs tracking-[2px] uppercase text-fg/45 mb-5">{formatDate(featuredShow.frontmatter.date)}</p>
+                    <p className="text-xs tracking-[2px] uppercase text-fg/55 mb-5">{formatDate(featuredShow.frontmatter.date)}</p>
                     <h2 className="text-fg leading-none" style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(30px, 4vw, 48px)', letterSpacing: '-0.5px' }}>{featuredShow.frontmatter.title}</h2>
                     <p className="mt-4 text-sm leading-relaxed text-fg/60">{featuredShow.frontmatter.description}</p>
                   </div>

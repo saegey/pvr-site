@@ -30,7 +30,7 @@ const BlogPage = ({ data }: { data: BlogData }) => {
         url="https://publicvinylradio.com/blog"
       />
       <div className="max-w-[860px] mx-auto px-4 md:px-12 pt-16 pb-24">
-        <p className="text-xs tracking-[2px] uppercase text-fg/40 mb-6">Blog</p>
+        <p className="text-xs tracking-[2px] uppercase text-fg/55 mb-6">Blog</p>
         <h1
           className="text-fg leading-tight mb-14"
           style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(30px, 4vw, 52px)', letterSpacing: '-0.5px' }}

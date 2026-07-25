@@ -95,6 +95,15 @@ a {
   animation: grainShift 1.2s steps(1) infinite;
 }
 
+.hero-bg {
+  background-image: url('/images/hero-bg.webp');
+}
+@media (max-width: 768px) {
+  .hero-bg {
+    background-image: url('/images/hero-bg-mobile.webp');
+  }
+}
+
 .hero-fadeup-1 {
   opacity: 0;
   animation: heroFadeUp 0.7s ease 0s forwards;

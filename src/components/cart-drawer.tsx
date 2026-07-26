@@ -11,6 +11,8 @@ const CartDrawer = () => {
   const handleCheckout = async () => {
     setLoading(true)
     setError(null)
+    const controller = new AbortController()
+    const timeout = setTimeout(() => controller.abort(), 20000)
     try {
       const res = await fetch('/api/create-checkout', {
         method: 'POST',
@@ -21,13 +23,17 @@ const CartDrawer = () => {
             quantity: i.quantity,
           })),
         }),
+        signal: controller.signal,
       })
       const data = await res.json()
       if (!res.ok) throw new Error(data.error || 'Checkout failed')
+      if (!data.url) throw new Error('Checkout failed — no redirect URL returned')
       window.location.href = data.url
     } catch (err: any) {
-      setError(err.message)
+      setError(err.name === 'AbortError' ? 'Checkout timed out — please try again.' : err.message)
       setLoading(false)
+    } finally {
+      clearTimeout(timeout)
     }
   }
 

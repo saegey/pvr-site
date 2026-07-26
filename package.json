@@ -22,7 +22,9 @@
     "shop:remove": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/shop-remove.mts",
     "shop:remove:sandbox": "op run --env-file=.env.op -- node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/shop-remove.mts --env=sandbox",
     "shop:remove:live": "op run --env-file=.env.op -- node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/shop-remove.mts --env=live",
-    "shop:remove:all": "op run --env-file=.env.op -- node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/shop-remove.mts --env=all"
+    "shop:remove:all": "op run --env-file=.env.op -- node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/shop-remove.mts --env=all",
+    "order:pdf:sandbox": "op run --env-file=.env.op -- node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/order-pdf.mts --env=sandbox",
+    "order:pdf:live": "op run --env-file=.env.op -- node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/order-pdf.mts --env=live"
   },
   "overrides": {
     "eslint-config-react-app": {
@@ -34,6 +36,7 @@
   "dependencies": {
     "@mdx-js/react": "^2.3.0",
     "@netlify/blobs": "8.2.0",
+    "@types/pdfkit": "0.17.6",
     "co-body": "6.2.0",
     "date-fns": "^4.1.0",
     "gatsby": "^5.14.6",
@@ -43,9 +46,9 @@
     "gatsby-plugin-manifest": "^5.14.0",
     "gatsby-plugin-mdx": "^5.14.0",
     "gatsby-plugin-netlify": "^5.1.1",
-    "gatsby-plugin-remove-serviceworker": "^1.0.0",
     "gatsby-plugin-react-helmet": "^6.14.0",
     "gatsby-plugin-react-svg": "^3.3.0",
+    "gatsby-plugin-remove-serviceworker": "^1.0.0",
     "gatsby-plugin-sharp": "^5.14.0",
     "gatsby-plugin-sitemap": "^6.14.0",
     "gatsby-remark-copy-linked-files": "^6.14.0",
@@ -56,6 +59,7 @@
     "gatsby-transformer-remark": "^6.14.0",
     "gatsby-transformer-sharp": "^5.14.0",
     "gatsby-transformer-yaml": "^5.14.0",
+    "pdfkit": "0.19.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-helmet": "^6.1.0",

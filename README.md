@@ -182,13 +182,16 @@ directly.
 npm run shop:remove -- <product-id>            # remove entry + image folder only
 npm run shop:remove:sandbox -- <product-id>    # also archive its Stripe products (sandbox)
 npm run shop:remove:live -- <product-id>       # also archive in live
+npm run shop:remove:all -- <product-id>        # archive in both, then remove
 ```
 
 Deletes the entry from `products.ts` and its `static/images/shop/<id>/` folder,
-and (with `:sandbox`/`:live`) archives the per-variant Stripe products so they
-drop off Checkout. Prompts for confirmation; add `--yes` to skip, `--keep-images`
-to keep the folder, or `--dry-run` to preview. (Stripe products with prices can't
-be hard-deleted, so they're archived — the same as "Archive" in the dashboard.)
+and (with `:sandbox`/`:live`/`:all`) archives the per-variant Stripe products so
+they drop off Checkout. Prompts for confirmation; add `--yes` to skip,
+`--keep-images` to keep the folder, or `--dry-run` to preview. (Stripe products
+with prices can't be hard-deleted, so they're archived — same as "Archive" in the
+dashboard.) Stripe products are found by their `pvr_id` stamp, so archiving still
+works even if you already deleted the `products.ts` entry by hand.
 
 ### Stripe credentials via 1Password
 

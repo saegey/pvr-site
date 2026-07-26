@@ -123,19 +123,4 @@ export const PRODUCTS: Product[] = [
     tags: ["art"],
     priceLookupKey: "pvr-cyanotype-print",
   },
-  {
-    id: "pvr-t-shirt",
-    name: "PVR T-shirt",
-    description:
-      "Silk screened tshirt",
-    price: 35,
-    images: [
-      "/images/shop/pvr-t-shirt/tshirt-1.png",
-    ],
-    variants: [
-      { label: "Small", priceLookupKey: "pvr-t-shirt--small" },
-      { label: "Medium", priceLookupKey: "pvr-t-shirt--medium" },
-      { label: "Large", priceLookupKey: "pvr-t-shirt--large" },
-    ],
-  },
 ];

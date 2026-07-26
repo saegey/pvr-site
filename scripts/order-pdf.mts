@@ -67,8 +67,10 @@ const money = (amount: number | null | undefined, currency = 'usd') =>
 
 const text = (value: string | null | undefined) => value?.trim() || '—'
 
-const compactId = (id: string) =>
-  id.length <= 32 ? id : `${id.slice(0, 16)}...${id.slice(-8)}`
+const orderReference = (session: Stripe.Checkout.Session) =>
+  session.client_reference_id
+  ?? session.metadata?.order_reference
+  ?? `PVR-${new Date(session.created * 1000).toISOString().slice(0, 10).replaceAll('-', '')}-${session.id.slice(-6).toUpperCase()}`
 
 const addressLines = (address: Stripe.Address | null | undefined) => {
   if (!address) return ['No shipping address collected']
@@ -122,7 +124,7 @@ async function main() {
     preserveAspectRatio: 'xMinYMin meet',
   })
   doc.font('brand').fontSize(19).fillColor(INK).text('RECEIPT', 360, 53, { width: 204, align: 'right' })
-  label(doc, `Order ${compactId(session.id)}`, 360, 83, 204)
+  label(doc, `Order ${orderReference(session)}`, 360, 83, 204)
   label(doc, `Placed ${new Date(session.created * 1000).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}`, 360, 98, 204)
   drawRule(doc, 145)
 

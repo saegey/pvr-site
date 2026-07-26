@@ -193,6 +193,24 @@ with prices can't be hard-deleted, so they're archived — same as "Archive" in 
 dashboard.) Stripe products are found by their `pvr_id` stamp, so archiving still
 works even if you already deleted the `products.ts` entry by hand.
 
+### Generating an order PDF
+
+Create a PVR-branded receipt and packing slip from a Stripe Checkout Session.
+This is read-only: it retrieves the order details but makes no Stripe changes.
+
+```bash
+# Sandbox Checkout Session (cs_test_...)
+npm run order:pdf:sandbox -- cs_test_123
+
+# Live Checkout Session, written to a chosen location
+npm run order:pdf:live -- cs_live_123 --output=./orders/pvr-order.pdf
+```
+
+The default output is `order-<session-id>.pdf` in the current directory. The
+template includes the PVR display and mono fonts, customer shipping details,
+line items, shipping, discount, tax, and total. Like the shop sync commands,
+the scripts obtain their corresponding Stripe key from 1Password.
+
 ### Stripe credentials via 1Password
 
 The sync scripts pull secrets from 1Password at runtime using

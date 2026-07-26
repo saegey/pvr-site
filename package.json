@@ -13,7 +13,11 @@
     "build": "gatsby build",
     "serve": "gatsby serve",
     "clean": "gatsby clean",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "shop:new": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/shop-new.mts",
+    "shop:images": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/shop-images.mts",
+    "shop:sync:sandbox": "op run --env-file=.env.op -- node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/shop-sync.mts --env=sandbox",
+    "shop:sync:live": "op run --env-file=.env.op -- node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/shop-sync.mts --env=live"
   },
   "overrides": {
     "eslint-config-react-app": {

@@ -8,3 +8,6 @@ src/gatsby-types.d.ts
 # Local Netlify folder
 .netlify
 .env.development
+
+# Locally generated customer order PDFs
+.generated/orders/

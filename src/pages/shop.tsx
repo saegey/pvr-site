@@ -310,16 +310,14 @@ const ProductCard = ({ product }: { product: Product }) => {
 // ─── Page ─────────────────────────────────────────────────────────────────────
 const ShopPage = () => {
   const [success, setSuccess] = useState(false)
-  const { clearCart } = useCart()
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search)
       if (params.get('success') === 'true') {
+        // The cart is cleared by CartProvider (which owns cart storage); here we
+        // only surface the confirmation banner and scroll to it.
         setSuccess(true)
-        clearCart()
-        localStorage.removeItem('pvr-cart')
-        window.history.replaceState({}, '', '/shop')
         window.scrollTo({ top: 0, behavior: 'smooth' })
       }
     }

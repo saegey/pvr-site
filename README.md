@@ -195,7 +195,8 @@ works even if you already deleted the `products.ts` entry by hand.
 
 ### Generating an order PDF
 
-Create a PVR-branded receipt and packing slip from a Stripe Checkout Session.
+Create a PVR-branded receipt and packing slip from a Stripe Checkout Session or
+Payment Intent.
 This is read-only: it retrieves the order details but makes no Stripe changes.
 
 ```bash
@@ -204,9 +205,13 @@ npm run order:pdf:sandbox -- cs_test_123
 
 # Live Checkout Session, written to a chosen location
 npm run order:pdf:live -- cs_live_123 --output=./orders/pvr-order.pdf
+
+# Payment Intent IDs work too
+npm run order:pdf:sandbox -- pi_123
 ```
 
-The default output is `order-<session-id>.pdf` in the current directory. The
+The default output is `.generated/orders/order-<id>.pdf`, a gitignored local
+directory. The command will not replace an existing file unless `--force` is supplied. The
 template includes the PVR display and mono fonts, customer shipping details,
 line items, shipping, discount, tax, and total. Like the shop sync commands,
 the scripts obtain their corresponding Stripe key from 1Password.

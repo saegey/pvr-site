@@ -24,7 +24,7 @@ export type Product = {
 // ─────────────────────────────────────────────────────────────────────────────
 export const PRODUCTS: Product[] = [
   {
-    id: "pvr-cyanotype-print-pvr-logo",
+    id: "pvr-cyanotype-print--pvr-logo",
     name: "PVR Cyanotype Print",
     description:
       "8×10 cyanotype print on 280g/m² paper and hand-printed at home — each one is unique with its own natural variations.",
@@ -34,7 +34,7 @@ export const PRODUCTS: Product[] = [
       "/images/shop/pvr-cyanotype-print-pvr-logo/print-2.png",
     ],
     tags: ["art"],
-    priceLookupKey: "pvr-cyanotype-print-pvr-logo",
+    priceLookupKey: "pvr-cyanotype-print--pvr-logo",
   },
   {
     id: "pvr-5-panel-hat",
@@ -85,7 +85,7 @@ export const PRODUCTS: Product[] = [
     ],
   },
   {
-    id: "pvr-cyanotype",
+    id: "pvr-cyanotype-print--ballard",
     name: "Ballard Cyanotype Print",
     description:
       "8×10 cyanotype print on 280g/m² paper. Shot on film in Ballard and hand-printed at home — each one is unique with its own natural variations.",
@@ -95,10 +95,10 @@ export const PRODUCTS: Product[] = [
       "/images/shop/pvr-cyanotype/print-2.png",
     ],
     tags: ["art"],
-    priceLookupKey: "pvr-cyanotype-print",
+    priceLookupKey: "pvr-cyanotype-print--ballard",
   },
   {
-    id: "pvr-cyanotype-2",
+    id: "pvr-cyanotype-print--brewery-district",
     name: "Ballard Brewery District Cyanotype Print",
     description:
       "8×10 cyanotype print on 280g/m² paper. Shot on film in the Ballard brewery district and hand-printed at home — each one is unique with its own natural variations.",
@@ -111,7 +111,7 @@ export const PRODUCTS: Product[] = [
     priceLookupKey: "pvr-cyanotype-2",
   },
   {
-    id: "pvr-cyanotype-3",
+    id: "pvr-cyanotype-print--summer-solstice",
     name: "Summer Solstice Cyanotype Print",
     description:
       "8×10 cyanotype print on 280g/m² paper. Vinyl event flyer from our Summer Solstice night at Rapha Seattle, June 20th 2025. Hand-printed at home — each one is unique with its own natural variations.",

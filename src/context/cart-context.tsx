@@ -68,6 +68,18 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     try {
+      // Returning from a completed Stripe Checkout (success_url = /shop?success=true):
+      // start empty and drop any persisted cart instead of rehydrating it, so a
+      // finished order never leaves items behind. The provider owns cart storage,
+      // so doing this here (rather than in the page) avoids a race where the page
+      // clears the cart and the provider then rehydrates it from localStorage.
+      const params = new URLSearchParams(window.location.search)
+      if (params.get('success') === 'true') {
+        localStorage.removeItem(STORAGE_KEY)
+        setItems([])
+        window.history.replaceState({}, '', window.location.pathname)
+        return
+      }
       const stored = localStorage.getItem(STORAGE_KEY)
       if (stored) setItems(reconcile(JSON.parse(stored)))
     } catch {}

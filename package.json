@@ -9,6 +9,7 @@
   ],
   "scripts": {
     "develop": "gatsby develop",
+    "dev": "op run --env-file=.env.op -- npx netlify dev",
     "start": "gatsby develop",
     "build": "gatsby build",
     "serve": "gatsby serve",
@@ -17,7 +18,10 @@
     "shop:new": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/shop-new.mts",
     "shop:images": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/shop-images.mts",
     "shop:sync:sandbox": "op run --env-file=.env.op -- node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/shop-sync.mts --env=sandbox",
-    "shop:sync:live": "op run --env-file=.env.op -- node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/shop-sync.mts --env=live"
+    "shop:sync:live": "op run --env-file=.env.op -- node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/shop-sync.mts --env=live",
+    "shop:remove": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/shop-remove.mts",
+    "shop:remove:sandbox": "op run --env-file=.env.op -- node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/shop-remove.mts --env=sandbox",
+    "shop:remove:live": "op run --env-file=.env.op -- node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/shop-remove.mts --env=live"
   },
   "overrides": {
     "eslint-config-react-app": {

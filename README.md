@@ -176,6 +176,20 @@ directly.
    are immutable) when a price changes it creates a new Price, moves the lookup
    key onto it, and archives the old one. Re-running is always safe.
 
+### Removing a product
+
+```bash
+npm run shop:remove -- <product-id>            # remove entry + image folder only
+npm run shop:remove:sandbox -- <product-id>    # also archive its Stripe products (sandbox)
+npm run shop:remove:live -- <product-id>       # also archive in live
+```
+
+Deletes the entry from `products.ts` and its `static/images/shop/<id>/` folder,
+and (with `:sandbox`/`:live`) archives the per-variant Stripe products so they
+drop off Checkout. Prompts for confirmation; add `--yes` to skip, `--keep-images`
+to keep the folder, or `--dry-run` to preview. (Stripe products with prices can't
+be hard-deleted, so they're archived — the same as "Archive" in the dashboard.)
+
 ### Stripe credentials via 1Password
 
 The sync scripts pull secrets from 1Password at runtime using
@@ -217,9 +231,28 @@ If you keep the keys in a different vault or under different item names, update
 - Requires the [1Password CLI](https://developer.1password.com/docs/cli/) (`op`)
   installed and signed in. The scripts run on Node's native TypeScript support
   (Node 22+), so there's no build step.
-- Stripe product images use `SITE_URL` (default `https://publicvinylradio.com`)
-  plus the `.webp` path, and render on the Stripe Checkout page. Images for a
-  brand-new product only resolve there once the site deploys with those files.
+- **Local checkout** — the `/api/create-checkout` route needs `STRIPE_SECRET_KEY`
+  at runtime. Start the dev server with the sandbox key injected from 1Password:
+
+  ```bash
+  npm run dev   # = op run --env-file=.env.op -- npx netlify dev
+  ```
+
+  Plain `npm run develop` works for everything except placing an order. (In
+  production, Netlify provides `STRIPE_SECRET_KEY` as the live key.)
+- **Variants become separate Stripe products.** A product with variants syncs as
+  one Stripe Product per variant, named `<product> — <variant>` (e.g. `PVR Tee —
+  Large`), so the size shows on the Checkout page. The cart and lookup keys are
+  unchanged.
+- **Product images must be publicly reachable URLs** (Stripe can't host arbitrary
+  product images for you). The sync points Stripe at the deployed site's `.webp`
+  files, so run `npm run shop:images` first. A **brand-new** product's images
+  aren't on the live site until you deploy — until then the product syncs without
+  images (you'll see a warning) and picks them up on the next sync after deploy.
+  To preview images before merging, sync against a public Netlify deploy-preview
+  URL: `npm run shop:sync:sandbox -- --image-base=https://deploy-preview-NN--yoursite.netlify.app`.
+  Images are only re-sent when their bytes or the base URL change (tracked via an
+  `image_hash` on the Stripe product).
 - Products are matched to Stripe by `metadata.pvr_id` (= the product `id`), so
   the same catalog maps cleanly onto both the sandbox and live accounts.
 - The sync never archives Stripe products removed from `products.ts` — clean

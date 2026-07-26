@@ -108,7 +108,7 @@ export const PRODUCTS: Product[] = [
       "/images/shop/pvr-cyanotype-2/print-2.png",
     ],
     tags: ["art"],
-    priceLookupKey: "pvr-cyanotype-print",
+    priceLookupKey: "pvr-cyanotype-2",
   },
   {
     id: "pvr-cyanotype-3",
@@ -121,6 +121,6 @@ export const PRODUCTS: Product[] = [
       "/images/shop/pvr-cyanotype-3/print-2.png",
     ],
     tags: ["art"],
-    priceLookupKey: "pvr-cyanotype-print",
+    priceLookupKey: "pvr-cyanotype-3",
   },
 ];

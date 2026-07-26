@@ -213,8 +213,30 @@ npm run order:pdf:sandbox -- pi_123
 The default output is `.generated/orders/order-<id>.pdf`, a gitignored local
 directory. The command will not replace an existing file unless `--force` is supplied. The
 template includes the PVR display and mono fonts, customer shipping details,
-line items, shipping, discount, tax, and total. Like the shop sync commands,
+line items, shipping, discount, tax, and total. The order header uses a short
+PVR reference rather than Stripe's long internal Payment Intent ID. Like the shop sync commands,
 the scripts obtain their corresponding Stripe key from 1Password.
+
+### Tracking fulfillment
+
+Stripe is the source of truth for fulfillment state. When a paid Checkout
+Session is received, the webhook records it as `paid`; marking an order shipped
+adds its carrier, tracking number, and shipping timestamp to the same Stripe
+record.
+
+```bash
+# Show the 25 newest completed orders (use --limit=100 for more)
+npm run order:list:sandbox
+
+# Mark an order shipped using its PVR reference, Checkout Session, or Payment Intent ID
+npm run order:ship:sandbox -- PVR-20260726-ABC123 --carrier=USPS --tracking=9400111899223856928499
+```
+
+Before using this in production, create a Stripe webhook endpoint at
+`https://publicvinylradio.com/api/stripe-webhook`, listen for
+`checkout.session.completed` and `checkout.session.async_payment_succeeded`,
+and add its signing secret to Netlify as `STRIPE_WEBHOOK_SECRET`. The endpoint
+verifies Stripe's signature before writing any fulfillment metadata.
 
 ### Stripe credentials via 1Password
 

@@ -24,7 +24,11 @@
     "shop:remove:live": "op run --env-file=.env.op -- node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/shop-remove.mts --env=live",
     "shop:remove:all": "op run --env-file=.env.op -- node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/shop-remove.mts --env=all",
     "order:pdf:sandbox": "op run --env-file=.env.op -- node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/order-pdf.mts --env=sandbox",
-    "order:pdf:live": "op run --env-file=.env.op -- node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/order-pdf.mts --env=live"
+    "order:pdf:live": "op run --env-file=.env.op -- node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/order-pdf.mts --env=live",
+    "order:list:sandbox": "op run --env-file=.env.op -- node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/order-list.mts --env=sandbox",
+    "order:list:live": "op run --env-file=.env.op -- node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/order-list.mts --env=live",
+    "order:ship:sandbox": "op run --env-file=.env.op -- node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/order-ship.mts --env=sandbox",
+    "order:ship:live": "op run --env-file=.env.op -- node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/order-ship.mts --env=live"
   },
   "overrides": {
     "eslint-config-react-app": {

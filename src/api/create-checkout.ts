@@ -1,4 +1,5 @@
 import type { GatsbyFunctionRequest, GatsbyFunctionResponse } from 'gatsby'
+import { randomBytes } from 'node:crypto'
 import Stripe from 'stripe'
 import { PRODUCTS } from '../data/products'
 
@@ -69,9 +70,11 @@ export default async function handler(
     const shippingAmount = subtotal >= FREE_SHIPPING_THRESHOLD
       ? 0
       : FIRST_ITEM_SHIPPING + (itemCount - 1) * ADDITIONAL_ITEM_SHIPPING
+    const orderReference = `PVR-${new Date().toISOString().slice(0, 10).replaceAll('-', '')}-${randomBytes(3).toString('hex').toUpperCase()}`
 
     const session = await stripe.checkout.sessions.create({
       mode: 'payment',
+      client_reference_id: orderReference,
       shipping_address_collection: {
         allowed_countries: ['US'],
       },
@@ -101,6 +104,7 @@ export default async function handler(
         price: pricesByLookupKey.get(item.priceLookupKey)!.id,
       })),
       metadata: {
+        order_reference: orderReference,
         items: JSON.stringify(
           items.map(item => ({
             priceLookupKey: item.priceLookupKey,

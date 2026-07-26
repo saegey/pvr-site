@@ -1,29 +1,32 @@
 /**
  * Creates a PVR-branded order receipt / packing slip from a Stripe Checkout
- * Session. The script is read-only: it never changes anything in Stripe.
+ * Session or Payment Intent. The script is read-only: it never changes
+ * anything in Stripe.
  *
  * Usage:
- *   npm run order:pdf:sandbox -- cs_test_...
- *   npm run order:pdf:live -- cs_live_... --output=./orders/my-order.pdf
+ *   npm run order:pdf:sandbox -- cs_test_...  # Checkout Session
+ *   npm run order:pdf:live -- pi_... --output=./orders/my-order.pdf
  */
-import { createWriteStream, existsSync } from 'node:fs'
+import { createWriteStream, existsSync, readFileSync } from 'node:fs'
 import { mkdir } from 'node:fs/promises'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import PDFDocument from 'pdfkit'
 import Stripe from 'stripe'
+import SVGtoPDF from 'svg-to-pdfkit'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const args = process.argv.slice(2)
 const environment = args.includes('--env=live') ? 'live' : 'sandbox'
-const sessionId = args.find(arg => arg.startsWith('--session='))?.slice('--session='.length)
-  ?? args.find(arg => arg.startsWith('cs_'))
+const orderId = args.find(arg => arg.startsWith('--session='))?.slice('--session='.length)
+  ?? args.find(arg => arg.startsWith('cs_') || arg.startsWith('pi_'))
 const outputArg = args.find(arg => arg.startsWith('--output='))?.slice('--output='.length)
+const overwrite = args.includes('--force')
 
-if (!sessionId) {
+if (!orderId) {
   console.error(
-    'Missing Checkout Session ID.\n' +
-    'Usage: npm run order:pdf:sandbox -- cs_test_... [--output=./orders/order.pdf]'
+    'Missing Checkout Session or Payment Intent ID.\n' +
+    'Usage: npm run order:pdf:sandbox -- cs_test_...|pi_... [--output=./custom-order.pdf]'
   )
   process.exit(1)
 }
@@ -43,20 +46,29 @@ if (environment === 'sandbox' && secret.startsWith('sk_live')) {
   process.exit(1)
 }
 
-const outputPath = resolve(outputArg ?? `order-${sessionId}.pdf`)
+const outputPath = resolve(outputArg ?? `.generated/orders/order-${orderId}.pdf`)
+if (existsSync(outputPath) && !overwrite) {
+  console.error(`Refusing to overwrite ${outputPath}. Choose another --output path or add --force.`)
+  process.exit(1)
+}
 const stripe = new Stripe(secret)
 const brandFont = resolve(__dirname, '../static/fonts/ITC-Lubalin-Graph-Std-Demi.otf')
+const monoFont = resolve(__dirname, '../static/fonts/JetBrainsMono-Regular.ttf')
+const monoBoldFont = resolve(__dirname, '../static/fonts/JetBrainsMono-Bold.ttf')
+const blackLogo = resolve(__dirname, '../src/images/press/PVR LOGO_BLK.svg')
 const PAGE = { width: 612, height: 792, margin: 48 }
 const INK = '#101010'
-const PAPER = '#f8f3e9'
-const ACCENT = '#e95e3b'
-const MONO = 'Courier'
+const MONO = 'mono'
+const MONO_BOLD = 'mono-bold'
 
 const money = (amount: number | null | undefined, currency = 'usd') =>
   new Intl.NumberFormat('en-US', { style: 'currency', currency: currency.toUpperCase() })
     .format((amount ?? 0) / 100)
 
 const text = (value: string | null | undefined) => value?.trim() || '—'
+
+const compactId = (id: string) =>
+  id.length <= 32 ? id : `${id.slice(0, 16)}...${id.slice(-8)}`
 
 const addressLines = (address: Stripe.Address | null | undefined) => {
   if (!address) return ['No shipping address collected']
@@ -78,7 +90,13 @@ const body = (doc: PDFKit.PDFDocument, value: string, x: number, y: number, widt
   doc.font(MONO).fontSize(size).fillColor(INK).text(value, x, y, { width, lineGap: 3 })
 
 async function main() {
-  const session = await stripe.checkout.sessions.retrieve(sessionId!)
+  const checkoutSessionId = orderId!.startsWith('pi_')
+    ? (await stripe.checkout.sessions.list({ payment_intent: orderId!, limit: 1 })).data[0]?.id
+    : orderId!
+  if (!checkoutSessionId) {
+    throw new Error(`No Checkout Session was found for Payment Intent ${orderId}.`)
+  }
+  const session = await stripe.checkout.sessions.retrieve(checkoutSessionId)
   const lineItems = await stripe.checkout.sessions.listLineItems(session.id, {
     limit: 100,
     expand: ['data.price.product'],
@@ -92,20 +110,19 @@ async function main() {
     Subject: 'Order receipt',
   } })
   doc.registerFont('brand', existsSync(brandFont) ? brandFont : 'Times-Bold')
-  // PDFKit's bundled Courier is deliberately used for small transactional
-  // details. The web's mono face is WOFF2, which PDFKit does not support in
-  // every Node/fontkit combination.
+  doc.registerFont(MONO, monoFont)
+  doc.registerFont(MONO_BOLD, monoBoldFont)
   const output = createWriteStream(outputPath)
   doc.pipe(output)
 
-  doc.rect(0, 0, PAGE.width, PAGE.height).fill(PAPER)
-  doc.rect(0, 0, PAGE.width, 12).fill(ACCENT)
   doc.fillColor(INK)
-  doc.font('brand').fontSize(31).text('PUBLIC VINYL', PAGE.margin, 47)
-  doc.font('brand').fontSize(31).text('RADIO', PAGE.margin, 79)
-  label(doc, 'Seattle, Washington', PAGE.margin, 121)
-  doc.font('brand').fontSize(19).fillColor(INK).text('ORDER RECEIPT', 360, 53, { width: 204, align: 'right' })
-  label(doc, `Order ${session.id}`, 360, 83, 204)
+  SVGtoPDF(doc, readFileSync(blackLogo, 'utf8'), PAGE.margin, 42, {
+    width: 64,
+    height: 84,
+    preserveAspectRatio: 'xMinYMin meet',
+  })
+  doc.font('brand').fontSize(19).fillColor(INK).text('RECEIPT', 360, 53, { width: 204, align: 'right' })
+  label(doc, `Order ${compactId(session.id)}`, 360, 83, 204)
   label(doc, `Placed ${new Date(session.created * 1000).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}`, 360, 98, 204)
   drawRule(doc, 145)
 
@@ -137,8 +154,6 @@ async function main() {
     const itemHeight = Math.max(doc.heightOfString(name, { width: 344, lineGap: 3 }), 14)
     if (y + itemHeight + 16 > 610) {
       doc.addPage({ size: [PAGE.width, PAGE.height], margin: 0 })
-      doc.rect(0, 0, PAGE.width, PAGE.height).fill(PAPER)
-      doc.rect(0, 0, PAGE.width, 12).fill(ACCENT)
       doc.font('brand').fontSize(17).fillColor(INK).text('PUBLIC VINYL RADIO', PAGE.margin, 40)
       drawRule(doc, 72)
       y = 91
@@ -153,22 +168,27 @@ async function main() {
   const totalX = 386
   let totalY = y + 16
   const amount = (title: string, value: number | null | undefined, emphasized = false) => {
-    label(doc, title, totalX, totalY, 88)
-    doc.font(emphasized ? 'brand' : MONO).fontSize(emphasized ? 14 : 9).fillColor(INK)
-      .text(money(value, session.currency ?? 'usd'), 456, totalY - (emphasized ? 3 : 0), { width: 108, align: 'right' })
-    totalY += emphasized ? 26 : 17
+    if (emphasized) {
+      doc.font(MONO_BOLD).fontSize(9).fillColor(INK).text(title, totalX, totalY, { width: 88 })
+    } else {
+      label(doc, title, totalX, totalY, 88)
+    }
+    doc.font(emphasized ? MONO_BOLD : MONO).fontSize(9).fillColor(INK)
+      .text(money(value, session.currency ?? 'usd'), 456, totalY, { width: 108 })
+    totalY += 17
   }
   amount('Subtotal', session.amount_subtotal)
   if (session.total_details?.amount_discount) amount('Discount', -session.total_details.amount_discount)
   if (session.shipping_cost?.amount_total) amount('Shipping', session.shipping_cost.amount_total)
   if (session.total_details?.amount_tax) amount('Tax', session.total_details.amount_tax)
-  drawRule(doc, totalY - 4)
+  drawRule(doc, totalY + 6)
+  totalY += 18
   amount('Total', session.amount_total, true)
 
   const footerY = Math.max(totalY + 22, 684)
   drawRule(doc, footerY)
-  doc.font('brand').fontSize(14).fillColor(INK).text('THANK YOU FOR SUPPORTING INDEPENDENT RADIO.', PAGE.margin, footerY + 17, { width: 516, align: 'center' })
-  label(doc, 'publicvinylradio.com', PAGE.margin, footerY + 45, 516)
+  doc.font('brand').fontSize(14).fillColor(INK).text('THANK YOU FOR SUPPORTING PUBLIC VINYL RADIO.', PAGE.margin, footerY + 17, { width: 516, align: 'center' })
+  doc.font(MONO).fontSize(7).fillColor(INK).text('PUBLICVINYLRADIO.COM', PAGE.margin, footerY + 45, { width: 516, align: 'center', characterSpacing: 0.8 })
   const finished = new Promise<void>((resolveWrite, rejectWrite) => {
     output.on('finish', resolveWrite)
     output.on('error', rejectWrite)

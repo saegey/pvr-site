@@ -64,7 +64,11 @@ const config: GatsbyConfig = {
         icon_options: { purpose: `any maskable` },
       },
     },
-    `gatsby-plugin-offline`,
+    // Replaced gatsby-plugin-offline: its service worker cached the app bundle
+    // (which includes the product catalog), so shop changes went stale on
+    // returning visitors. This plugin ships a self-unregistering service worker
+    // that tears down any previously-installed one, falling back to the CDN.
+    `gatsby-plugin-remove-serviceworker`,
 
     // content sources
     {

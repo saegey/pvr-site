@@ -6,6 +6,7 @@ import React, {
   useCallback,
   ReactNode,
 } from 'react'
+import { PRODUCTS } from '../data/products'
 
 export type CartItem = {
   cartKey: string // productId + variantLabel — unique per distinct size/variant
@@ -38,6 +39,29 @@ const CartCtx = createContext<CartContextType | null>(null)
 
 const STORAGE_KEY = 'pvr-cart-v2'
 
+// Reconcile a saved cart against the current catalog so a stale localStorage
+// item can't break checkout. Refreshes name/price/image and re-derives the price
+// lookup key from the variant label (keys and prices change over time), and
+// drops items whose product or variant no longer exists.
+const reconcile = (stored: CartItem[]): CartItem[] =>
+  stored.flatMap(item => {
+    const product = PRODUCTS.find(p => p.id === item.productId)
+    if (!product) return []
+    const variant = item.variantLabel
+      ? product.variants?.find(v => v.label === item.variantLabel)
+      : undefined
+    if (item.variantLabel && !variant) return [] // variant removed/renamed
+    const priceLookupKey = variant?.priceLookupKey ?? product.priceLookupKey
+    if (!priceLookupKey) return []
+    return [{
+      ...item,
+      productName: product.name,
+      priceLookupKey,
+      price: product.price,
+      image: product.images[0] ?? item.image,
+    }]
+  })
+
 export const CartProvider = ({ children }: { children: ReactNode }) => {
   const [items, setItems] = useState<CartItem[]>([])
   const [isOpen, setIsOpen] = useState(false)
@@ -45,7 +69,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     try {
       const stored = localStorage.getItem(STORAGE_KEY)
-      if (stored) setItems(JSON.parse(stored))
+      if (stored) setItems(reconcile(JSON.parse(stored)))
     } catch {}
   }, [])
 

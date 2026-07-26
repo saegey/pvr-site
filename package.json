@@ -21,7 +21,8 @@
     "shop:sync:live": "op run --env-file=.env.op -- node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/shop-sync.mts --env=live",
     "shop:remove": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/shop-remove.mts",
     "shop:remove:sandbox": "op run --env-file=.env.op -- node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/shop-remove.mts --env=sandbox",
-    "shop:remove:live": "op run --env-file=.env.op -- node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/shop-remove.mts --env=live"
+    "shop:remove:live": "op run --env-file=.env.op -- node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/shop-remove.mts --env=live",
+    "shop:remove:all": "op run --env-file=.env.op -- node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/shop-remove.mts --env=all"
   },
   "overrides": {
     "eslint-config-react-app": {

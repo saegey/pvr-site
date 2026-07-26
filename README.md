@@ -129,6 +129,138 @@ Your content here...
 - `coverImage` - Path to cover image (shown if no YouTube video)
 - `youtubeId` - YouTube video ID for embedding
 
+## Shop
+
+`src/data/products.ts` is the **single source of truth** for the shop. The
+storefront renders from it, checkout resolves its price lookup keys, and the
+sync script pushes it to Stripe — you should rarely touch the Stripe dashboard
+directly.
+
+### Adding / updating a product
+
+1. **Scaffold the entry** — an interactive prompt that appends a formatted
+   product to `src/data/products.ts` and creates its image folder:
+
+   ```bash
+   npm run shop:new
+   ```
+
+   It asks for the name, id, description, price, tags, image filenames, and
+   variants (generating `<id>--<variant>` lookup keys). To edit an existing
+   product instead, just change its entry in `src/data/products.ts` by hand.
+
+2. **Add source images** to `static/images/shop/<product-id>/` as `.png` (or
+   `.jpg`) — the folder is created for you by `shop:new`. High-res originals are
+   fine; they get downscaled.
+
+3. **Generate optimized images** — creates the `.webp` (product cards) and
+   `-thumb.webp` (cart drawer) derivatives from each source file:
+
+   ```bash
+   npm run shop:images            # missing/stale only
+   npm run shop:images -- --force # regenerate everything
+   ```
+
+4. **Preview locally** with `npm run develop`.
+
+5. **Push to Stripe sandbox, then promote to live** once you're happy:
+
+   ```bash
+   npm run shop:sync:sandbox                # write to the sandbox account
+   npm run shop:sync:sandbox -- --dry-run   # preview changes, writes nothing
+   npm run shop:sync:live                   # promote the same catalog to live
+   ```
+
+   The sync is **idempotent** — it creates products/prices that are missing,
+   updates names/descriptions/images that drifted, and (because Stripe prices
+   are immutable) when a price changes it creates a new Price, moves the lookup
+   key onto it, and archives the old one. Re-running is always safe.
+
+### Removing a product
+
+```bash
+npm run shop:remove -- <product-id>            # remove entry + image folder only
+npm run shop:remove:sandbox -- <product-id>    # also archive its Stripe products (sandbox)
+npm run shop:remove:live -- <product-id>       # also archive in live
+npm run shop:remove:all -- <product-id>        # archive in both, then remove
+```
+
+Deletes the entry from `products.ts` and its `static/images/shop/<id>/` folder,
+and (with `:sandbox`/`:live`/`:all`) archives the per-variant Stripe products so
+they drop off Checkout. Prompts for confirmation; add `--yes` to skip,
+`--keep-images` to keep the folder, or `--dry-run` to preview. (Stripe products
+with prices can't be hard-deleted, so they're archived — same as "Archive" in the
+dashboard.) Stripe products are found by their `pvr_id` stamp, so archiving still
+works even if you already deleted the `products.ts` entry by hand.
+
+### Stripe credentials via 1Password
+
+The sync scripts pull secrets from 1Password at runtime using
+`op run --env-file=.env.op`. `.env.op` contains only `op://` references (no
+secrets), so it's safe to commit.
+
+Create the two 1Password items the references point at (run these yourself so
+the keys never leave your machine — paste your real Stripe keys in place of the
+placeholders):
+
+```bash
+# Sandbox key (starts with sk_test_...)
+op item create \
+  --category="API Credential" \
+  --vault="PVR" \
+  --title="Stripe PVR Sandbox" \
+  "secret key[password]=sk_test_REPLACE_ME"
+
+# Live key (starts with sk_live_...)
+op item create \
+  --category="API Credential" \
+  --vault="PVR" \
+  --title="Stripe PVR Live" \
+  "secret key[password]=sk_live_REPLACE_ME"
+```
+
+Then verify the references resolve:
+
+```bash
+op run --env-file=.env.op -- printenv STRIPE_SECRET_KEY_SANDBOX
+```
+
+If you keep the keys in a different vault or under different item names, update
+`--vault=`/`--title=` above and edit the matching `op://` lines in `.env.op`.
+(`op vault list` shows your vault names.)
+
+### Notes
+
+- Requires the [1Password CLI](https://developer.1password.com/docs/cli/) (`op`)
+  installed and signed in. The scripts run on Node's native TypeScript support
+  (Node 22+), so there's no build step.
+- **Local checkout** — the `/api/create-checkout` route needs `STRIPE_SECRET_KEY`
+  at runtime. Start the dev server with the sandbox key injected from 1Password:
+
+  ```bash
+  npm run dev   # = op run --env-file=.env.op -- npx netlify dev
+  ```
+
+  Plain `npm run develop` works for everything except placing an order. (In
+  production, Netlify provides `STRIPE_SECRET_KEY` as the live key.)
+- **Variants become separate Stripe products.** A product with variants syncs as
+  one Stripe Product per variant, named `<product> — <variant>` (e.g. `PVR Tee —
+  Large`), so the size shows on the Checkout page. The cart and lookup keys are
+  unchanged.
+- **Product images must be publicly reachable URLs** (Stripe can't host arbitrary
+  product images for you). The sync points Stripe at the deployed site's `.webp`
+  files, so run `npm run shop:images` first. A **brand-new** product's images
+  aren't on the live site until you deploy — until then the product syncs without
+  images (you'll see a warning) and picks them up on the next sync after deploy.
+  To preview images before merging, sync against a public Netlify deploy-preview
+  URL: `npm run shop:sync:sandbox -- --image-base=https://deploy-preview-NN--yoursite.netlify.app`.
+  Images are only re-sent when their bytes or the base URL change (tracked via an
+  `image_hash` on the Stripe product).
+- Products are matched to Stripe by `metadata.pvr_id` (= the product `id`), so
+  the same catalog maps cleanly onto both the sandbox and live accounts.
+- The sync never archives Stripe products removed from `products.ts` — clean
+  those up in the dashboard if needed.
+
 ## Audio Streaming
 
 Audio files are hosted on Cloudflare R2. To use the audio player:

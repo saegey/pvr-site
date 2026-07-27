@@ -1,0 +1,4 @@
+{
+  "//": "Declares the .ts data files here (products.ts, events.ts, public-events.ts) as ES modules so Node's TypeScript loader doesn't have to guess their module type when the scripts/*.mts tools import them. This removes the MODULE_TYPELESS_PACKAGE_JSON warning without setting a project-wide \"type\" (which would break postcss.config.js and Gatsby). tsconfig uses moduleResolution \"node\", which ignores this field, and Gatsby compiles these via webpack, so neither is affected.",
+  "type": "module"
+}

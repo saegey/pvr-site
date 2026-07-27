@@ -41,7 +41,7 @@ export default function ShowsArchivePage({ data }: PageProps<DataProps>) {
           <p className="max-w-sm text-sm leading-relaxed text-fg/55">Recorded vinyl sets, track-by-track journeys, and live selections from PVR.</p>
         </div>
 
-        <div className="mt-4 border-t border-b border-fg/12 py-4 flex justify-between text-xs tracking-[1px] text-fg/55">
+        <div className="mt-4 border-b border-fg/12 py-4 flex justify-between text-xs tracking-[1px] text-fg/55">
           <span className="uppercase">All shows</span>
           <span>{Math.min(visible, shows.length)} of {shows.length}</span>
         </div>
@@ -62,7 +62,7 @@ export default function ShowsArchivePage({ data }: PageProps<DataProps>) {
                 <p className="text-xs tracking-[2px] uppercase text-fg/55">{formatDate(show.frontmatter.date)}</p>
                 <h2 className="mt-3 text-fg leading-snug" style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(24px, 3vw, 34px)' }}>{show.frontmatter.title}</h2>
                 {show.frontmatter.host?.length > 0 && <p className="mt-1 text-sm text-fg/55">with {show.frontmatter.host.join(', ')}</p>}
-                <p className="mt-4 max-w-2xl text-sm leading-relaxed text-fg/50">{show.frontmatter.description}</p>
+                <p className="mt-4 max-w-2xl text-sm leading-relaxed text-fg/50 line-clamp-3">{show.frontmatter.description}</p>
                 <div className="mt-5 flex flex-wrap gap-2">
                   {(show.frontmatter.tags || []).map((tag) => <span key={tag} className="text-[11px] tracking-[1px] uppercase px-2 py-1 border border-fg/20 text-fg/55">{tag}</span>)}
                 </div>

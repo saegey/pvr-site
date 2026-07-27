@@ -213,8 +213,59 @@ npm run order:pdf:sandbox -- pi_123
 The default output is `.generated/orders/order-<id>.pdf`, a gitignored local
 directory. The command will not replace an existing file unless `--force` is supplied. The
 template includes the PVR display and mono fonts, customer shipping details,
-line items, shipping, discount, tax, and total. Like the shop sync commands,
+line items, shipping, discount, tax, and total. The order header uses a short
+PVR reference rather than Stripe's long internal Payment Intent ID. Like the shop sync commands,
 the scripts obtain their corresponding Stripe key from 1Password.
+
+### Tracking fulfillment
+
+Stripe is the source of truth for fulfillment state. When a paid Checkout
+Session is received, the webhook records it as `paid`; marking an order shipped
+adds its carrier, tracking number, and shipping timestamp to both the Checkout
+Session and its Payment Intent. This makes the status visible in Stripe's normal
+Payment details view.
+
+```bash
+# Show the 25 newest completed orders (use --limit=100 for more)
+npm run order:list:sandbox
+
+# Mark an order shipped using its PVR reference, Checkout Session, or Payment Intent ID
+npm run order:ship:sandbox -- PVR-20260726-ABC123 --carrier=USPS --tracking=9400111899223856928499
+
+# A shipment email is sent by default. Deliberately send another only when needed.
+npm run order:ship:sandbox -- PVR-20260726-ABC123 --carrier=USPS --tracking=9400111899223856928499 --resend-email
+
+# Backfill shipment metadata without emailing the customer again.
+npm run order:ship:sandbox -- PVR-20260726-ABC123 --carrier=USPS --tracking=9400111899223856928499 --no-email
+```
+
+Before using this in production, create a Stripe webhook endpoint at
+`https://publicvinylradio.com/api/stripe-webhook`, listen for
+`checkout.session.completed` and `checkout.session.async_payment_succeeded`,
+and add its signing secret to Netlify as `STRIPE_WEBHOOK_SECRET`. The endpoint
+verifies Stripe's signature before writing any fulfillment metadata.
+
+`order:ship` also emails the customer after recording the shipment. Configure
+`RESEND_API_KEY`, `ORDER_EMAIL_FROM`, and `ORDER_EMAIL_REPLY_TO` in both
+Netlify and the local environment used by the CLI (for example, as 1Password
+references in `.env.op`). The command records the Resend email ID and timestamp
+in Stripe and will refuse to send another shipment email unless
+`--resend-email` is provided.
+
+### Creating events
+
+Use the interactive event builder for public events and private listening
+sessions. It validates the shared event slug, writes the appropriate data file,
+and creates `static/images/events/<slug>/` for event assets.
+
+```bash
+npm run event:new
+npm run event:new -- --dry-run  # review the generated event without writing files
+```
+
+Private sessions are unlisted. The builder generates a five-character link at
+`/e/<code>`; share that link directly with guests rather than linking it from
+the public site.
 
 ### Stripe credentials via 1Password
 

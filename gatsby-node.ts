@@ -108,15 +108,15 @@ exports.createPages = async ({
   const publicEventTemplate = path.resolve(`src/templates/public-event-template.tsx`);
   const events = require("./src/data/events.data.json");
   const publicEvents = require("./src/data/public-events.data.json");
-  events.forEach((event: { slug: string }) => {
-    console.log(`Creating event page for ${event.slug}`);
+  events.forEach((event: { slug: string; accessCode: string }) => {
+    console.log(`Creating private event page for ${event.accessCode}`);
     createPage({
-      path: `/events/${event.slug}`,
+      path: `/e/${event.accessCode}`,
       component: eventTemplate,
       context: { slug: event.slug, event },
     });
     createPage({
-      path: `/events/${event.slug}/admin`,
+      path: `/e/${event.accessCode}/admin`,
       component: adminTemplate,
       context: { slug: event.slug, event },
     });
@@ -147,6 +147,20 @@ exports.createPages = async ({
         });
       }
     );
+
+  // ── Collaborator pages ──
+  // One page per curated host in src/data/hosts.data.json. The template lists
+  // every show whose frontmatter `host` includes the handle.
+  const collaboratorTemplate = path.resolve(`src/templates/collaborator-template.tsx`);
+  const hosts = require("./src/data/hosts.data.json");
+  hosts.forEach((host: { slug: string; handle: string; image?: string }) => {
+    console.log(`Creating collaborator page for ${host.slug}`);
+    createPage({
+      path: `/collaborators/${host.slug}`,
+      component: collaboratorTemplate,
+      context: { slug: host.slug, handle: host.handle, image: host.image ?? null },
+    });
+  });
 
   // (result.data.allMdx.nodes as MdxNode[]).forEach((node) => {
   //   const { template, slug } = node.frontmatter;

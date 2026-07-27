@@ -189,7 +189,7 @@ const EventTemplate: React.FC<{ pageContext: { event: PVREvent } }> = ({
       <SEO
         title={`${event.title} · Public Vinyl Radio`}
         description={event.description}
-        url={`https://publicvinylradio.com/events/${event.slug}`}
+        url={`https://publicvinylradio.com/e/${event.accessCode}`}
       />
 
       <div className="max-w-[600px] mx-auto px-5 pt-10 pb-24">

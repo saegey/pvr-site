@@ -2,6 +2,8 @@ import eventsData from "./events.data.json";
 
 export type PVREvent = {
   slug: string;
+  /** Five-character unlisted URL token for private sessions. */
+  accessCode: string;
   title: string;
   /** ISO date, e.g. 2026-07-28 */
   date: string;

@@ -9,6 +9,7 @@ import ImageCarousel from '../components/image-carousel'
 import StreamingLinks from '../components/streaming-links'
 import { MdxNode } from '../types/content'
 import { youTubeMaxResThumb, youTubeHQThumb } from '../utils/youtube'
+import { hostByHandle } from '../data/hosts'
 
 export const formatDate = (dateString: string) =>
   format(new Date(dateString), 'MMMM d, yyyy')
@@ -20,12 +21,54 @@ const formatDuration = (seconds?: number) => {
   return `${m}:${String(s).padStart(2, '0')}`
 }
 
+const TracklistRow = ({ track, index, slug }: { track: any; index: number; slug?: string }) => (
+  <div
+    className="flex items-center gap-4 py-4 border-b border-fg/12 hover:bg-fg/[0.02] transition-colors -mx-4 px-4"
+  >
+    <span className="text-xs text-fg/30 w-6 shrink-0 tabular-nums">
+      {String(index + 1).padStart(2, '0')}
+    </span>
+    <div className="flex-1 min-w-0">
+      <p
+        className="text-fg leading-snug truncate"
+        style={{ fontFamily: 'var(--font-mono)', fontSize: '15px' }}
+      >
+        {track.title}
+      </p>
+      <p className="text-xs text-fg/55 truncate mt-0.5">
+        {track.artist}
+        {track.album && (
+          <span className="text-fg/35">
+            {' — '}{track.album}{track.year ? ` (${track.year})` : ''}
+          </span>
+        )}
+      </p>
+    </div>
+    {!!track.duration_seconds && (
+      <span className="text-xs text-fg/35 tabular-nums shrink-0">
+        {formatDuration(track.duration_seconds)}
+      </span>
+    )}
+    <StreamingLinks
+      discogs_url={track.discogs_url}
+      apple_music_url={track.apple_music_url}
+      spotify_url={track.spotify_url}
+      soundcloud_url={track.soundcloud_url}
+      youtube_url={track.youtube_url}
+      trackingLocation="track_card"
+      trackTitle={track.title}
+      showSlug={slug}
+    />
+  </div>
+)
+
 type DataProps = {
   mdx: MdxNode & { excerpt?: string }
   site: { siteMetadata: { siteUrl: string; image?: string } }
 }
 
 const ShowTemplate: React.FC<PageProps<DataProps>> = ({ data, children }) => {
+  const [isTracklistOpen, setIsTracklistOpen] = React.useState(false)
   const {
     title,
     description,
@@ -157,7 +200,25 @@ const ShowTemplate: React.FC<PageProps<DataProps>> = ({ data, children }) => {
             {title}
           </h1>
           <p className="text-sm text-fg/55 mb-5">
-            with {(host || []).join(', ')}
+            with{' '}
+            {(host || []).map((h: string, i: number) => {
+              const collaborator = hostByHandle(h)
+              return (
+                <React.Fragment key={h}>
+                  {i > 0 && ', '}
+                  {collaborator ? (
+                    <Link
+                      to={`/collaborators/${collaborator.slug}`}
+                      className="underline decoration-fg/30 underline-offset-2 hover:decoration-fg hover:text-fg transition-colors"
+                    >
+                      {h}
+                    </Link>
+                  ) : (
+                    h
+                  )}
+                </React.Fragment>
+              )
+            })}
           </p>
           <div className="flex flex-wrap gap-2">
             {(tags || []).map((tag: string) => (
@@ -203,54 +264,43 @@ const ShowTemplate: React.FC<PageProps<DataProps>> = ({ data, children }) => {
             <div className="border-t border-fg/12 pt-6 mb-4">
               <span className="text-xs tracking-[2px] uppercase text-fg/55">Tracklist</span>
             </div>
-            {tracklist.map((t: any, idx: number) => (
-              <div
-                key={`${t.artist}-${t.title}-${idx}`}
-                className="flex items-center gap-4 py-4 border-b border-fg/12 hover:bg-fg/[0.02] transition-colors -mx-4 px-4"
-              >
-                {/* Index */}
-                <span className="text-xs text-fg/30 w-6 shrink-0 tabular-nums">
-                  {String(idx + 1).padStart(2, '0')}
-                </span>
-
-                {/* Title / artist / album */}
-                <div className="flex-1 min-w-0">
-                  <p
-                    className="text-fg leading-snug truncate"
-                    style={{ fontFamily: 'var(--font-display)', fontSize: '15px' }}
-                  >
-                    {t.title}
-                  </p>
-                  <p className="text-xs text-fg/55 truncate mt-0.5">
-                    {t.artist}
-                    {t.album && (
-                      <span className="text-fg/35">
-                        {' — '}{t.album}{t.year ? ` (${t.year})` : ''}
-                      </span>
-                    )}
-                  </p>
-                </div>
-
-                {/* Duration */}
-                {!!t.duration_seconds && (
-                  <span className="text-xs text-fg/35 tabular-nums shrink-0">
-                    {formatDuration(t.duration_seconds)}
-                  </span>
-                )}
-
-                {/* Streaming links */}
-                <StreamingLinks
-                  discogs_url={t.discogs_url}
-                  apple_music_url={t.apple_music_url}
-                  spotify_url={t.spotify_url}
-                  soundcloud_url={t.soundcloud_url}
-                  youtube_url={t.youtube_url}
-                  trackingLocation="track_card"
-                  trackTitle={t.title}
-                  showSlug={slug}
-                />
-              </div>
+            {tracklist.slice(0, 10).map((track: any, index: number) => (
+              <TracklistRow key={`${track.artist}-${track.title}-${index}`} track={track} index={index} slug={slug} />
             ))}
+            {tracklist.length > 10 && (
+              <div className="mt-5 flex justify-center">
+                <button
+                  type="button"
+                  onClick={() => setIsTracklistOpen(true)}
+                  className="text-xs tracking-[1.5px] uppercase border border-fg px-4 py-3 hover:bg-fg hover:text-bg transition-colors"
+                >
+                  View all {tracklist.length} tracks
+                </button>
+              </div>
+            )}
+          </div>
+        )}
+
+        {isTracklistOpen && tracklist && (
+          <div className="fixed inset-0 z-50 bg-bg overflow-y-auto" role="dialog" aria-modal="true" aria-label="Full tracklist">
+            <div className="max-w-3xl mx-auto px-8 py-8 sm:px-12 sm:py-12">
+              <div className="sticky top-0 bg-bg border-b border-fg/12 pb-5 mb-4 flex items-center justify-between gap-4">
+                <div>
+                  <p className="text-xs tracking-[2px] uppercase text-fg/55">Tracklist</p>
+                  <p className="mt-1 text-xs text-fg/55">{tracklist.length} tracks</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setIsTracklistOpen(false)}
+                  className="text-xs tracking-[1.5px] uppercase border border-fg px-4 py-3 hover:bg-fg hover:text-bg transition-colors"
+                >
+                  Close
+                </button>
+              </div>
+              {tracklist.map((track: any, index: number) => (
+                <TracklistRow key={`${track.artist}-${track.title}-${index}`} track={track} index={index} slug={slug} />
+              ))}
+            </div>
           </div>
         )}
 

@@ -1,0 +1,40 @@
+[
+  {
+    "handle": "Saegey",
+    "name": "Saegey",
+    "slug": "saegey",
+    "image": "collaborators/saegey.jpg",
+    "website": "http://saegey.com"
+  },
+  {
+    "handle": "TOPYEN",
+    "name": "TOPYEN",
+    "slug": "topyen",
+    "image": "collaborators/topyen.jpg"
+  },
+  {
+    "handle": "G00DF00T",
+    "name": "G00DF00T",
+    "slug": "g00df00t"
+  },
+  {
+    "handle": "DJ Librarian",
+    "name": "DJ Librarian",
+    "slug": "dj-librarian"
+  },
+  {
+    "handle": "cdsmooth",
+    "name": "CDSmooth",
+    "slug": "cdsmooth"
+  },
+  {
+    "handle": "razberryberetta",
+    "name": "Razberry Beretta",
+    "slug": "razberry-beretta"
+  },
+  {
+    "handle": "camilo",
+    "name": "Camilo",
+    "slug": "camilo"
+  }
+]

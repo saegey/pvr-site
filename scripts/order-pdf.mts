@@ -7,13 +7,12 @@
  *   npm run order:pdf:sandbox -- cs_test_...  # Checkout Session
  *   npm run order:pdf:live -- pi_... --output=./orders/my-order.pdf
  */
-import { createWriteStream, existsSync, readFileSync } from 'node:fs'
+import { createWriteStream, existsSync } from 'node:fs'
 import { mkdir } from 'node:fs/promises'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import PDFDocument from 'pdfkit'
 import Stripe from 'stripe'
-import SVGtoPDF from 'svg-to-pdfkit'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const args = process.argv.slice(2)
@@ -55,7 +54,7 @@ const stripe = new Stripe(secret)
 const brandFont = resolve(__dirname, '../static/fonts/ITC-Lubalin-Graph-Std-Demi.otf')
 const monoFont = resolve(__dirname, '../static/fonts/JetBrainsMono-Regular.ttf')
 const monoBoldFont = resolve(__dirname, '../static/fonts/JetBrainsMono-Bold.ttf')
-const blackLogo = resolve(__dirname, '../src/images/press/PVR LOGO_BLK.svg')
+const blackLogo = resolve(__dirname, '../src/images/press/PVR-Logo-Landcape-BLK.png')
 const PAGE = { width: 612, height: 792, margin: 48 }
 const INK = '#101010'
 const MONO = 'mono'
@@ -118,11 +117,7 @@ async function main() {
   doc.pipe(output)
 
   doc.fillColor(INK)
-  SVGtoPDF(doc, readFileSync(blackLogo, 'utf8'), PAGE.margin, 42, {
-    width: 64,
-    height: 84,
-    preserveAspectRatio: 'xMinYMin meet',
-  })
+  doc.image(blackLogo, PAGE.margin, 48, { fit: [200, 62] })
   doc.font('brand').fontSize(19).fillColor(INK).text('RECEIPT', 360, 53, { width: 204, align: 'right' })
   label(doc, `Order ${orderReference(session)}`, 360, 83, 204)
   label(doc, `Placed ${new Date(session.created * 1000).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}`, 360, 98, 204)

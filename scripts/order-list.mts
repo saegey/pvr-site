@@ -15,6 +15,7 @@ async function main() {
     total: formatMoney(session.amount_total, session.currency),
     placed: new Date(session.created * 1000).toISOString().slice(0, 10),
     tracking: session.metadata?.tracking_number ?? '—',
+    email: session.metadata?.shipment_email_sent_at ? 'sent' : '—',
   }))
   console.table(rows)
   if (sessions.has_more) console.log(`Showing the newest ${limit} completed orders. Use --limit=100 for more.`)

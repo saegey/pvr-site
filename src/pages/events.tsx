@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { graphql, Link } from "gatsby";
 import SEO from "../components/seo";
-import { ACTIVE_EVENTS } from "../data/events";
+import type { PVREvent } from "../data/events";
 import { PUBLIC_EVENTS } from '../data/public-events'
 
 type Summary = {
@@ -20,6 +20,8 @@ const initials = (name: string) =>
     .slice(0, 2)
     .toUpperCase();
 
+const getUnlistedSession = (): PVREvent | undefined => undefined;
+
 // Read the "already RSVP'd" cookie dropped on the event page
 const readRsvpCookie = (
   slug: string
@@ -36,10 +38,9 @@ const readRsvpCookie = (
 };
 
 const EventsPage = () => {
-  // Show the soonest active private session in the RSVP card
-  const session = ACTIVE_EVENTS.filter((e) => e.isPrivate).sort((a, b) =>
-    a.date.localeCompare(b.date)
-  )[0];
+  // Private sessions are intentionally unlisted and only render at /e/<code>.
+  const session = getUnlistedSession();
+  const showPrivateSessions = false;
 
   const [summary, setSummary] = useState<Summary | null>(null);
   const [myStatus, setMyStatus] = useState<
@@ -176,6 +177,7 @@ const EventsPage = () => {
       </div>
 
       {/* ── Private Listening Sessions ── */}
+      {showPrivateSessions && (
       <div className="max-w-[1320px] mx-auto px-4 md:px-12 mb-24">
         <div className="border-t border-fg/12 pt-6 mb-3">
           <span className="text-xs tracking-[2px] uppercase text-fg/55">
@@ -303,6 +305,7 @@ const EventsPage = () => {
         </div>
         )}
       </div>
+      )}
     </>
   );
 };

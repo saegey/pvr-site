@@ -75,6 +75,9 @@ export default async function handler(
     const session = await stripe.checkout.sessions.create({
       mode: 'payment',
       client_reference_id: orderReference,
+      payment_intent_data: {
+        metadata: { order_reference: orderReference },
+      },
       shipping_address_collection: {
         allowed_countries: ['US'],
       },

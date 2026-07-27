@@ -4,11 +4,19 @@ import { StaticImage } from 'gatsby-plugin-image'
 import SEO from '../components/seo'
 import { useOgImageFromPath } from '../hooks/useOgImage'
 
-const TEAM = [
+type Person = {
+  name: string
+  role: string
+  bio: string
+  website: string | null
+  image: React.ReactNode
+}
+
+const CORE: Person[] = [
   {
-    name: 'Adam Saegebarth',
+    name: 'Adam',
     role: 'Founder · DJ · Editor',
-    bio: 'Curates and mixes every PVR set with a global ear. Software engineer by trade, vinyl lifer by heart. Precision, flow, and feel.',
+    bio: 'Digs the records, builds the speakers, runs the boards. Software engineer by trade, vinyl obsessive the rest of the time.',
     website: 'http://saegey.com',
     image: (
       <StaticImage
@@ -24,27 +32,9 @@ const TEAM = [
     ),
   },
   {
-    name: 'Ben Schauland',
-    role: 'DJ · Editor · Visual Collab',
-    bio: "Designer and selector. Records and edits his own sets and helps shape the visual identity that matches PVR's eclectic energy.",
-    website: 'https://www.benschauland.com',
-    image: (
-      <StaticImage
-        src="../images/DSC00661.jpeg"
-        alt="Ben Schauland"
-        placeholder="blurred"
-        formats={['auto', 'webp']}
-        width={60}
-        height={60}
-        style={{ borderRadius: '50%', display: 'block' }}
-        imgStyle={{ objectFit: 'cover', borderRadius: '50%' }}
-      />
-    ),
-  },
-  {
-    name: 'Scarlett Saegebarth',
+    name: 'Scarlett',
     role: 'Photography · Social',
-    bio: 'Captures the vibe behind the lens and carries it across platforms so the images resonate as strongly as the music.',
+    bio: "Shoots the nights and runs the feed — the eye that carries PVR's look off the decks and online.",
     website: null,
     image: (
       <StaticImage
@@ -61,6 +51,90 @@ const TEAM = [
   },
 ]
 
+const COLLABORATORS: Person[] = [
+  {
+    name: 'Ben',
+    role: 'Collaborator · DJ',
+    bio: "Designer and selector who helped shape PVR's early look and sound. Still drops in to spin and collaborate.",
+    website: 'https://www.benschauland.com',
+    image: (
+      <StaticImage
+        src="../images/DSC00661.jpeg"
+        alt="Ben Schauland"
+        placeholder="blurred"
+        formats={['auto', 'webp']}
+        width={60}
+        height={60}
+        style={{ borderRadius: '50%', display: 'block' }}
+        imgStyle={{ objectFit: 'cover', borderRadius: '50%' }}
+      />
+    ),
+  },
+]
+
+const PersonRow = ({ person }: { person: Person }) => (
+  <div className="py-8 border-b border-fg/12">
+    {/* Mobile: photo + name/role inline, bio below */}
+    <div className="flex items-start gap-4 mb-4 md:hidden">
+      <div className="w-[48px] h-[48px] rounded-full overflow-hidden shrink-0 grayscale">
+        {person.image}
+      </div>
+      <div className="pt-1 min-w-0">
+        <p
+          className="text-fg leading-snug"
+          style={{ fontFamily: 'var(--font-display)', fontSize: '18px' }}
+        >
+          {person.name}
+        </p>
+        <p className="text-xs tracking-[1px] uppercase text-fg/55 mt-1">{person.role}</p>
+      </div>
+    </div>
+    <p className="text-sm text-fg/60 leading-[1.7] mb-3 md:hidden">{person.bio}</p>
+    {person.website && (
+      <a
+        href={person.website}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="text-xs tracking-[1px] uppercase text-fg/55 hover:text-fg transition-colors md:hidden"
+      >
+        Website →
+      </a>
+    )}
+
+    {/* Desktop: 4-column grid */}
+    <div
+      className="hidden md:grid items-start gap-8"
+      style={{ gridTemplateColumns: '60px 1fr 2fr 100px' }}
+    >
+      <div className="w-[60px] h-[60px] rounded-full overflow-hidden shrink-0 grayscale">
+        {person.image}
+      </div>
+      <div className="pt-1">
+        <p
+          className="text-fg leading-snug"
+          style={{ fontFamily: 'var(--font-display)', fontSize: '20px' }}
+        >
+          {person.name}
+        </p>
+        <p className="text-xs tracking-[1px] uppercase text-fg/55 mt-1">{person.role}</p>
+      </div>
+      <p className="text-sm text-fg/60 leading-[1.7] pt-1">{person.bio}</p>
+      <div className="pt-1">
+        {person.website ? (
+          <a
+            href={person.website}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-xs tracking-[1px] uppercase text-fg/55 hover:text-fg transition-colors whitespace-nowrap"
+          >
+            Website →
+          </a>
+        ) : null}
+      </div>
+    </div>
+  </div>
+)
+
 const AboutPage = () => {
   const ogImage = useOgImageFromPath('Scan167279.jpeg')
 
@@ -68,7 +142,7 @@ const AboutPage = () => {
     <>
       <SEO
         title="About · Public Vinyl Radio"
-        description="About Public Vinyl Radio — an all-vinyl platform for deep, unfiltered sounds. Meet the people behind PVR."
+        description="Public Vinyl Radio — a DIY vinyl collective. 100% analog sets, custom sound systems, global rhythms. The future is analog."
         url="https://publicvinylradio.com/about"
         image={ogImage}
       />
@@ -87,7 +161,7 @@ const AboutPage = () => {
                 letterSpacing: '-0.5px',
               }}
             >
-              An analog platform in a digital world.
+              The future is analog.
             </h1>
           </div>
 
@@ -105,31 +179,31 @@ const AboutPage = () => {
         </div>
       </div>
 
-      {/* ── Mission ── */}
+      {/* ── Intro ── */}
       <div className="max-w-[820px] mx-auto px-4 md:px-12 py-12 border-t border-fg/12">
         <p className="text-base text-fg/75 leading-[1.8]">
-          100% vinyl DJ sets, recorded and edited by the people who spin them.
-          We collect, we curate, we share our favorite music with the world.
+          100% vinyl, start to finish. We dig for the records, build the systems that play
+          them, and put on the music that moves us — global rhythms, deep grooves, no filler.
         </p>
       </div>
 
-      {/* ── Why Vinyl / What PVR Is ── */}
+      {/* ── The Sound / DIY ── */}
       <div className="max-w-[820px] mx-auto px-4 md:px-12">
         <div className="border-t border-fg/12 py-12">
-          <p className="text-xs tracking-[2px] uppercase text-fg/55 mb-4">Why Vinyl?</p>
+          <p className="text-xs tracking-[2px] uppercase text-fg/55 mb-4">The Sound</p>
           <p className="text-sm text-fg/65 leading-[1.8]">
-            Vinyl isn't just a format — it's a philosophy. The ritual of selecting, cueing, and
-            mixing records creates a tactile connection to the music. Every set has its own
-            fingerprints: warm, raw, and human.
+            We play records because they're alive — the pops, the hiss, the imperfections that
+            make a set breathe. Everything runs through custom-built speakers and a rotary mixer,
+            tuned for feel, not for volume. Hi-fi warmth over a predictable PA stack.
           </p>
         </div>
 
         <div className="border-t border-fg/12 py-12">
-          <p className="text-xs tracking-[2px] uppercase text-fg/55 mb-4">What PVR Is</p>
+          <p className="text-xs tracking-[2px] uppercase text-fg/55 mb-4">DIY to the Core</p>
           <p className="text-sm text-fg/65 leading-[1.8]">
-            Public Vinyl Radio is a channel for vinyl selectors. Adam and Ben both record and edit
-            their own sets, and the platform exists to collaborate with other crate diggers and
-            storytellers who share the love of analog sound.
+            Public Vinyl Radio is a vinyl collective, DIY to the bone. We build our own speakers,
+            cut our own merch, print our own flyers, make our own art. The door's open to selectors
+            who dig the same.
           </p>
         </div>
       </div>
@@ -140,70 +214,17 @@ const AboutPage = () => {
           <p className="text-xs tracking-[2px] uppercase text-fg/55">The People Behind It</p>
         </div>
 
-        {TEAM.map((person) => (
-          <div
-            key={person.name}
-            className="py-8 border-b border-fg/12"
-          >
-            {/* Mobile: photo + name/role inline, bio below */}
-            <div className="flex items-start gap-4 mb-4 md:hidden">
-              <div className="w-[48px] h-[48px] rounded-full overflow-hidden shrink-0 grayscale">
-                {person.image}
-              </div>
-              <div className="pt-1 min-w-0">
-                <p
-                  className="text-fg leading-snug"
-                  style={{ fontFamily: 'var(--font-display)', fontSize: '18px' }}
-                >
-                  {person.name}
-                </p>
-                <p className="text-xs tracking-[1px] uppercase text-fg/55 mt-1">{person.role}</p>
-              </div>
-            </div>
-            <p className="text-sm text-fg/60 leading-[1.7] mb-3 md:hidden">{person.bio}</p>
-            {person.website && (
-              <a
-                href={person.website}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-xs tracking-[1px] uppercase text-fg/55 hover:text-fg transition-colors md:hidden"
-              >
-                Website →
-              </a>
-            )}
+        {CORE.map((person) => (
+          <PersonRow key={person.name} person={person} />
+        ))}
 
-            {/* Desktop: 4-column grid */}
-            <div
-              className="hidden md:grid items-start gap-8"
-              style={{ gridTemplateColumns: '60px 1fr 2fr 100px' }}
-            >
-              <div className="w-[60px] h-[60px] rounded-full overflow-hidden shrink-0 grayscale">
-                {person.image}
-              </div>
-              <div className="pt-1">
-                <p
-                  className="text-fg leading-snug"
-                  style={{ fontFamily: 'var(--font-display)', fontSize: '20px' }}
-                >
-                  {person.name}
-                </p>
-                <p className="text-xs tracking-[1px] uppercase text-fg/55 mt-1">{person.role}</p>
-              </div>
-              <p className="text-sm text-fg/60 leading-[1.7] pt-1">{person.bio}</p>
-              <div className="pt-1">
-                {person.website ? (
-                  <a
-                    href={person.website}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-xs tracking-[1px] uppercase text-fg/55 hover:text-fg transition-colors whitespace-nowrap"
-                  >
-                    Website →
-                  </a>
-                ) : null}
-              </div>
-            </div>
-          </div>
+        {/* ── Collaborators ── */}
+        <div className="pt-10 mb-2">
+          <p className="text-xs tracking-[2px] uppercase text-fg/55">Collaborators</p>
+        </div>
+
+        {COLLABORATORS.map((person) => (
+          <PersonRow key={person.name} person={person} />
         ))}
       </div>
 
@@ -219,17 +240,17 @@ const AboutPage = () => {
               letterSpacing: '-0.5px',
             }}
           >
-            Collaborate with Public Vinyl Radio
+            Play With Us
           </h2>
           <p className="text-sm text-fg/60 leading-[1.7] mb-8 max-w-[480px]">
-            Are you a vinyl selector with a story to tell? We're building a home for analog mixes
-            and global sounds.
+            Vinyl selector with a crate worth hearing? We're building a home for analog sound
+            and global rhythms. Bring a set.
           </p>
           <a
             href="mailto:adam.saegebarth@gmail.com?subject=PVR%20Collab"
             className="inline-block text-xs tracking-[2px] uppercase px-8 py-4 border border-fg/30 text-fg/70 hover:border-fg/60 hover:text-fg transition-colors duration-150"
           >
-            Pitch Your Set
+            Send a Set
           </a>
         </div>
       </div>

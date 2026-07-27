@@ -38,12 +38,26 @@ export default async function handler(
   if (session.payment_status !== 'paid') return res.status(200).json({ received: true, paymentStatus: session.payment_status })
 
   const metadata = session.metadata ?? {}
+  const fulfillmentStatus = metadata.fulfillment_status ?? 'paid'
+  const paidAt = metadata.paid_at ?? new Date().toISOString()
   await stripe.checkout.sessions.update(session.id, {
     metadata: {
       ...metadata,
-      fulfillment_status: metadata.fulfillment_status ?? 'paid',
-      paid_at: metadata.paid_at ?? new Date().toISOString(),
+      fulfillment_status: fulfillmentStatus,
+      paid_at: paidAt,
     },
   })
+  const paymentIntentId = typeof session.payment_intent === 'string' ? session.payment_intent : session.payment_intent?.id
+  if (paymentIntentId) {
+    const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId)
+    await stripe.paymentIntents.update(paymentIntentId, {
+      metadata: {
+        ...paymentIntent.metadata,
+        order_reference: metadata.order_reference ?? session.client_reference_id ?? session.id,
+        fulfillment_status: fulfillmentStatus,
+        paid_at: paidAt,
+      },
+    })
+  }
   return res.status(200).json({ received: true })
 }

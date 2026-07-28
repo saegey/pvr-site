@@ -108,6 +108,7 @@ exports.createPages = async ({
   const publicEventTemplate = path.resolve(`src/templates/public-event-template.tsx`);
   const events = require("./src/data/events.data.json");
   const publicEvents = require("./src/data/public-events.data.json");
+  const { PRODUCTS } = require("./src/data/products");
   events.forEach((event: { slug: string; accessCode: string }) => {
     console.log(`Creating private event page for ${event.accessCode}`);
     createPage({
@@ -128,6 +129,19 @@ exports.createPages = async ({
       path: `/events/${event.slug}`,
       component: publicEventTemplate,
       context: { event },
+    });
+  });
+
+  // ── Product pages ──
+  // Products live in the catalog rather than a CMS, so create a static,
+  // shareable page for every catalog entry at /shop/<product-id>.
+  const productTemplate = path.resolve(`src/templates/product-template.tsx`);
+  PRODUCTS.forEach((product: any) => {
+    console.log(`Creating product page for ${product.id}`);
+    createPage({
+      path: `/shop/${product.id}`,
+      component: productTemplate,
+      context: { product },
     });
   });
 

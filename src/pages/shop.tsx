@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react'
-import { graphql } from 'gatsby'
+import { graphql, Link } from 'gatsby'
 import SEO from '../components/seo'
 import { PRODUCTS, Product, ProductVariant } from '../data/products'
 import { useCart } from '../context/cart-context'
@@ -182,14 +182,16 @@ const ProductCard = ({ product }: { product: Product }) => {
                   style={{ background: 'linear-gradient(110deg, rgba(236,236,230,0.04), rgba(236,236,230,0.12), rgba(236,236,230,0.04))' }}
                 />
               )}
-              <img
-                src={cardImageSrc(product.images[imageIndex])}
-                alt={`${product.name} — image ${imageIndex + 1}`}
-                className="w-full h-full object-cover transition-opacity duration-300"
-                loading="lazy"
-                decoding="async"
-                onLoad={() => setLoadedImages((images) => new Set(images).add(imageIndex))}
-              />
+              <Link to={`/shop/${product.id}`} aria-label={`View ${product.name}`} className="block w-full h-full">
+                <img
+                  src={cardImageSrc(product.images[imageIndex])}
+                  alt={`${product.name} — image ${imageIndex + 1}`}
+                  className="w-full h-full object-cover transition-opacity duration-300"
+                  loading="lazy"
+                  decoding="async"
+                  onLoad={() => setLoadedImages((images) => new Set(images).add(imageIndex))}
+                />
+              </Link>
             </>
           ) : (
             <div
@@ -245,12 +247,14 @@ const ProductCard = ({ product }: { product: Product }) => {
         {/* Info */}
         <div className="pt-5 flex flex-col gap-4 flex-1">
           <div>
-            <h2
-              className="text-fg leading-snug"
-              style={{ fontFamily: 'var(--font-display)', fontSize: '18px' }}
-            >
-              {product.name}
-            </h2>
+            <Link to={`/shop/${product.id}`} className="text-fg hover:text-fg/65 transition-colors">
+              <h2
+                className="leading-snug"
+                style={{ fontFamily: 'var(--font-display)', fontSize: '18px' }}
+              >
+                {product.name}
+              </h2>
+            </Link>
             <p className="text-xs text-fg/55 mt-1">{formatPrice(product.price)}</p>
           </div>
 

@@ -5,6 +5,8 @@ import { Product, ProductVariant } from '../data/products'
 import { useCart } from '../context/cart-context'
 
 const formatPrice = (price: number) => `$${price.toFixed(2)}`
+const webpImageSrc = (src: string) => src.replace(/\.(png|jpe?g)$/i, '.webp')
+const thumbnailImageSrc = (src: string) => webpImageSrc(src).replace(/\.webp$/i, '-thumb.webp')
 
 type ProductPageContext = { product: Product }
 
@@ -18,6 +20,9 @@ const ProductTemplate = ({ pageContext }: { pageContext: ProductPageContext }) =
   const [added, setAdded] = useState(false)
 
   const priceLookupKey = selectedVariant?.priceLookupKey ?? product.priceLookupKey ?? ''
+  const activeImage = product.images[imageIndex]
+  const activeWebpImage = activeImage ? webpImageSrc(activeImage) : ''
+  const activeThumbnailImage = activeImage ? thumbnailImageSrc(activeImage) : ''
   const productUrl = `https://publicvinylradio.com/shop/${product.id}`
   const socialImage = product.images[0]
     ? `https://publicvinylradio.com${product.images[0]}`
@@ -59,11 +64,19 @@ const ProductTemplate = ({ pageContext }: { pageContext: ProductPageContext }) =
           <section className="space-y-3" aria-label={`${product.name} images`}>
             <div className="bg-fg/5 overflow-hidden" style={{ aspectRatio: '5/4' }}>
               {product.images.length > 0 ? (
-                <img
-                  src={product.images[imageIndex]}
-                  alt={`${product.name} — image ${imageIndex + 1}`}
-                  className="w-full h-full object-cover"
-                />
+                <picture className="block w-full h-full">
+                  <source
+                    type="image/webp"
+                    srcSet={`${activeThumbnailImage} 320w, ${activeWebpImage} 1200w`}
+                    sizes="(max-width: 1023px) 100vw, 58vw"
+                  />
+                  <img
+                    src={activeImage}
+                    alt={`${product.name} — image ${imageIndex + 1}`}
+                    className="w-full h-full object-cover"
+                    decoding="async"
+                  />
+                </picture>
               ) : (
                 <div
                   className="w-full h-full"
@@ -89,7 +102,10 @@ const ProductTemplate = ({ pageContext }: { pageContext: ProductPageContext }) =
                       outlineOffset: '2px',
                     }}
                   >
-                    <img src={image} alt="" className="w-full h-full object-cover" />
+                    <picture className="block w-full h-full">
+                      <source type="image/webp" srcSet={thumbnailImageSrc(image)} />
+                      <img src={image} alt="" className="w-full h-full object-cover" loading="lazy" decoding="async" />
+                    </picture>
                   </button>
                 ))}
               </div>

@@ -12,5 +12,19 @@
     "rsvpEnabled": true,
     "partnerLogo": "/images/soundbreak-logo.png",
     "partnerLogoAlt": "Sound Break Bike House"
+  },
+  {
+    "slug": "human-people-inner-signals",
+    "date": "Aug 15th, 2026",
+    "title": "Inner Signals",
+    "venue": "Human People Beer Café",
+    "location": "6105a Roosevelt Way NE, Roosevelt",
+    "time": "5–8 PM",
+    "description": "Beneath every conversation is another frequency. Inner Signals invites you to tune into an evening of analog sound—records chosen for the moments between genres, where rhythm, texture, and atmosphere take over.",
+    "djs": ["Public Vinyl Radio"],
+    "maxPlusOnes": 1,
+    "rsvpEnabled": true,
+    "partnerLogo": "/images/human-people-logo.png",
+    "partnerLogoAlt": "Human People Beer Café"
   }
 ]

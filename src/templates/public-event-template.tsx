@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { graphql, Link } from 'gatsby'
 import SEO from '../components/seo'
+import ImageCarousel from '../components/image-carousel'
 import type { PublicEvent } from '../data/public-events'
 
 type RsvpSummary = {
@@ -68,6 +69,7 @@ const PublicEventTemplate: React.FC<{ pageContext: { event: PublicEvent } }> = (
       <SEO
         title={`${event.title} · Public Vinyl Radio`}
         description={event.description}
+        image={event.poster ? `https://publicvinylradio.com${event.poster}` : undefined}
         url={`https://publicvinylradio.com/events/${event.slug}`}
       />
       <main className="min-h-screen bg-bg text-fg">
@@ -117,6 +119,26 @@ const PublicEventTemplate: React.FC<{ pageContext: { event: PublicEvent } }> = (
               <p className="mt-6 max-w-2xl text-base leading-relaxed text-fg/75 md:text-lg">
                 {event.description}
               </p>
+
+              {event.flyers && event.flyers.length > 0 ? (
+                <div className="mt-10">
+                  <ImageCarousel
+                    images={event.flyers}
+                    showThumbnails={event.flyers.length > 1}
+                    showFullscreenButton={false}
+                  />
+                </div>
+              ) : (
+                event.poster && (
+                  <div className="mt-10">
+                    <img
+                      src={event.poster}
+                      alt={event.posterAlt ?? event.title}
+                      className="w-full max-w-xl border border-fg/15"
+                    />
+                  </div>
+                )
+              )}
 
               <div className="mt-10 border-t border-fg/12 pt-6 text-sm leading-relaxed text-fg/60">
                 <p className="text-fg">{event.venue}</p>

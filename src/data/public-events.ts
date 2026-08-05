@@ -15,6 +15,11 @@ export type PublicEvent = {
   rsvpUrl?: string
   partnerLogo?: string
   partnerLogoAlt?: string
+  /** Primary flyer/poster image shown on the event page. */
+  poster?: string
+  posterAlt?: string
+  /** Optional gallery of flyer variants shown in a carousel. */
+  flyers?: { original: string; thumbnail?: string; description?: string }[]
 }
 
 export const PUBLIC_EVENTS: PublicEvent[] = publicEventsData as PublicEvent[]

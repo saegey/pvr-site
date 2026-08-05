@@ -18,6 +18,14 @@ declare module 'react-image-gallery' {
     slideDuration?: number
     slideOnThumbnailOver?: boolean
     additionalClass?: string
+    renderLeftNav?: (
+      onClick: React.MouseEventHandler<HTMLElement>,
+      disabled: boolean
+    ) => React.ReactNode
+    renderRightNav?: (
+      onClick: React.MouseEventHandler<HTMLElement>,
+      disabled: boolean
+    ) => React.ReactNode
   }
 
   export default class ImageGallery extends React.Component<ImageGalleryProps> {}

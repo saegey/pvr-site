@@ -2,7 +2,11 @@ import React, { useEffect, useState } from "react";
 import { graphql, Link } from "gatsby";
 import SEO from "../components/seo";
 import type { PVREvent } from "../data/events";
-import { PUBLIC_EVENTS } from '../data/public-events'
+import {
+  partitionEvents,
+  formatEventDateShort,
+  formatTimeRange,
+} from '../data/public-events'
 
 type Summary = {
   capacity: number;
@@ -47,6 +51,12 @@ const EventsPage = () => {
     "confirmed" | "waitlisted" | null
   >(null);
 
+  // Split upcoming vs. past at render (no post-mount state swap, so there's no
+  // layout shift). SSR uses build time; the client recomputes at hydration, so
+  // same-day views match the server HTML and a passed event still rolls into
+  // Past on load.
+  const { upcoming, past } = partitionEvents();
+
   useEffect(() => {
     if (!session) return;
     const mine = readRsvpCookie(session.slug);
@@ -66,12 +76,6 @@ const EventsPage = () => {
 
   return (
     <>
-      <SEO
-        title="Events · Public Vinyl Radio"
-        description="Public events and private listening sessions from Public Vinyl Radio."
-        url="https://publicvinylradio.com/events"
-      />
-
       {/* ── Header band ── */}
       <div className="max-w-[1320px] mx-auto px-4 md:px-12 pt-16 pb-12">
         <p className="text-xs tracking-[2px] uppercase text-fg/55 mb-6">
@@ -106,24 +110,21 @@ const EventsPage = () => {
           </span>
         </div>
 
-        {PUBLIC_EVENTS.length === 0 && (
+        {upcoming.length === 0 && (
           <div className="py-12 text-center border-b border-fg/12">
             <p className="text-sm text-fg/35">No upcoming public events. Check back soon.</p>
           </div>
         )}
 
-        {PUBLIC_EVENTS.map((event, i) => (
+        {upcoming.map((event) => (
           <div
             key={event.title}
             className="flex flex-col md:flex-row md:items-center gap-3 md:gap-6 py-6 border-b border-fg/12 hover:bg-fg/[0.03] transition-colors -mx-4 px-4"
           >
             {/* Top row on mobile: index + date + RSVP pill */}
             <div className="flex items-center gap-3 md:contents">
-              <span className="text-xs text-fg/30 w-6 shrink-0 tabular-nums hidden md:inline">
-                {String(i + 1).padStart(2, "0")}
-              </span>
               <span className="text-xs tracking-[1px] uppercase text-fg/55 md:w-28 md:shrink-0">
-                {event.date}
+                {formatEventDateShort(event.startDateTime)}
               </span>
               {/* RSVP pill — right-aligned on mobile top row */}
               {event.rsvpEnabled && (
@@ -142,14 +143,15 @@ const EventsPage = () => {
                 to={`/events/${event.slug}`}
                 className="text-fg leading-snug"
                 style={{
-                  fontFamily: "var(--font-display)",
+                  fontFamily: "var(--font-mono)",
+                  fontWeight: 700,
                   fontSize: "clamp(18px, 4vw, 21px)",
                 }}
               >
                 {event.title}
               </Link>
               <p className="text-xs text-fg/55 mt-1">
-                {event.venue}, {event.location} · {event.time} · with {event.djs.join(", ")}
+                {event.venue}, {event.location} · {formatTimeRange(event.startDateTime, event.endDateTime)} · with {event.djs.join(", ")}
               </p>
               <p className="text-xs text-fg/50 mt-2 max-w-2xl leading-relaxed">
                 {event.description}
@@ -175,6 +177,54 @@ const EventsPage = () => {
           </div>
         ))}
       </div>
+
+      {/* ── Past Events ── */}
+      {past.length > 0 && (
+        <div className="max-w-[1320px] mx-auto px-4 md:px-12 mb-20">
+          <div className="flex items-baseline justify-between border-t border-b border-fg/12 py-4 mb-0">
+            <span className="text-xs tracking-[2px] uppercase text-fg/40">
+              Past Events
+            </span>
+          </div>
+
+          {past.map((event) => (
+            <div
+              key={event.slug}
+              className="flex flex-col md:flex-row md:items-center gap-3 md:gap-6 py-6 border-b border-fg/12 opacity-55 hover:opacity-100 transition-opacity -mx-4 px-4"
+            >
+              <div className="flex items-center gap-3 md:contents">
+                <span className="text-xs tracking-[1px] uppercase text-fg/45 md:w-28 md:shrink-0">
+                  {formatEventDateShort(event.startDateTime)}
+                </span>
+              </div>
+
+              <div className="flex-1 min-w-0">
+                <Link
+                  to={`/events/${event.slug}`}
+                  className="text-fg leading-snug"
+                  style={{
+                    fontFamily: "var(--font-mono)",
+                    fontWeight: 700,
+                    fontSize: "clamp(18px, 4vw, 21px)",
+                  }}
+                >
+                  {event.title}
+                </Link>
+                <p className="text-xs text-fg/45 mt-1">
+                  {event.venue}, {event.location} · with {event.djs.join(", ")}
+                </p>
+              </div>
+
+              <Link
+                to={`/events/${event.slug}`}
+                className="hidden md:inline text-xs tracking-[1px] uppercase text-fg/40 border border-fg/15 px-4 py-2 hover:border-fg/40 hover:text-fg transition-colors shrink-0"
+              >
+                Details →
+              </Link>
+            </div>
+          ))}
+        </div>
+      )}
 
       {/* ── Private Listening Sessions ── */}
       {showPrivateSessions && (
@@ -311,6 +361,14 @@ const EventsPage = () => {
 };
 
 export default EventsPage;
+
+export const Head = () => (
+  <SEO
+    title="Events · Public Vinyl Radio"
+    description="Public events and private listening sessions from Public Vinyl Radio."
+    url="https://publicvinylradio.com/events"
+  />
+);
 
 export const query = graphql`
   query EventsPageQuery {

@@ -1,5 +1,4 @@
 import React from "react";
-import { Helmet } from "react-helmet";
 import { useStaticQuery, graphql } from "gatsby";
 
 interface SEOProps {
@@ -10,6 +9,8 @@ interface SEOProps {
   type?: string; // Open Graph type e.g., 'website' | 'article'
 }
 
+// Renders plain document-head tags for use inside a Gatsby `Head` export.
+// (useStaticQuery is supported in Head; React state/effect hooks are not.)
 const SEO: React.FC<SEOProps> = ({ title, description, image, url, type }) => {
   const { site } = useStaticQuery(graphql`
     query SiteMetadataQuery {
@@ -31,7 +32,7 @@ const SEO: React.FC<SEOProps> = ({ title, description, image, url, type }) => {
   const metaType = type || "website";
 
   return (
-    <Helmet>
+    <>
       {/* Basic SEO */}
       <title>{metaTitle}</title>
       <meta name="description" content={metaDescription} />
@@ -49,14 +50,11 @@ const SEO: React.FC<SEOProps> = ({ title, description, image, url, type }) => {
       <meta name="twitter:title" content={metaTitle} />
       <meta name="twitter:description" content={metaDescription} />
       <meta name="twitter:image" content={metaImage} />
-      {site.siteMetadata.twitterUsername && (
-        <meta name="twitter:site" content={site.siteMetadata.twitterUsername} />
-      )}
 
       {/* Apple Messages Metadata */}
       <meta property="og:image:width" content="1200" />
       <meta property="og:image:height" content="630" />
-    </Helmet>
+    </>
   );
 };
 

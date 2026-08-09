@@ -24,11 +24,6 @@ const BlogPage = ({ data }: { data: BlogData }) => {
 
   return (
     <>
-      <SEO
-        title="Blog · Public Vinyl Radio"
-        description="Behind the music — stories and notes from Public Vinyl Radio."
-        url="https://publicvinylradio.com/blog"
-      />
       <div className="max-w-[860px] mx-auto px-4 md:px-12 pt-16 pb-24">
         <p className="text-xs tracking-[2px] uppercase text-fg/55 mb-6">Blog</p>
         <h1
@@ -73,6 +68,14 @@ const BlogPage = ({ data }: { data: BlogData }) => {
 }
 
 export default BlogPage
+
+export const Head = () => (
+  <SEO
+    title="Blog · Public Vinyl Radio"
+    description="Behind the music — stories and notes from Public Vinyl Radio."
+    url="https://publicvinylradio.com/blog"
+  />
+)
 
 export const query = graphql`
   query BlogPageQuery {

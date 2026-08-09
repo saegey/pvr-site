@@ -136,16 +136,8 @@ const PersonRow = ({ person }: { person: Person }) => (
 )
 
 const AboutPage = () => {
-  const ogImage = useOgImageFromPath('Scan167279.jpeg')
-
   return (
     <>
-      <SEO
-        title="About · Public Vinyl Radio"
-        description="Public Vinyl Radio — a DIY vinyl collective. 100% analog sets, custom sound systems, global rhythms. The future is analog."
-        url="https://publicvinylradio.com/about"
-        image={ogImage}
-      />
 
       {/* ── Header band ── */}
       <div className="max-w-[1320px] mx-auto px-4 md:px-12 pt-16 pb-12">
@@ -157,7 +149,7 @@ const AboutPage = () => {
               className="text-fg leading-tight"
               style={{
                 fontFamily: 'var(--font-display)',
-                fontSize: 'clamp(30px, 4.5vw, 60px)',
+                fontSize: 'clamp(34px, 4.5vw, 60px)',
                 letterSpacing: '-0.5px',
               }}
             >
@@ -259,6 +251,18 @@ const AboutPage = () => {
 }
 
 export default AboutPage
+
+export const Head = () => {
+  const ogImage = useOgImageFromPath('Scan167279.jpeg')
+  return (
+    <SEO
+      title="About · Public Vinyl Radio"
+      description="Public Vinyl Radio — a DIY vinyl collective. 100% analog sets, custom sound systems, global rhythms. The future is analog."
+      url="https://publicvinylradio.com/about"
+      image={ogImage}
+    />
+  )
+}
 
 export const query = graphql`
   query AboutPageQuery {

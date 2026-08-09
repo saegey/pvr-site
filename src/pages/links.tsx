@@ -8,7 +8,7 @@ import ShopIcon from '../icons/shop.svg'
 import { format } from 'date-fns'
 import { trackLinkClickDeduped } from '../utils/analytics'
 import { youTubeMaxResThumb, youTubeHQThumb } from '../utils/youtube'
-import { PUBLIC_EVENTS } from '../data/public-events'
+import { partitionEvents, formatEventDate } from '../data/public-events'
 
 type LinkItem = {
   title: string
@@ -42,8 +42,7 @@ const iconMap: Record<string, React.ComponentType<React.SVGProps<SVGSVGElement>>
 
 export default function LinksPage({ data }: { data: DataProps }) {
   const items = data.allDataYaml.nodes?.[0]?.links ?? []
-  const latestPublicEvents = [...PUBLIC_EVENTS]
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+  const latestPublicEvents = partitionEvents().upcoming
   const latest = (data.shows.nodes || []).slice(0, 6)
 
   return (
@@ -79,9 +78,9 @@ export default function LinksPage({ data }: { data: DataProps }) {
                 rel={isExternal ? 'noopener noreferrer' : undefined}
                 className="flex items-center justify-center gap-2.5 py-3.5 px-4 border transition-colors duration-150"
                 style={{
-                  borderColor: 'rgb(236 236 230 / 0.2)',
-                  color: 'rgb(236 236 230 / 0.75)',
-                  fontSize: '11px',
+                  borderColor: 'rgb(236 236 230 / 0.3)',
+                  color: 'rgb(236 236 230 / 0.92)',
+                  fontSize: '13px',
                   letterSpacing: '2px',
                   textTransform: 'uppercase',
                 }}
@@ -90,8 +89,8 @@ export default function LinksPage({ data }: { data: DataProps }) {
                   ;(e.currentTarget as HTMLElement).style.color = 'rgb(236 236 230)'
                 }}
                 onMouseLeave={e => {
-                  (e.currentTarget as HTMLElement).style.borderColor = 'rgb(236 236 230 / 0.2)'
-                  ;(e.currentTarget as HTMLElement).style.color = 'rgb(236 236 230 / 0.75)'
+                  (e.currentTarget as HTMLElement).style.borderColor = 'rgb(236 236 230 / 0.3)'
+                  ;(e.currentTarget as HTMLElement).style.color = 'rgb(236 236 230 / 0.92)'
                 }}
                 onMouseDown={() =>
                   trackLinkClickDeduped({
@@ -107,7 +106,7 @@ export default function LinksPage({ data }: { data: DataProps }) {
                     width={16}
                     height={16}
                     aria-hidden
-                    style={{ color: 'rgb(236 236 230 / 0.5)' }}
+                    style={{ color: 'rgb(236 236 230 / 0.75)' }}
                   />
                 )}
                 {link.title}
@@ -123,7 +122,7 @@ export default function LinksPage({ data }: { data: DataProps }) {
               className="flex items-baseline justify-between pb-3 mb-0"
               style={{ borderBottom: '1px solid rgb(236 236 230 / 0.12)' }}
             >
-              <span style={{ fontSize: '10px', letterSpacing: '2px', textTransform: 'uppercase', color: 'rgb(236 236 230 / 0.4)' }}>
+              <span style={{ fontSize: '11px', letterSpacing: '2px', textTransform: 'uppercase', color: 'rgb(236 236 230 / 0.6)' }}>
                 Public Events
               </span>
             </div>
@@ -145,7 +144,7 @@ export default function LinksPage({ data }: { data: DataProps }) {
               >
                 <span
                   className="shrink-0 tabular-nums pt-0.5"
-                  style={{ fontSize: '11px', color: 'rgb(236 236 230 / 0.25)', width: '18px' }}
+                  style={{ fontSize: '12px', color: 'rgb(236 236 230 / 0.4)', width: '18px' }}
                 >
                   {String(i + 1).padStart(2, '0')}
                 </span>
@@ -154,8 +153,9 @@ export default function LinksPage({ data }: { data: DataProps }) {
                   <p
                     className="leading-snug truncate"
                     style={{
-                      fontFamily: 'var(--font-display)',
-                      fontSize: '14px',
+                      fontFamily: 'var(--font-mono)',
+                      fontWeight: 700,
+                      fontSize: '16px',
                       color: 'rgb(236 236 230)',
                     }}
                   >
@@ -163,9 +163,9 @@ export default function LinksPage({ data }: { data: DataProps }) {
                   </p>
                   <p
                     className="mt-0.5 truncate"
-                    style={{ fontSize: '11px', color: 'rgb(236 236 230 / 0.4)' }}
+                    style={{ fontSize: '13px', color: 'rgb(236 236 230 / 0.7)' }}
                   >
-                    {event.date} · {event.venue}
+                    {formatEventDate(event.startDateTime)} · {event.venue}
                   </p>
                 </div>
               </GatsbyLink>
@@ -181,7 +181,7 @@ export default function LinksPage({ data }: { data: DataProps }) {
               className="flex items-baseline justify-between pb-3 mb-0"
               style={{ borderBottom: '1px solid rgb(236 236 230 / 0.12)' }}
             >
-              <span style={{ fontSize: '10px', letterSpacing: '2px', textTransform: 'uppercase', color: 'rgb(236 236 230 / 0.4)' }}>
+              <span style={{ fontSize: '11px', letterSpacing: '2px', textTransform: 'uppercase', color: 'rgb(236 236 230 / 0.6)' }}>
                 Latest Shows
               </span>
             </div>
@@ -209,7 +209,7 @@ export default function LinksPage({ data }: { data: DataProps }) {
                   {/* Index */}
                   <span
                     className="shrink-0 tabular-nums pt-0.5"
-                    style={{ fontSize: '11px', color: 'rgb(236 236 230 / 0.25)', width: '18px' }}
+                    style={{ fontSize: '12px', color: 'rgb(236 236 230 / 0.4)', width: '18px' }}
                   >
                     {String(i + 1).padStart(2, '0')}
                   </span>
@@ -246,8 +246,9 @@ export default function LinksPage({ data }: { data: DataProps }) {
                     <p
                       className="leading-snug truncate"
                       style={{
-                        fontFamily: 'var(--font-display)',
-                        fontSize: '14px',
+                        fontFamily: 'var(--font-mono)',
+                        fontWeight: 700,
+                        fontSize: '16px',
                         color: 'rgb(236 236 230)',
                       }}
                     >
@@ -255,7 +256,7 @@ export default function LinksPage({ data }: { data: DataProps }) {
                     </p>
                     <p
                       className="mt-0.5 truncate"
-                      style={{ fontSize: '11px', color: 'rgb(236 236 230 / 0.4)' }}
+                      style={{ fontSize: '13px', color: 'rgb(236 236 230 / 0.7)' }}
                     >
                       {format(new Date(show.frontmatter.date), 'MMM d, yyyy')}
                       {show.frontmatter.host?.length > 0 && (

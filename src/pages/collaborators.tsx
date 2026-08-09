@@ -1,5 +1,5 @@
 import React from 'react'
-import { graphql, Link, PageProps } from 'gatsby'
+import { graphql, Link, PageProps, HeadProps } from 'gatsby'
 import { GatsbyImage, getImage, IGatsbyImageData } from 'gatsby-plugin-image'
 import SEO from '../components/seo'
 import { HOSTS } from '../data/hosts'
@@ -23,12 +23,6 @@ export default function CollaboratorsPage({ data }: PageProps<DataProps>) {
 
   return (
     <>
-      <SEO
-        title="Collaborators · Public Vinyl Radio"
-        description="The selectors behind Public Vinyl Radio — DJs and collaborators, and the sets they've recorded."
-        url={`${data.site.siteMetadata.siteUrl}/collaborators`}
-      />
-
       <section className="max-w-[1320px] mx-auto px-4 md:px-12 pt-28 pb-24 md:pt-40">
         <p className="text-xs tracking-[2px] uppercase text-fg/55 mb-5">Public Vinyl Radio</p>
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 border-b border-fg/12 pb-8">
@@ -70,6 +64,14 @@ export default function CollaboratorsPage({ data }: PageProps<DataProps>) {
     </>
   )
 }
+
+export const Head = ({ data }: HeadProps<DataProps>) => (
+  <SEO
+    title="Collaborators · Public Vinyl Radio"
+    description="The selectors behind Public Vinyl Radio — DJs and collaborators, and the sets they've recorded."
+    url={`${data.site.siteMetadata.siteUrl}/collaborators`}
+  />
+)
 
 export const query = graphql`
   query CollaboratorsIndexQuery {

@@ -1,11 +1,10 @@
 import React from 'react'
-import { graphql, Link, PageProps } from 'gatsby'
+import { graphql, Link, PageProps, HeadProps } from 'gatsby'
 import { GatsbyImage, getImage, IGatsbyImageData } from 'gatsby-plugin-image'
-import { Helmet } from 'react-helmet'
 import SEO from '../components/seo'
 import { formatDate } from '../utils/date'
 import { youTubeHQThumb, youTubeMaxResThumb } from '../utils/youtube'
-import { PUBLIC_EVENTS } from '../data/public-events'
+import { partitionEvents, formatEventDate, formatTimeRange } from '../data/public-events'
 
 interface Show {
   id: string
@@ -38,31 +37,10 @@ interface DataProps {
 
 const ShowsPage: React.FC<PageProps<DataProps>> = ({ data }) => {
   const featuredShow = data.allMdx.nodes[0]
-  const today = new Date()
-  today.setHours(0, 0, 0, 0)
-  const upcomingEvents = [...PUBLIC_EVENTS]
-    .filter((event) => new Date(event.date) >= today)
-    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
-    .slice(0, 2)
-  const { siteMetadata } = data.site
+  const upcomingEvents = partitionEvents().upcoming.slice(0, 2)
 
   return (
     <>
-      <SEO title="Public Vinyl Radio" url={siteMetadata.siteUrl} />
-      <Helmet>
-        <link rel="preload" as="image" href="/images/hero-bg-mobile.webp" type="image/webp" media="(max-width: 768px)" />
-        <link rel="preload" as="image" href="/images/hero-bg.webp" type="image/webp" media="(min-width: 769px)" />
-        <script type="application/ld+json">
-          {JSON.stringify({
-            '@context': 'https://schema.org',
-            '@type': 'WebSite',
-            url: siteMetadata.siteUrl,
-            name: siteMetadata.title,
-            description: siteMetadata.description,
-          })}
-        </script>
-      </Helmet>
-
       {/* ── Hero band ── */}
       <section className="relative min-h-[520px] flex flex-col justify-end overflow-hidden">
         {/* Background image */}
@@ -121,10 +99,10 @@ const ShowsPage: React.FC<PageProps<DataProps>> = ({ data }) => {
             </div>
             {upcomingEvents.map((event) => (
               <Link key={event.slug} to={`/events/${event.slug}`} className="group flex flex-col md:flex-row md:items-center gap-3 md:gap-10 py-7 border-b border-fg/12 hover:bg-fg/[0.03] transition-colors -mx-4 px-4">
-                <p className="text-xs tracking-[2px] uppercase text-fg/55 md:w-36 shrink-0">{event.date}</p>
+                <p className="text-xs tracking-[2px] uppercase text-fg/55 md:w-36 shrink-0">{formatEventDate(event.startDateTime)}</p>
                 <div className="flex-1">
                   <h2 className="text-fg leading-snug" style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(24px, 4vw, 34px)' }}>{event.title}</h2>
-                  <p className="mt-1 text-sm text-fg/55">{event.venue} · {event.time}</p>
+                  <p className="mt-1 text-sm text-fg/55">{event.venue} · {formatTimeRange(event.startDateTime, event.endDateTime)}</p>
                 </div>
                 <span className="text-xs tracking-[1px] uppercase text-fg/55 group-hover:text-fg transition-colors">Details →</span>
               </Link>
@@ -183,6 +161,26 @@ const ShowsPage: React.FC<PageProps<DataProps>> = ({ data }) => {
 }
 
 export default ShowsPage
+
+export const Head = ({ data }: HeadProps<DataProps>) => {
+  const { siteMetadata } = data.site
+  return (
+    <>
+      <SEO title="Public Vinyl Radio" url={siteMetadata.siteUrl} />
+      <link rel="preload" as="image" href="/images/hero-bg-mobile.webp" type="image/webp" media="(max-width: 768px)" />
+      <link rel="preload" as="image" href="/images/hero-bg.webp" type="image/webp" media="(min-width: 769px)" />
+      <script type="application/ld+json">
+        {JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'WebSite',
+          url: siteMetadata.siteUrl,
+          name: siteMetadata.title,
+          description: siteMetadata.description,
+        })}
+      </script>
+    </>
+  )
+}
 
 export const query = graphql`
   query IndexPageQuery {

@@ -10,7 +10,7 @@ export interface FrontmatterCoverImage {
 export interface TrackItem {
   title?: string;
   artist?: string;
-  year?: number;
+  year?: string;
   album?: string;
   discogs_url?: string;
   album_thumbnail?: string;

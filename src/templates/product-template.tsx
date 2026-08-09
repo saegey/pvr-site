@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Link } from 'gatsby'
+import { Link, HeadProps } from 'gatsby'
 import SEO from '../components/seo'
 import { Product, ProductVariant } from '../data/products'
 import { useCart } from '../context/cart-context'
@@ -23,10 +23,6 @@ const ProductTemplate = ({ pageContext }: { pageContext: ProductPageContext }) =
   const activeImage = product.images[imageIndex]
   const activeWebpImage = activeImage ? webpImageSrc(activeImage) : ''
   const activeThumbnailImage = activeImage ? thumbnailImageSrc(activeImage) : ''
-  const productUrl = `https://publicvinylradio.com/shop/${product.id}`
-  const socialImage = product.images[0]
-    ? `https://publicvinylradio.com${product.images[0]}`
-    : undefined
 
   const handleAdd = () => {
     if (!priceLookupKey) return
@@ -44,14 +40,6 @@ const ProductTemplate = ({ pageContext }: { pageContext: ProductPageContext }) =
 
   return (
     <>
-      <SEO
-        title={`${product.name} · Public Vinyl Radio`}
-        description={product.description}
-        image={socialImage}
-        url={productUrl}
-        type="product"
-      />
-
       <div className="max-w-[1320px] mx-auto px-4 md:px-12 pt-10 md:pt-16 pb-24">
         <Link
           to="/shop"
@@ -171,3 +159,20 @@ const ProductTemplate = ({ pageContext }: { pageContext: ProductPageContext }) =
 }
 
 export default ProductTemplate
+
+export const Head = ({ pageContext }: HeadProps<object, ProductPageContext>) => {
+  const { product } = pageContext
+  const productUrl = `https://publicvinylradio.com/shop/${product.id}`
+  const socialImage = product.images[0]
+    ? `https://publicvinylradio.com${product.images[0]}`
+    : undefined
+  return (
+    <SEO
+      title={`${product.name} · Public Vinyl Radio`}
+      description={product.description}
+      image={socialImage}
+      url={productUrl}
+      type="product"
+    />
+  )
+}

@@ -52,11 +52,6 @@ const NewsletterForm = () => {
 
 const JoinPage = () => (
   <>
-    <SEO
-      title="Join · Public Vinyl Radio"
-      description="Subscribe to the Public Vinyl Radio newsletter."
-      url="https://publicvinylradio.com/join"
-    />
     <div className="max-w-[540px] mx-auto px-4 md:px-12 pt-16 pb-24">
       <p className="text-xs tracking-[2px] uppercase text-fg/55 mb-6">Newsletter</p>
       <h1
@@ -74,6 +69,14 @@ const JoinPage = () => (
 )
 
 export default JoinPage
+
+export const Head = () => (
+  <SEO
+    title="Join · Public Vinyl Radio"
+    description="Subscribe to the Public Vinyl Radio newsletter."
+    url="https://publicvinylradio.com/join"
+  />
+)
 
 export const query = graphql`
   query JoinPageQuery {

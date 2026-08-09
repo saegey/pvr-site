@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { HeadProps } from 'gatsby'
 import SEO from '../components/seo'
 import { MDXProvider } from '@mdx-js/react'
 import { compile, run } from '@mdx-js/mdx'
@@ -38,7 +39,6 @@ const BlogPostTemplate = ({ pageContext }: { pageContext: any }) => {
 
   return (
     <>
-      <SEO title={`${title} | Public Vinyl Radio`} />
       <div className="max-w-[860px] mx-auto px-4 md:px-12 pt-16 pb-24">
         <p className="text-xs tracking-[1px] uppercase text-fg/35 mb-4">{formatDate(date)}</p>
         <h1
@@ -62,3 +62,7 @@ const BlogPostTemplate = ({ pageContext }: { pageContext: any }) => {
 }
 
 export default BlogPostTemplate
+
+export const Head = ({ pageContext }: HeadProps<object, { title: string }>) => (
+  <SEO title={`${pageContext.title} | Public Vinyl Radio`} />
+)

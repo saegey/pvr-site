@@ -123,12 +123,6 @@ const PressPage = ({ data }: { data: { allFile: { nodes: AssetFile[] } } }) => {
 
   return (
     <>
-      <SEO
-        title="Press Kit · Public Vinyl Radio"
-        description="Download logos and press assets for Public Vinyl Radio."
-        url="https://publicvinylradio.com/press"
-      />
-
       <div className="max-w-[860px] mx-auto px-4 md:px-12 pt-16 pb-24">
         {/* Header */}
         <p className="text-xs tracking-[2px] uppercase text-fg/55 mb-6">Press</p>
@@ -184,6 +178,14 @@ const PressPage = ({ data }: { data: { allFile: { nodes: AssetFile[] } } }) => {
 }
 
 export default PressPage
+
+export const Head = () => (
+  <SEO
+    title="Press Kit · Public Vinyl Radio"
+    description="Download logos and press assets for Public Vinyl Radio."
+    url="https://publicvinylradio.com/press"
+  />
+)
 
 export const query = graphql`
   query PressPageQuery {

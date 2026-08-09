@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { graphql, Link } from "gatsby";
+import { graphql, Link, HeadProps } from "gatsby";
 import SEO from "../components/seo";
 import type { PVREvent } from "../data/events";
 
@@ -132,8 +132,6 @@ const AdminTemplate: React.FC<{ pageContext: { event: PVREvent } }> = ({
 
   return (
     <>
-      <SEO title={`Admin · ${event.title}`} />
-
       <div className="max-w-[900px] mx-auto px-5 pt-10 pb-24">
         <Link
           to={`/events/${event.slug}`}
@@ -276,6 +274,10 @@ const AdminTemplate: React.FC<{ pageContext: { event: PVREvent } }> = ({
 };
 
 export default AdminTemplate;
+
+export const Head = ({ pageContext }: HeadProps<object, { event: PVREvent }>) => (
+  <SEO title={`Admin · ${pageContext.event.title}`} />
+);
 
 export const query = graphql`
   query EventAdminPageQuery {

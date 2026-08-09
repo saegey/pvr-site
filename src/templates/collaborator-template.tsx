@@ -1,5 +1,5 @@
 import React from "react";
-import { graphql, Link, PageProps } from "gatsby";
+import { graphql, Link, PageProps, HeadProps } from "gatsby";
 import { GatsbyImage, getImage, IGatsbyImageData } from "gatsby-plugin-image";
 import SEO from "../components/seo";
 import { formatDate } from "../utils/date";
@@ -48,13 +48,6 @@ export default function CollaboratorPage({
 
   return (
     <>
-      <SEO
-        title={`${name} · Public Vinyl Radio`}
-        description={
-          host?.bio || `Vinyl sets by ${name} on Public Vinyl Radio.`
-        }
-        url={`${data.site.siteMetadata.siteUrl}/collaborators/${pageContext.slug}`}
-      />
 
       <section className="max-w-[1320px] mx-auto px-4 md:px-12 pt-28 pb-20 md:pt-40">
         <Link
@@ -183,6 +176,18 @@ export default function CollaboratorPage({
     </>
   );
 }
+
+export const Head = ({ data, pageContext }: HeadProps<DataProps, Ctx>) => {
+  const host = hostBySlug(pageContext.slug);
+  const name = host?.name ?? pageContext.handle;
+  return (
+    <SEO
+      title={`${name} · Public Vinyl Radio`}
+      description={host?.bio || `Vinyl sets by ${name} on Public Vinyl Radio.`}
+      url={`${data.site.siteMetadata.siteUrl}/collaborators/${pageContext.slug}`}
+    />
+  );
+};
 
 export const query = graphql`
   query CollaboratorPageQuery($handle: String!, $image: String) {

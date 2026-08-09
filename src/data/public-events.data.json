@@ -1,11 +1,11 @@
 [
   {
     "slug": "sound-breaks-with-pvr",
-    "date": "Aug 8, 2026",
+    "startDateTime": "2026-08-08T16:00:00-07:00",
+    "endDateTime": "2026-08-08T20:00:00-07:00",
     "title": "Flow State",
     "venue": "Sound Break Bike House",
     "location": "115 S. Jackson St., Pioneer Square",
-    "time": "4–8 PM",
     "description": "An evening of all-vinyl selections by Public Vinyl Radio at the Sound Break Bike House grand opening. Summer vibes with sounds from the water: cumbia, surf rock, tropic, afrobeats, and more.",
     "djs": ["Public Vinyl Radio"],
     "maxPlusOnes": 1,
@@ -31,11 +31,11 @@
   },
   {
     "slug": "human-people-inner-signals",
-    "date": "Aug 15th, 2026",
+    "startDateTime": "2026-08-15T17:00:00-07:00",
+    "endDateTime": "2026-08-15T20:00:00-07:00",
     "title": "Inner Signals",
     "venue": "Human People Beer Café",
     "location": "6105a Roosevelt Way NE, Roosevelt",
-    "time": "5–8 PM",
     "description": "Beneath every conversation is another frequency. Inner Signals invites you to tune into an evening of analog sound—records chosen for the moments between genres, where rhythm, texture, and atmosphere take over.",
     "djs": ["Public Vinyl Radio"],
     "maxPlusOnes": 1,

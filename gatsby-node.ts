@@ -6,25 +6,29 @@ exports.createSchemaCustomization = ({ actions }: { actions: any }) => {
       frontmatter: Frontmatter
     }
 
-    type Track {
+    type Track @dontInfer {
       title: String
       artist: String
-      year: Int
-  album: String
-  discogs_url: String
-  album_thumbnail: String
-  duration_seconds: Int
-  apple_music_url: String
-  spotify_url: String
-  soundcloud_url: String
+      year: String
+      album: String
+      discogs_url: String
+      discogs_urls: String
+      album_thumbnail: String
+      duration_seconds: Int
+      apple_music_url: String
+      spotify_url: String
+      soundcloud_url: String
+      youtube_url: String
+      genres: [String]
     }
 
-    type Frontmatter {
+    type Frontmatter @dontInfer {
       title: String!
       description: String
       episode: Int
       date: Date @dateformat
       tags: [String!]
+      template: String
       iframeSrc: String
       youtubeId: String
       appleMusicUrl: String

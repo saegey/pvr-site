@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { graphql, Link, PageProps } from 'gatsby'
+import { graphql, Link, PageProps, HeadProps } from 'gatsby'
 import { GatsbyImage, getImage, IGatsbyImageData } from 'gatsby-plugin-image'
 import SEO from '../components/seo'
 import { formatDate } from '../utils/date'
@@ -33,15 +33,14 @@ export default function ShowsArchivePage({ data }: PageProps<DataProps>) {
 
   return (
     <>
-      <SEO title="Show Archive" url={`${data.site.siteMetadata.siteUrl}/shows`} />
-      <section className="max-w-[1320px] mx-auto px-4 md:px-12 pt-28 pb-20 md:pt-40">
-        <p className="text-xs tracking-[2px] uppercase text-fg/55 mb-5">Public Vinyl Radio</p>
-        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 border-b border-fg/12 pb-8">
-          <h1 className="text-fg leading-none" style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(44px, 7vw, 82px)' }}>Show archive</h1>
-          <p className="max-w-sm text-sm leading-relaxed text-fg/55">Recorded vinyl sets, track-by-track journeys, and live selections from PVR.</p>
+      <section className="max-w-[1320px] mx-auto px-4 md:px-12 pt-16 pb-12">
+        <p className="text-xs tracking-[2px] uppercase text-fg/55 mb-6">Archive</p>
+        <h1 className="text-fg leading-tight mb-10" style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(34px, 4.5vw, 60px)', letterSpacing: '-0.5px' }}>Recorded Live on Vinyl</h1>
+        <div className="border-t border-fg/12 pt-8 max-w-[640px]">
+          <p className="text-sm text-fg/60 leading-[1.8]">Recorded vinyl sets, track-by-track journeys, and live selections from PVR.</p>
         </div>
 
-        <div className="mt-4 border-b border-fg/12 py-4 flex justify-between text-xs tracking-[1px] text-fg/55">
+        <div className="mt-10 border-t border-b border-fg/12 py-4 flex justify-between text-xs tracking-[1px] text-fg/55">
           <span className="uppercase">All shows</span>
           <span>{Math.min(visible, shows.length)} of {shows.length}</span>
         </div>
@@ -60,7 +59,7 @@ export default function ShowsArchivePage({ data }: PageProps<DataProps>) {
               </div>
               <div>
                 <p className="text-xs tracking-[2px] uppercase text-fg/55">{formatDate(show.frontmatter.date)}</p>
-                <h2 className="mt-3 text-fg leading-snug" style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(24px, 3vw, 34px)' }}>{show.frontmatter.title}</h2>
+                <h2 className="mt-3 text-fg leading-snug" style={{ fontFamily: 'var(--font-mono)', fontWeight: 700, fontSize: 'clamp(18px, 4vw, 21px)' }}>{show.frontmatter.title}</h2>
                 {show.frontmatter.host?.length > 0 && <p className="mt-1 text-sm text-fg/55">with {show.frontmatter.host.join(', ')}</p>}
                 <p className="mt-4 max-w-2xl text-sm leading-relaxed text-fg/50 line-clamp-3">{show.frontmatter.description}</p>
                 <div className="mt-5 flex flex-wrap gap-2">
@@ -80,6 +79,10 @@ export default function ShowsArchivePage({ data }: PageProps<DataProps>) {
     </>
   )
 }
+
+export const Head = ({ data }: HeadProps<DataProps>) => (
+  <SEO title="Recorded Live on Vinyl" url={`${data.site.siteMetadata.siteUrl}/shows`} />
+)
 
 export const query = graphql`
   query ShowsArchivePageQuery {

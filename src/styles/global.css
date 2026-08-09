@@ -20,6 +20,14 @@
   font-display: block;
 }
 
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('/fonts/JetBrainsMono-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: block;
+}
+
 /* ─── Font: ITC Lubalin Graph Std Demi ─── */
 @font-face {
   font-family: 'ITC Lubalin Graph Std Demi';

@@ -81,7 +81,7 @@ const PublicEventTemplate: React.FC<{ pageContext: { event: PublicEvent } }> = (
     <>
 
       <main className="min-h-screen bg-bg text-fg">
-        <div className="max-w-[960px] mx-auto px-4 md:px-12 py-8 md:py-16">
+        <div className="max-w-[960px] mx-auto px-4 md:px-8 py-8 md:py-10">
           <Link
             to="/events"
             className="inline-block text-xs tracking-[1px] uppercase text-fg/50 hover:text-fg transition-colors"
@@ -90,7 +90,7 @@ const PublicEventTemplate: React.FC<{ pageContext: { event: PublicEvent } }> = (
           </Link>
 
           <section className="mt-8 md:border md:border-fg/15">
-            <div className="px-5 py-7 md:px-12 md:py-12">
+            <div className="px-0 pb-10 md:px-8 md:py-8">
               <div className="flex items-center gap-4 md:gap-6">
                 <div className="flex h-16 flex-1 items-center justify-center border border-white/20 px-4 md:h-24">
                   <img
@@ -114,7 +114,7 @@ const PublicEventTemplate: React.FC<{ pageContext: { event: PublicEvent } }> = (
               </div>
             </div>
 
-            <div className="px-5 py-7 md:px-12 md:py-12">
+            <div className="px-0 py-0 md:px-8 md:py-8">
               <p className="text-xs tracking-[2px] uppercase text-fg/50">
                 Public event · {formatEventDate(event.startDateTime)} · {formatTimeRange(event.startDateTime, event.endDateTime)}
               </p>

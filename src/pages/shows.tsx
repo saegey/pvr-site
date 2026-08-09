@@ -45,11 +45,10 @@ export default function ShowsArchivePage({ data }: PageProps<DataProps>) {
           <span>{Math.min(visible, shows.length)} of {shows.length}</span>
         </div>
 
-        {visibleShows.map((show, index) => {
+        {visibleShows.map((show) => {
           const coverImageData = show.frontmatter.coverImage ? getImage(show.frontmatter.coverImage as any) : null
           return (
-            <Link key={show.id} to={`/shows/${show.frontmatter.slug}`} className="group grid md:grid-cols-[40px_220px_1fr] gap-4 md:gap-8 py-6 border-b border-fg/12 hover:bg-fg/[0.03] transition-colors -mx-4 px-4">
-              <span className="hidden md:block text-xs tabular-nums text-fg/55 pt-1">{String(index + 1).padStart(2, '0')}</span>
+            <Link key={show.id} to={`/shows/${show.frontmatter.slug}`} className="group grid md:grid-cols-[220px_1fr] gap-4 md:gap-8 py-6 border-b border-fg/12 hover:bg-fg/[0.03] transition-colors -mx-4 px-4">
               <div className="aspect-video bg-fg/5 overflow-hidden">
                 {show.frontmatter.youtubeId ? (
                   <img src={youTubeHQThumb(show.frontmatter.youtubeId)} alt={show.frontmatter.title} className="w-full h-full object-cover" loading="lazy" decoding="async" onError={(e) => { const image = e.currentTarget; image.onerror = null; image.src = `https://img.youtube.com/vi/${show.frontmatter.youtubeId}/mqdefault.jpg` }} />

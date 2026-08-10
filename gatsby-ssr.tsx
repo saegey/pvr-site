@@ -16,6 +16,14 @@ export const onRenderBody = ({ setHeadComponents, setHtmlAttributes }: { setHead
       crossOrigin="anonymous"
     />,
     <link
+      key="font-jetbrains-bold"
+      rel="preload"
+      href="/fonts/JetBrainsMono-Bold.ttf"
+      as="font"
+      type="font/ttf"
+      crossOrigin="anonymous"
+    />,
+    <link
       key="font-lubalin"
       rel="preload"
       href="/fonts/ITC-Lubalin-Graph-Std-Demi.otf"

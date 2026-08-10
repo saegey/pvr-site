@@ -62,7 +62,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
                 {label}
               </Link>
             ))}
-            {EXTERNAL_LINKS.map(({ label, href }) => (
+            {/*{EXTERNAL_LINKS.map(({ label, href }) => (
               <a
                 key={href}
                 href={href}
@@ -72,7 +72,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
               >
                 {label}
               </a>
-            ))}
+            ))}*/}
           </nav>
 
           {/* Cart icon */}

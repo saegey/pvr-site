@@ -10,13 +10,24 @@ export function useOgImageFromPath(path?: string) {
   // Static query: fetch all images so we can pick by prop (GraphQL can't take props)
   const data = useStaticQuery(graphql`
     query UseOgImage_AllImages {
-      allFile(filter: { sourceInstanceName: { eq: "images" } }) {
+      # Only raster files get Sharp processing — SVGs can't be processed and
+      # would emit "can't use childImageSharp" warnings.
+      raster: allFile(
+        filter: { sourceInstanceName: { eq: "images" }, extension: { ne: "svg" } }
+      ) {
         nodes {
           relativePath
           publicURL
           childImageSharp {
             gatsbyImageData(width: 1200, height: 630)
           }
+        }
+      }
+      # Every image (incl. SVGs) for publicURL fallback matching.
+      all: allFile(filter: { sourceInstanceName: { eq: "images" } }) {
+        nodes {
+          relativePath
+          publicURL
         }
       }
       site {
@@ -47,24 +58,30 @@ export function useOgImageFromPath(path?: string) {
   const normalized = path.replace(/^\/*/, "").replace(/^images\//, "");
 
   // Find by exact match, else by suffix (helps if caller included directories)
-  const nodes = data.allFile.nodes as Array<{
+  const rasterNodes = data.raster.nodes as Array<{
     relativePath: string;
     publicURL?: string;
     childImageSharp?: { gatsbyImageData?: any };
   }>;
-  const match =
+  const allNodes = data.all.nodes as Array<{
+    relativePath: string;
+    publicURL?: string;
+  }>;
+
+  const findIn = <T extends { relativePath: string }>(nodes: T[]) =>
     nodes.find((n) => n.relativePath === normalized) ||
     nodes.find((n) => n.relativePath.endsWith(normalized));
 
-  if (!match) return toAbsolute(fallback);
-
-  // Prefer processed image for consistent OG dimensions, else fall back to publicURL
-  if (match.childImageSharp?.gatsbyImageData) {
-    const src = getSrc(match.childImageSharp.gatsbyImageData) || fallback;
+  // Prefer processed raster image for consistent OG dimensions.
+  const raster = findIn(rasterNodes);
+  if (raster?.childImageSharp?.gatsbyImageData) {
+    const src = getSrc(raster.childImageSharp.gatsbyImageData) || fallback;
     return toAbsolute(src);
   }
 
-  if (match.publicURL) return toAbsolute(match.publicURL);
+  // Otherwise fall back to the raw file URL (covers SVGs).
+  const any = raster || findIn(allNodes);
+  if (any?.publicURL) return toAbsolute(any.publicURL);
 
   return toAbsolute(fallback);
 }

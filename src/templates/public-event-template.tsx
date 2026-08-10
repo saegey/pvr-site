@@ -1,8 +1,15 @@
 import React, { useEffect, useState } from 'react'
-import { graphql, Link } from 'gatsby'
+import { graphql, Link, HeadProps } from 'gatsby'
 import SEO from '../components/seo'
 import ImageCarousel from '../components/image-carousel'
-import type { PublicEvent } from '../data/public-events'
+import {
+  formatEventDate,
+  formatTimeRange,
+  googleCalendarUrl,
+  icsDataUrl,
+  isPastEvent,
+  type PublicEvent,
+} from '../data/public-events'
 
 type RsvpSummary = {
   seatsTaken: number
@@ -29,6 +36,12 @@ const PublicEventTemplate: React.FC<{ pageContext: { event: PublicEvent } }> = (
   const [confirmed, setConfirmed] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [summary, setSummary] = useState<RsvpSummary | null>(null)
+  // Resolved after mount so SSR matches; a passed event hides its RSVP form.
+  const [isPast, setIsPast] = useState(false)
+
+  useEffect(() => {
+    setIsPast(isPastEvent(event))
+  }, [event])
 
   useEffect(() => {
     fetch(`/api/rsvp?slug=${encodeURIComponent(event.slug)}`)
@@ -66,14 +79,9 @@ const PublicEventTemplate: React.FC<{ pageContext: { event: PublicEvent } }> = (
 
   return (
     <>
-      <SEO
-        title={`${event.title} · Public Vinyl Radio`}
-        description={event.description}
-        image={event.poster ? `https://publicvinylradio.com${event.poster}` : undefined}
-        url={`https://publicvinylradio.com/events/${event.slug}`}
-      />
+
       <main className="min-h-screen bg-bg text-fg">
-        <div className="max-w-[960px] mx-auto px-4 md:px-12 py-8 md:py-16">
+        <div className="max-w-[960px] mx-auto px-4 md:px-8 py-8 md:py-10">
           <Link
             to="/events"
             className="inline-block text-xs tracking-[1px] uppercase text-fg/50 hover:text-fg transition-colors"
@@ -82,7 +90,7 @@ const PublicEventTemplate: React.FC<{ pageContext: { event: PublicEvent } }> = (
           </Link>
 
           <section className="mt-8 md:border md:border-fg/15">
-            <div className="bg-black px-5 py-7 md:px-12 md:py-12">
+            <div className="px-0 pb-10 md:px-8 md:py-8">
               <div className="flex items-center gap-4 md:gap-6">
                 <div className="flex h-16 flex-1 items-center justify-center border border-white/20 px-4 md:h-24">
                   <img
@@ -106,9 +114,9 @@ const PublicEventTemplate: React.FC<{ pageContext: { event: PublicEvent } }> = (
               </div>
             </div>
 
-            <div className="px-5 py-7 md:px-12 md:py-12">
+            <div className="px-0 py-0 md:px-8 md:py-8">
               <p className="text-xs tracking-[2px] uppercase text-fg/50">
-                Public event · {event.date} · {event.time}
+                Public event · {formatEventDate(event.startDateTime)} · {formatTimeRange(event.startDateTime, event.endDateTime)}
               </p>
               <h1
                 className="mt-4 text-fg leading-[0.95]"
@@ -143,16 +151,37 @@ const PublicEventTemplate: React.FC<{ pageContext: { event: PublicEvent } }> = (
               <div className="mt-10 border-t border-fg/12 pt-6 text-sm leading-relaxed text-fg/60">
                 <p className="text-fg">{event.venue}</p>
                 <p>{event.location}</p>
-                <p className="mt-3">{event.time} · with {event.djs.join(', ')}</p>
+                <p className="mt-3">{formatTimeRange(event.startDateTime, event.endDateTime)} · with {event.djs.join(', ')}</p>
               </div>
 
               <div className="mt-10 border-t border-fg/12 pt-8">
-                {event.rsvpEnabled ? confirmed ? (
+                {isPast ? (
+                  <p className="text-sm text-fg/50">This event has ended.</p>
+                ) : event.rsvpEnabled ? confirmed ? (
                   <div className="border border-fg/16 p-6">
                     <p className="text-fg" style={{ fontFamily: 'var(--font-display)', fontSize: '22px' }}>
                       You’re on the list.
                     </p>
-                    <p className="mt-2 text-sm text-fg/60">See you August 8 at Sound Break Bike House.</p>
+                    <p className="mt-2 text-sm text-fg/60">
+                      See you {formatEventDate(event.startDateTime)} at {event.venue}.
+                    </p>
+                    <div className="mt-5 flex flex-wrap gap-3">
+                      <a
+                        href={googleCalendarUrl(event)}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-xs tracking-[1px] uppercase text-fg/60 border border-fg/20 px-4 py-2 hover:border-fg/50 hover:text-fg transition-colors"
+                      >
+                        Add to Google Calendar
+                      </a>
+                      <a
+                        href={icsDataUrl(event)}
+                        download={`${event.slug}.ics`}
+                        className="text-xs tracking-[1px] uppercase text-fg/60 border border-fg/20 px-4 py-2 hover:border-fg/50 hover:text-fg transition-colors"
+                      >
+                        Download .ics
+                      </a>
+                    </div>
                   </div>
                 ) : (
                   <form onSubmit={submit} className="max-w-xl border border-fg/16 p-6">
@@ -207,6 +236,18 @@ const PublicEventTemplate: React.FC<{ pageContext: { event: PublicEvent } }> = (
 }
 
 export default PublicEventTemplate
+
+export const Head = ({ pageContext }: HeadProps<object, { event: PublicEvent }>) => {
+  const event = pageContext.event
+  return (
+    <SEO
+      title={`${event.title} · Public Vinyl Radio`}
+      description={event.description}
+      image={event.poster ? `https://publicvinylradio.com${event.poster}` : undefined}
+      url={`https://publicvinylradio.com/events/${event.slug}`}
+    />
+  )
+}
 
 export const query = graphql`
   query PublicEventPageQuery {

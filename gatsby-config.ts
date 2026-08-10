@@ -8,7 +8,11 @@ const config: GatsbyConfig = {
     siteUrl: process.env.SITE_URL || "https://publicvinylradio.com",
     image: "/default-social-image.jpg",
   },
-  graphqlTypegen: true,
+  // Disabled: with typegen on, Gatsby rewrites src/gatsby-types.d.ts on every
+  // query extraction, and since that file lives in the watched src/ tree it
+  // retriggers a rebuild → a constant dev reload loop. Flip to true briefly to
+  // regenerate types when queries change, then set back to false.
+  graphqlTypegen: false,
   plugins: [
     // analytics + fonts
     {
@@ -50,7 +54,6 @@ const config: GatsbyConfig = {
     },
 
     // icons + manifest
-    `gatsby-plugin-react-helmet`,
     {
       resolve: `gatsby-plugin-manifest`,
       options: {

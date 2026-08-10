@@ -2,8 +2,7 @@ import React from 'react'
 import { MDXProvider } from '@mdx-js/react'
 import { format } from 'date-fns'
 import SEO from '../components/seo'
-import { graphql, Link, PageProps } from 'gatsby'
-import { Helmet } from 'react-helmet'
+import { graphql, Link, PageProps, HeadProps } from 'gatsby'
 import { GatsbyImage, getImage, getSrc } from 'gatsby-plugin-image'
 import ImageCarousel from '../components/image-carousel'
 import StreamingLinks from '../components/streaming-links'
@@ -67,6 +66,29 @@ type DataProps = {
   site: { siteMetadata: { siteUrl: string; image?: string } }
 }
 
+// Shared SEO derivation so the page body and the Head export stay in sync.
+const getShowSeo = (data: DataProps) => {
+  const fm = data.mdx.frontmatter as any
+  const seoDescription = (data.mdx.excerpt as string) || fm?.description || ''
+  const siteUrl = data.site.siteMetadata.siteUrl.replace(/\/$/, '')
+  const pageUrl = `${siteUrl}/shows/${fm?.slug || ''}`
+  const ogFromYouTube = fm?.youtubeId ? youTubeMaxResThumb(fm.youtubeId) : undefined
+  const ogFallback = data.site.siteMetadata.image
+    ? `${siteUrl}${data.site.siteMetadata.image}`
+    : undefined
+  const coverUrl = fm?.coverImage?.publicURL
+    ? `${siteUrl}${fm.coverImage.publicURL}`
+    : undefined
+  return {
+    title: fm?.title as string,
+    description: seoDescription,
+    date: fm?.date as string,
+    youtubeId: fm?.youtubeId as string | undefined,
+    image: ogFromYouTube || coverUrl || ogFallback,
+    url: pageUrl,
+  }
+}
+
 const ShowTemplate: React.FC<PageProps<DataProps>> = ({ data, children }) => {
   const [isTracklistOpen, setIsTracklistOpen] = React.useState(false)
   const scrollPosition = React.useRef(0)
@@ -103,18 +125,6 @@ const ShowTemplate: React.FC<PageProps<DataProps>> = ({ data, children }) => {
       }
     }) || []
 
-  const seoDescription = (data.mdx.excerpt as string) || description || ''
-  const siteUrl = data.site.siteMetadata.siteUrl.replace(/\/$/, '')
-  const pageUrl = `${siteUrl}/shows/${slug || ''}`
-  const ogFromYouTube = youtubeId ? youTubeMaxResThumb(youtubeId) : undefined
-  const ogFallback = data.site.siteMetadata.image
-    ? `${siteUrl}${data.site.siteMetadata.image}`
-    : undefined
-  const coverUrl = (data.mdx.frontmatter as any)?.coverImage?.publicURL
-    ? `${siteUrl}${(data.mdx.frontmatter as any).coverImage.publicURL}`
-    : undefined
-  const ogImage = ogFromYouTube || coverUrl || ogFallback
-
   // iOS Safari lets the document scroll behind a fixed overlay unless the
   // document itself is frozen. Keeping its current offset lets us restore the
   // page exactly where the listener opened the tracklist when the modal closes.
@@ -150,30 +160,6 @@ const ShowTemplate: React.FC<PageProps<DataProps>> = ({ data, children }) => {
 
   return (
     <>
-      <SEO
-        title={`${title} | Public Vinyl Radio`}
-        description={seoDescription}
-        image={ogImage}
-        url={pageUrl}
-        type="article"
-      />
-      {youtubeId && (
-        <Helmet>
-          <script type="application/ld+json">
-            {JSON.stringify({
-              '@context': 'https://schema.org',
-              '@type': 'VideoObject',
-              name: title,
-              description: seoDescription,
-              uploadDate: date,
-              thumbnailUrl: [youTubeHQThumb(youtubeId), youTubeMaxResThumb(youtubeId)],
-              embedUrl: `https://www.youtube.com/embed/${youtubeId}`,
-              url: pageUrl,
-            })}
-          </script>
-        </Helmet>
-      )}
-
       {/* ── Full-bleed cover band ── */}
       {youtubeId ? (
         <div className="w-full border-b border-fg/12">
@@ -384,6 +370,35 @@ const ShowTemplate: React.FC<PageProps<DataProps>> = ({ data, children }) => {
 }
 
 export default ShowTemplate
+
+export const Head = ({ data }: HeadProps<DataProps>) => {
+  const { title, description, date, youtubeId, image, url } = getShowSeo(data)
+  return (
+    <>
+      <SEO
+        title={`${title} | Public Vinyl Radio`}
+        description={description}
+        image={image}
+        url={url}
+        type="article"
+      />
+      {youtubeId && (
+        <script type="application/ld+json">
+          {JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'VideoObject',
+            name: title,
+            description,
+            uploadDate: date,
+            thumbnailUrl: [youTubeHQThumb(youtubeId), youTubeMaxResThumb(youtubeId)],
+            embedUrl: `https://www.youtube.com/embed/${youtubeId}`,
+            url,
+          })}
+        </script>
+      )}
+    </>
+  )
+}
 
 export const query = graphql`
   query Show($id: String!) {

@@ -250,7 +250,7 @@ const ProductCard = ({ product }: { product: Product }) => {
             <Link to={`/shop/${product.id}`} className="text-fg hover:text-fg/65 transition-colors">
               <h2
                 className="leading-snug"
-                style={{ fontFamily: 'var(--font-display)', fontSize: '18px' }}
+                style={{ fontFamily: 'var(--font-mono)', fontWeight: 700, fontSize: '18px' }}
               >
                 {product.name}
               </h2>
@@ -329,12 +329,6 @@ const ShopPage = () => {
 
   return (
     <>
-      <SEO
-        title="Shop · Public Vinyl Radio"
-        description="Gear from Public Vinyl Radio — tees, totes, and whatever else we make."
-        url="https://publicvinylradio.com/shop"
-      />
-
       <div className="max-w-[1320px] mx-auto px-4 md:px-12 pt-16 pb-12">
         <p className="text-xs tracking-[2px] uppercase text-fg/55 mb-6">Shop</p>
         <h1
@@ -371,6 +365,14 @@ const ShopPage = () => {
 }
 
 export default ShopPage
+
+export const Head = () => (
+  <SEO
+    title="Shop · Public Vinyl Radio"
+    description="Gear from Public Vinyl Radio — tees, totes, and whatever else we make."
+    url="https://publicvinylradio.com/shop"
+  />
+)
 
 export const query = graphql`
   query ShopPageQuery {

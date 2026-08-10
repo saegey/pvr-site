@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { graphql, Link } from "gatsby";
+import { graphql, Link, HeadProps } from "gatsby";
 import SEO from "../components/seo";
 import type { PVREvent } from "../data/events";
 
@@ -186,11 +186,6 @@ const EventTemplate: React.FC<{ pageContext: { event: PVREvent } }> = ({
 
   return (
     <>
-      <SEO
-        title={`${event.title} · Public Vinyl Radio`}
-        description={event.description}
-        url={`https://publicvinylradio.com/e/${event.accessCode}`}
-      />
 
       <div className="max-w-[600px] mx-auto px-5 pt-10 pb-24">
         <Link
@@ -405,6 +400,17 @@ const EventTemplate: React.FC<{ pageContext: { event: PVREvent } }> = ({
 };
 
 export default EventTemplate;
+
+export const Head = ({ pageContext }: HeadProps<object, { event: PVREvent }>) => {
+  const event = pageContext.event;
+  return (
+    <SEO
+      title={`${event.title} · Public Vinyl Radio`}
+      description={event.description}
+      url={`https://publicvinylradio.com/e/${event.accessCode}`}
+    />
+  );
+};
 
 export const query = graphql`
   query PrivateEventPageQuery {

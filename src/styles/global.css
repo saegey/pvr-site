@@ -20,6 +20,14 @@
   font-display: block;
 }
 
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('/fonts/JetBrainsMono-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: block;
+}
+
 /* ─── Font: ITC Lubalin Graph Std Demi ─── */
 @font-face {
   font-family: 'ITC Lubalin Graph Std Demi';
@@ -51,6 +59,15 @@
 /* ─── Base reset ─── */
 *, *::before, *::after {
   box-sizing: border-box;
+}
+
+html {
+  /* Always reserve space for the vertical scrollbar so centered (mx-auto)
+     content keeps the same width whether a page scrolls or not — otherwise
+     short pages sit ~8px wider than long ones and the header margin shifts
+     between routes. */
+  scrollbar-gutter: stable;
+  overflow-y: scroll; /* fallback for browsers without scrollbar-gutter */
 }
 
 html, body {

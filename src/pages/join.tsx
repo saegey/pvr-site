@@ -11,16 +11,16 @@ const NewsletterForm = () => {
     e.preventDefault()
     setLoading(true)
     try {
-      const response = await fetch('https://api.buttondown.email/v1/subscribers', {
+      const response = await fetch('/api/newsletter', {
         method: 'POST',
         headers: {
-          Authorization: `Token 95c23da4-3415-4cde-a755-36a02cd53d4d`,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email_address: email }),
+        body: JSON.stringify({ email }),
       })
       const data = await response.json()
-      setMessage(data.detail || 'Successfully subscribed!')
+      setMessage(data.message || data.error || 'Successfully subscribed!')
+      if (response.ok) setEmail('')
     } catch {
       setMessage('Something went wrong. Try again.')
     } finally {
@@ -61,7 +61,7 @@ const JoinPage = () => (
         Join
       </h1>
       <p className="text-sm text-fg/55 leading-[1.7] mb-10">
-        Subscribe for the latest sets, events, and updates from Public Vinyl Radio.
+        Subscribe for the latest sets, events, and updates from Public Vinyl Radio. By subscribing, you agree to receive occasional emails from PVR; unsubscribe anytime.
       </p>
       <NewsletterForm />
     </div>

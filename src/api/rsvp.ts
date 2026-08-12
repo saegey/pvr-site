@@ -1,5 +1,7 @@
 import type { GatsbyFunctionRequest, GatsbyFunctionResponse } from "gatsby";
 import { getStore } from "@netlify/blobs";
+import { createHmac, timingSafeEqual } from "node:crypto";
+import { Resend } from "resend";
 import EVENTS from "../data/events.data.json";
 import PUBLIC_EVENTS from "../data/public-events.data.json";
 
@@ -16,6 +18,15 @@ type Rsvp = {
 
 type PVREvent = {
   slug: string;
+  title: string;
+  description?: string;
+  venue?: string;
+  location?: string;
+  date?: string;
+  dateLabel?: string;
+  time?: string;
+  startDateTime?: string;
+  endDateTime?: string;
   capacity?: number | null;
   maxPlusOnes: number;
   address?: string;
@@ -135,6 +146,87 @@ const assignStatuses = (rsvps: Rsvp[], capacity?: number | null): Rsvp[] => {
 const isAdmin = (key?: string) =>
   !!key && !!process.env.RSVP_ADMIN_KEY && key === process.env.RSVP_ADMIN_KEY;
 
+const cancellationSecret = () => process.env.RSVP_CANCELLATION_SECRET || process.env.RSVP_ADMIN_KEY;
+
+const cancellationToken = (slug: string, rsvp: Rsvp) => {
+  const secret = cancellationSecret();
+  if (!secret) return null;
+  return createHmac("sha256", secret).update(`${slug}:${rsvp.id}:${rsvp.email}`).digest("hex");
+};
+
+const validCancellationToken = (slug: string, rsvp: Rsvp, token?: string) => {
+  const expected = cancellationToken(slug, rsvp);
+  if (!expected || !token || expected.length !== token.length) return false;
+  return timingSafeEqual(Buffer.from(expected), Buffer.from(token));
+};
+
+const eventDateTime = (event: PVREvent) => {
+  if (event.startDateTime) {
+    return new Date(event.startDateTime).toLocaleString("en-US", {
+      dateStyle: "full", timeStyle: "short", timeZone: "America/Los_Angeles",
+    });
+  }
+  return [event.dateLabel || event.date, event.time].filter(Boolean).join(" · ");
+};
+
+const escapeHtml = (value: string) => value.replace(/[&<>'"]/g, character => ({
+  "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;",
+}[character] as string));
+
+const escapeIcs = (value: string) => value.replace(/([,;\\])/g, "\\$1").replace(/\n/g, "\\n");
+
+const eventIcs = (event: PVREvent) => {
+  if (!event.startDateTime || !event.endDateTime) return null;
+  const stamp = (iso: string) => new Date(iso).toISOString().replace(/[-:]|\.\d{3}/g, "");
+  return [
+    "BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Public Vinyl Radio//Events//EN", "BEGIN:VEVENT",
+    `UID:${event.slug}@publicvinylradio.com`, `DTSTART:${stamp(event.startDateTime)}`,
+    `DTEND:${stamp(event.endDateTime)}`, `SUMMARY:${escapeIcs(`${event.title} · Public Vinyl Radio`)}`,
+    `DESCRIPTION:${escapeIcs(event.description || "")}`,
+    `LOCATION:${escapeIcs([event.venue, event.location].filter(Boolean).join(", "))}`,
+    "END:VEVENT", "END:VCALENDAR",
+  ].join("\r\n");
+};
+
+const sendRsvpEmail = async (event: PVREvent, rsvp: Rsvp) => {
+  const apiKey = process.env.RESEND_API_KEY;
+  const from = process.env.RSVP_EMAIL_FROM;
+  if (!apiKey || !from) {
+    console.warn("[rsvp] RSVP email skipped: RESEND_API_KEY or RSVP_EMAIL_FROM is not configured");
+    return;
+  }
+  const baseUrl = process.env.CONTEXT === "production"
+    ? process.env.SITE_URL || process.env.URL
+    : process.env.DEPLOY_PRIME_URL || process.env.URL || process.env.SITE_URL;
+  const siteUrl = (baseUrl || "https://publicvinylradio.com").replace(/\/$/, "");
+  const token = cancellationToken(event.slug, rsvp);
+  const cancelUrl = token
+    ? `${siteUrl}/rsvp-cancel?slug=${encodeURIComponent(event.slug)}&token=${encodeURIComponent(token)}`
+    : null;
+  const confirmed = rsvp.status === "confirmed";
+  const party = 1 + (rsvp.plusOnes || 0);
+  const where = [event.venue, confirmed ? (event.address || event.location) : event.location].filter(Boolean).join(" · ");
+  const details = `${eventDateTime(event)}\n${where}`;
+  const subject = confirmed
+    ? `You’re confirmed: ${event.title}`
+    : `You’re on the waitlist: ${event.title}`;
+  const intro = confirmed
+    ? `Your RSVP for ${party} ${party === 1 ? "person is" : "people are"} confirmed.`
+    : "The event is currently full, but you’re on the waitlist. We’ll email you if a spot opens up.";
+  const cancelCopy = cancelUrl ? `\n\nNeed to cancel? ${cancelUrl}` : "";
+  const ics = confirmed ? eventIcs(event) : null;
+  const result = await new Resend(apiKey).emails.send({
+    from,
+    replyTo: process.env.RSVP_EMAIL_REPLY_TO || undefined,
+    to: rsvp.email,
+    subject,
+    text: `Hi ${rsvp.name},\n\n${intro}\n\n${event.title}\n${details}${cancelCopy}`,
+    html: `<p>Hi ${escapeHtml(rsvp.name)},</p><p>${escapeHtml(intro)}</p><p><strong>${escapeHtml(event.title)}</strong><br />${escapeHtml(eventDateTime(event))}<br />${escapeHtml(where)}</p>${confirmed && ics ? "<p>A calendar invite is attached to this email.</p>" : ""}${cancelUrl ? `<p><a href="${cancelUrl}">Cancel your RSVP</a></p>` : ""}`,
+    attachments: ics ? [{ filename: `${event.slug}.ics`, content: Buffer.from(ics) }] : undefined,
+  }, { idempotencyKey: `rsvp/${event.slug}/${rsvp.id}/${rsvp.status}` });
+  if (result.error) throw new Error(result.error.message);
+};
+
 const summarize = (event: PVREvent, rsvps: Rsvp[]) => {
   const confirmed = rsvps.filter((r) => r.status === "confirmed");
   const waitlisted = rsvps.filter((r) => r.status === "waitlisted");
@@ -201,6 +293,7 @@ export default async function handler(
     const cappedPlusOnes = Math.min(plusOnes, ev.maxPlusOnes || 0);
 
     const rsvps = await loadRsvps(slug as string);
+    const previousStatuses = new Map(rsvps.map(rsvp => [rsvp.id, rsvp.status]));
     const normalizedEmail = email.trim().toLowerCase();
     const existing = rsvps.find((r) => r.email === normalizedEmail);
 
@@ -227,35 +320,59 @@ export default async function handler(
 
     const saved = rsvps.find((r) => r.email === normalizedEmail) as Rsvp;
 
+    // RSVP storage remains the source of truth: a delivery failure never loses
+    // a guest's place. Notify new guests and anyone newly promoted from waitlist.
+    const notifications = rsvps.filter(rsvp =>
+      !previousStatuses.has(rsvp.id) || previousStatuses.get(rsvp.id) !== rsvp.status
+    );
+    await Promise.all(notifications.map(rsvp =>
+      sendRsvpEmail(ev, rsvp).catch(error =>
+        console.error(`[rsvp] Could not send ${rsvp.status} email to ${rsvp.email}:`, error)
+      )
+    ));
+
     return res.status(200).json({
       status: saved.status,
       party: partySize(saved),
       address: saved.status === "confirmed" ? ev.address || null : null,
+      cancellationToken: cancellationToken(ev.slug, saved),
       summary: summarize(ev, rsvps),
     });
   }
 
   // DELETE — cancel an RSVP (auto-promotes the waitlist).
-  //   Admin:  ?key=…&id=…     Guest self-cancel: ?email=…
+  // Admins use ?key=…&id=…; guests use the signed token in their RSVP email.
   if (req.method === "DELETE") {
     const slug = req.query.slug as string;
     const id = req.query.id as string | undefined;
     const key = req.query.key as string | undefined;
-    const email = ((req.query.email as string) || "").trim().toLowerCase();
+    const token = req.query.token as string | undefined;
     const ev = getEvent(slug);
     if (!ev) return res.status(404).json({ error: "Event not found" });
 
     const admin = isAdmin(key);
-    if (!admin && !email)
-      return res.status(401).json({ error: "Unauthorized" });
-
     const current = await loadRsvps(slug);
+    const target = admin
+      ? current.find(rsvp => rsvp.id === id)
+      : current.find(rsvp => validCancellationToken(slug, rsvp, token));
+    if (!target)
+      return res.status(401).json({ error: "This cancellation link is invalid or has expired." });
+    const previousStatuses = new Map(current.map(rsvp => [rsvp.id, rsvp.status]));
     const rsvps = admin
       ? current.filter((r) => r.id !== id)
-      : current.filter((r) => r.email !== email);
+      : current.filter((r) => r.id !== target.id);
 
     assignStatuses(rsvps, ev.capacity);
     await saveRsvps(slug, rsvps);
+
+    const promotions = rsvps.filter(rsvp =>
+      previousStatuses.get(rsvp.id) === "waitlisted" && rsvp.status === "confirmed"
+    );
+    await Promise.all(promotions.map(rsvp =>
+      sendRsvpEmail(ev, rsvp).catch(error =>
+        console.error(`[rsvp] Could not send promotion email to ${rsvp.email}:`, error)
+      )
+    ));
 
     // Admins get the full list; guests only get the public summary
     return res

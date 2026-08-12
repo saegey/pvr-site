@@ -15,6 +15,7 @@ type RsvpResult = {
   status: "confirmed" | "waitlisted";
   party: number;
   address: string | null;
+  cancellationToken: string | null;
   summary: Summary;
 };
 
@@ -24,6 +25,7 @@ type StoredRsvp = {
   email: string;
   plusOnes: number;
   address: string | null;
+  cancellationToken: string | null;
 };
 
 const initials = (name: string) =>
@@ -88,7 +90,7 @@ const EventTemplate: React.FC<{ pageContext: { event: PVREvent } }> = ({
     if (cookie) {
       try {
         const { status, name } = JSON.parse(cookie);
-        setStored({ status, name, email: "", plusOnes: 0, address: null });
+        setStored({ status, name, email: "", plusOnes: 0, address: null, cancellationToken: null });
       } catch {
         /* ignore malformed cookie */
       }
@@ -135,6 +137,7 @@ const EventTemplate: React.FC<{ pageContext: { event: PVREvent } }> = ({
         email,
         plusOnes: bringGuest ? 1 : 0,
         address: data.address,
+        cancellationToken: data.cancellationToken,
       };
       localStorage.setItem(storageKey, JSON.stringify(record));
       // Cookie mirrors the essentials so the form stays disabled on this
@@ -150,7 +153,7 @@ const EventTemplate: React.FC<{ pageContext: { event: PVREvent } }> = ({
   };
 
   const cancelMyRsvp = async () => {
-    if (!stored?.email) return;
+    if (!stored?.cancellationToken) return;
     if (!window.confirm("Cancel your RSVP? This frees up your seat.")) return;
     setSubmitting(true);
     setError(null);
@@ -158,7 +161,7 @@ const EventTemplate: React.FC<{ pageContext: { event: PVREvent } }> = ({
       const res = await fetch(
         `/api/rsvp?slug=${encodeURIComponent(
           event.slug
-        )}&email=${encodeURIComponent(stored.email)}`,
+        )}&token=${encodeURIComponent(stored.cancellationToken)}`,
         { method: "DELETE" }
       );
       const data = await res.json();
@@ -301,7 +304,7 @@ const EventTemplate: React.FC<{ pageContext: { event: PVREvent } }> = ({
             {error && <p className="text-xs text-red-400 mt-5">{error}</p>}
 
             <div className="mt-6 flex flex-col gap-3 border-t border-fg/12 pt-5">
-              {stored.email && (
+              {stored.cancellationToken && (
                 <button
                   onClick={cancelMyRsvp}
                   disabled={submitting}

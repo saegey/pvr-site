@@ -13,21 +13,7 @@
     "partnerLogo": "/images/soundbreak-logo.png",
     "partnerLogoAlt": "Sound Break Bike House",
     "poster": "/images/flow-state/flow-state-blue.webp",
-    "posterAlt": "Flow State — an evening of all-vinyl selections by Public Vinyl Radio at Sound Break Bike House, Aug 8",
-    "flyers": [
-      {
-        "original": "/images/flow-state/flow-state-light.webp",
-        "thumbnail": "/images/flow-state/flow-state-light-thumb.webp"
-      },
-      {
-        "original": "/images/flow-state/flow-state-dark.webp",
-        "thumbnail": "/images/flow-state/flow-state-dark-thumb.webp"
-      },
-      {
-        "original": "/images/flow-state/flow-state-blue.webp",
-        "thumbnail": "/images/flow-state/flow-state-blue-thumb.webp"
-      }
-    ]
+    "posterAlt": "Flow State — an evening of all-vinyl selections by Public Vinyl Radio at Sound Break Bike House, Aug 8"
   },
   {
     "slug": "human-people-inner-signals",
@@ -41,6 +27,8 @@
     "maxPlusOnes": 1,
     "rsvpEnabled": true,
     "partnerLogo": "/images/human-people-logo.png",
-    "partnerLogoAlt": "Human People Beer Café"
+    "partnerLogoAlt": "Human People Beer Café",
+    "poster": "/images/inner-signals/inner-signals.webp",
+    "posterAlt": "Inner Signals at Human People Beer Café — Public Vinyl Radio, August 15, 5–8 PM"
   }
 ]

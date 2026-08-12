@@ -90,30 +90,6 @@ const PublicEventTemplate: React.FC<{ pageContext: { event: PublicEvent } }> = (
           </Link>
 
           <section className="mt-8 md:border md:border-fg/15">
-            <div className="px-0 pb-10 md:px-8 md:py-8">
-              <div className="flex items-center gap-4 md:gap-6">
-                <div className="flex h-16 flex-1 items-center justify-center border border-white/20 px-4 md:h-24">
-                  <img
-                    src="/images/pvr-logo-white.svg"
-                    alt="Public Vinyl Radio"
-                    className="max-h-10 w-full object-contain md:max-h-14"
-                  />
-                </div>
-                {event.partnerLogo && (
-                  <>
-                    <span className="text-white/40 text-lg">×</span>
-                    <div className="flex h-16 flex-1 items-center justify-center border border-white/20 px-4 md:h-24">
-                      <img
-                        src={event.partnerLogo}
-                        alt={event.partnerLogoAlt ?? 'Partner logo'}
-                        className="max-h-10 w-full object-contain md:max-h-14"
-                      />
-                    </div>
-                  </>
-                )}
-              </div>
-            </div>
-
             <div className="px-0 py-0 md:px-8 md:py-8">
               <p className="text-xs tracking-[2px] uppercase text-fg/50">
                 Public event · {formatEventDate(event.startDateTime)} · {formatTimeRange(event.startDateTime, event.endDateTime)}
@@ -227,6 +203,30 @@ const PublicEventTemplate: React.FC<{ pageContext: { event: PublicEvent } }> = (
                   </div>
                 </div>
               )}
+
+              <div className="mt-10 border-t border-fg/12 pt-8">
+                <div className="flex items-center gap-4 md:gap-6">
+                  <div className="flex h-16 flex-1 items-center justify-center border border-white/20 px-4 md:h-24">
+                    <img
+                      src="/images/pvr-logo-white.svg"
+                      alt="Public Vinyl Radio"
+                      className="max-h-10 w-full object-contain md:max-h-14"
+                    />
+                  </div>
+                  {event.partnerLogo && (
+                    <>
+                      <span className="text-white/40 text-lg">×</span>
+                      <div className="flex h-16 flex-1 items-center justify-center border border-white/20 px-4 md:h-24">
+                        <img
+                          src={event.partnerLogo}
+                          alt={event.partnerLogoAlt ?? 'Partner logo'}
+                          className="max-h-10 w-full object-contain md:max-h-14"
+                        />
+                      </div>
+                    </>
+                  )}
+                </div>
+              </div>
             </div>
           </section>
         </div>

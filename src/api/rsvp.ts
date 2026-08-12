@@ -195,7 +195,10 @@ const sendRsvpEmail = async (event: PVREvent, rsvp: Rsvp) => {
     console.warn("[rsvp] RSVP email skipped: RESEND_API_KEY or RSVP_EMAIL_FROM is not configured");
     return;
   }
-  const siteUrl = (process.env.SITE_URL || "https://publicvinylradio.com").replace(/\/$/, "");
+  const baseUrl = process.env.CONTEXT === "production"
+    ? process.env.SITE_URL || process.env.URL
+    : process.env.DEPLOY_PRIME_URL || process.env.URL || process.env.SITE_URL;
+  const siteUrl = (baseUrl || "https://publicvinylradio.com").replace(/\/$/, "");
   const token = cancellationToken(event.slug, rsvp);
   const cancelUrl = token
     ? `${siteUrl}/rsvp-cancel?slug=${encodeURIComponent(event.slug)}&token=${encodeURIComponent(token)}`

@@ -152,6 +152,7 @@ const ShowsPage: React.FC<PageProps<DataProps>> = ({ data }) => {
             <div className="mt-8 flex flex-wrap gap-3">
               <Link to="/about" className="text-xs tracking-[1px] uppercase px-5 py-3 border border-fg/25 text-fg/70 hover:border-fg hover:text-fg transition-colors">About PVR →</Link>
               <Link to="/shop" className="text-xs tracking-[1px] uppercase px-5 py-3 border border-fg/25 text-fg/70 hover:border-fg hover:text-fg transition-colors">Visit the shop →</Link>
+              <Link to="/join" className="text-xs tracking-[1px] uppercase px-5 py-3 border border-fg/25 text-fg/70 hover:border-fg hover:text-fg transition-colors">Join the newsletter →</Link>
             </div>
           </div>
         </div>

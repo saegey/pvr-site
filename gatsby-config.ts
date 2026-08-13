@@ -14,20 +14,8 @@ const config: GatsbyConfig = {
   // regenerate types when queries change, then set back to false.
   graphqlTypegen: false,
   plugins: [
-    // analytics + fonts
-    {
-      resolve: "gatsby-plugin-google-gtag",
-      options: {
-        trackingIds: [process.env.GA_MEASUREMENT_ID || "G-J46E6ZPHFF"],
-        pluginConfig: {
-          head: false,
-          respectDNT: false,          // turn on later in prod if you want
-        },
-        gtagConfig: {
-          anonymize_ip: true,
-        },
-      },
-    },
+    // analytics: Cloudflare Web Analytics — beacon injected in gatsby-ssr.tsx
+    // (set CF_ANALYTICS_TOKEN in the environment). Replaced GA4/gtag.
 
     // css
     `gatsby-plugin-postcss`,

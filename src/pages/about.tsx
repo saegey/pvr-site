@@ -53,6 +53,24 @@ const CORE: Person[] = [
 
 const COLLABORATORS: Person[] = [
   {
+    name: 'Camilo',
+    role: 'Collaborator · DJ',
+    bio: 'Selector and collaborator bringing fresh records and deep grooves to the PVR airwaves.',
+    website: null,
+    image: (
+      <StaticImage
+        src="../images/DSC_0955.png"
+        alt="Camilo"
+        placeholder="blurred"
+        formats={['auto', 'webp']}
+        width={60}
+        height={60}
+        style={{ borderRadius: '50%', display: 'block' }}
+        imgStyle={{ objectFit: 'cover', borderRadius: '50%' }}
+      />
+    ),
+  },
+  {
     name: 'Ben',
     role: 'Collaborator · DJ',
     bio: "Designer and selector who helped shape PVR's early look and sound. Still drops in to spin and collaborate.",

@@ -31,5 +31,12 @@ export const onRenderBody = ({ setHeadComponents, setHtmlAttributes }: { setHead
       type="font/otf"
       crossOrigin="anonymous"
     />,
+    // Cloudflare Web Analytics beacon (token is public — it ships in page HTML)
+    <script
+      key="cf-analytics"
+      type="module"
+      src="https://static.cloudflareinsights.com/beacon.min.js"
+      data-cf-beacon='{"token": "4a3dabb9c8ec4fbea9c6e57d8deddd9c"}'
+    />,
   ])
 }

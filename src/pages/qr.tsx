@@ -7,7 +7,6 @@ import YouTubeIcon from '../icons/youtube.svg'
 import WebsiteIcon from '../icons/website.svg'
 import PVRLogo from '../icons/heads.svg'
 import { format } from 'date-fns'
-import { trackLinkClickDeduped } from '../utils/analytics'
 import { youTubeMaxResThumb, youTubeHQThumb } from '../utils/youtube'
 
 type Show = {
@@ -71,7 +70,6 @@ export default function QRPage({ data }: { data: DataProps }) {
                 style={{ borderColor: 'rgb(236 236 230 / 0.2)', color: 'rgb(236 236 230 / 0.75)', fontSize: '11px', letterSpacing: '2px', textTransform: 'uppercase' }}
                 onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = 'rgb(236 236 230 / 0.6)'; (e.currentTarget as HTMLElement).style.color = 'rgb(236 236 230)' }}
                 onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = 'rgb(236 236 230 / 0.2)'; (e.currentTarget as HTMLElement).style.color = 'rgb(236 236 230 / 0.75)' }}
-                onMouseDown={() => trackLinkClickDeduped({ linkText: link.title, linkUrl: link.url, linkType: isExternal ? 'external' : 'internal', location: 'qr_page' })}
               >
                 {link.Icon && <link.Icon width={16} height={16} aria-hidden style={{ color: 'rgb(236 236 230 / 0.5)' }} />}
                 {link.title}
@@ -95,7 +93,6 @@ export default function QRPage({ data }: { data: DataProps }) {
                   to={`/shows/${show.frontmatter.slug}`}
                   className="flex gap-3 py-4 -mx-1 px-1"
                   style={{ borderBottom: '1px solid rgb(236 236 230 / 0.08)' }}
-                  onMouseDown={() => trackLinkClickDeduped({ linkText: show.frontmatter.title, linkUrl: `/shows/${show.frontmatter.slug}`, linkType: 'internal', location: 'qr_page_shows' })}
                 >
                   <span className="shrink-0 tabular-nums pt-0.5" style={{ fontSize: '11px', color: 'rgb(236 236 230 / 0.25)', width: '18px' }}>
                     {String(i + 1).padStart(2, '0')}

@@ -6,7 +6,6 @@ import InstagramIcon from '../icons/instagram.svg'
 import WebsiteIcon from '../icons/website.svg'
 import ShopIcon from '../icons/shop.svg'
 import { format } from 'date-fns'
-import { trackLinkClickDeduped } from '../utils/analytics'
 import { youTubeMaxResThumb, youTubeHQThumb } from '../utils/youtube'
 import { partitionEvents, formatEventDate } from '../data/public-events'
 
@@ -92,14 +91,6 @@ export default function LinksPage({ data }: { data: DataProps }) {
                   (e.currentTarget as HTMLElement).style.borderColor = 'rgb(236 236 230 / 0.3)'
                   ;(e.currentTarget as HTMLElement).style.color = 'rgb(236 236 230 / 0.92)'
                 }}
-                onMouseDown={() =>
-                  trackLinkClickDeduped({
-                    linkText: link.title,
-                    linkUrl: link.url,
-                    linkType: isExternal ? 'external' : 'internal',
-                    location: 'links_buttons',
-                  })
-                }
               >
                 {SvgIcon && (
                   <SvgIcon
@@ -133,14 +124,6 @@ export default function LinksPage({ data }: { data: DataProps }) {
                 to={`/events/${event.slug}`}
                 className="flex gap-3 py-4 -mx-1 px-1 transition-colors duration-150"
                 style={{ borderBottom: '1px solid rgb(236 236 230 / 0.08)' }}
-                onMouseDown={() =>
-                  trackLinkClickDeduped({
-                    linkText: event.title,
-                    linkUrl: `/events/${event.slug}`,
-                    linkType: 'internal',
-                    location: 'latest_public_events',
-                  })
-                }
               >
                 <span
                   className="shrink-0 tabular-nums pt-0.5"
@@ -197,14 +180,6 @@ export default function LinksPage({ data }: { data: DataProps }) {
                   to={`/shows/${show.frontmatter.slug}`}
                   className="flex gap-3 py-4 -mx-1 px-1 transition-colors duration-150"
                   style={{ borderBottom: '1px solid rgb(236 236 230 / 0.08)' }}
-                  onMouseDown={() =>
-                    trackLinkClickDeduped({
-                      linkText: show.frontmatter.title,
-                      linkUrl: `/shows/${show.frontmatter.slug}`,
-                      linkType: 'internal',
-                      location: 'latest_shows',
-                    })
-                  }
                 >
                   {/* Index */}
                   <span

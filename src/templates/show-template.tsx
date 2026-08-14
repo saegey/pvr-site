@@ -54,9 +54,6 @@ const TracklistRow = ({ track, index, slug }: { track: any; index: number; slug?
       spotify_url={track.spotify_url}
       soundcloud_url={track.soundcloud_url}
       youtube_url={track.youtube_url}
-      trackingLocation="track_card"
-      trackTitle={track.title}
-      showSlug={slug}
     />
   </div>
 )

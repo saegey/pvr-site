@@ -15,7 +15,7 @@ const config: GatsbyConfig = {
   graphqlTypegen: false,
   plugins: [
     // analytics: Cloudflare Web Analytics — beacon injected in gatsby-ssr.tsx
-    // (set CF_ANALYTICS_TOKEN in the environment). Replaced GA4/gtag.
+    // (replaced GA4/gtag).
 
     // css
     `gatsby-plugin-postcss`,

@@ -14,17 +14,6 @@ interface R2PlaylistPlayerProps {
   showDownload?: boolean;
 }
 
-const trackAudioEvent = (action: string, url: string, title?: string, value?: number) => {
-  if (typeof window !== 'undefined' && (window as any).gtag) {
-    (window as any).gtag('event', action, {
-      event_category: 'Audio Player - Playlist',
-      event_label: title || url,
-      audio_url: url,
-      value,
-    });
-  }
-};
-
 const formatTime = (time: number) => {
   if (isNaN(time)) return '0:00';
   const minutes = Math.floor(time / 60);
@@ -43,7 +32,6 @@ const R2PlaylistPlayer = ({ tracks, autoplay = false, showDownload = true }: R2P
   const [duration, setDuration] = useState(0);
   const [volume, setVolume] = useState(1);
   const [isMuted, setIsMuted] = useState(false);
-  const [trackedMilestones, setTrackedMilestones] = useState<Set<number>>(new Set());
 
   const currentTrack = tracks[currentTrackIndex];
 
@@ -57,10 +45,8 @@ const R2PlaylistPlayer = ({ tracks, autoplay = false, showDownload = true }: R2P
     if (!audioRef.current) return;
     if (isPlaying) {
       audioRef.current.pause();
-      trackAudioEvent('pause', currentTrack.url, currentTrack.title, Math.round(currentTime));
     } else {
       audioRef.current.play();
-      trackAudioEvent('play', currentTrack.url, currentTrack.title, Math.round(currentTime));
     }
     setIsPlaying(!isPlaying);
   };
@@ -68,15 +54,6 @@ const R2PlaylistPlayer = ({ tracks, autoplay = false, showDownload = true }: R2P
   const handleTimeUpdate = () => {
     if (!audioRef.current) return;
     setCurrentTime(audioRef.current.currentTime);
-    if (duration > 0) {
-      const progress = (audioRef.current.currentTime / duration) * 100;
-      [25, 50, 75, 100].forEach(milestone => {
-        if (progress >= milestone && !trackedMilestones.has(milestone)) {
-          trackAudioEvent(`playback_${milestone}%`, currentTrack.url, currentTrack.title, milestone);
-          setTrackedMilestones(prev => new Set(prev).add(milestone));
-        }
-      });
-    }
   };
 
   const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -98,7 +75,6 @@ const R2PlaylistPlayer = ({ tracks, autoplay = false, showDownload = true }: R2P
   };
 
   const handleDownload = () => {
-    trackAudioEvent('download', currentTrack.url, currentTrack.title);
     const link = document.createElement('a');
     link.href = currentTrack.url;
     link.download = `${currentTrack.title}.mp3`;
@@ -108,11 +84,8 @@ const R2PlaylistPlayer = ({ tracks, autoplay = false, showDownload = true }: R2P
   };
 
   const playTrack = (index: number) => {
-    const newTrack = tracks[index];
-    trackAudioEvent('track_change', newTrack.url, newTrack.title, index);
     setCurrentTrackIndex(index);
     setCurrentTime(0);
-    setTrackedMilestones(new Set());
     if (audioRef.current) {
       audioRef.current.load();
       if (isPlaying) audioRef.current.play();

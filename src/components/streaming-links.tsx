@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from 'react'
 import { FaApple, FaSpotify, FaPlay, FaYoutube } from 'react-icons/fa'
 import { SiDiscogs } from 'react-icons/si'
 import { IoEllipsisHorizontal } from 'react-icons/io5'
-import { trackStreamClickDeduped } from '../utils/analytics'
 
 type Props = {
   discogs_url?: string | null
@@ -10,9 +9,6 @@ type Props = {
   spotify_url?: string | null
   soundcloud_url?: string | null
   youtube_url?: string | null
-  trackingLocation?: string
-  showSlug?: string
-  trackTitle?: string
 }
 
 const SERVICES = [
@@ -29,9 +25,6 @@ const StreamingLinks: React.FC<Props> = ({
   spotify_url,
   soundcloud_url,
   youtube_url,
-  trackingLocation = 'streaming_links',
-  showSlug,
-  trackTitle,
 }) => {
   const urlMap: Record<string, string | null | undefined> = {
     discogs: discogs_url,
@@ -79,15 +72,6 @@ const StreamingLinks: React.FC<Props> = ({
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-3 px-4 py-2.5 text-xs text-fg/60 hover:text-fg hover:bg-fg/[0.04] transition-colors duration-100"
-                onMouseDown={() =>
-                  trackStreamClickDeduped({
-                    service: key,
-                    linkUrl: url,
-                    location: trackingLocation,
-                    showSlug,
-                    trackTitle,
-                  })
-                }
                 onClick={() => setOpen(false)}
               >
                 <Icon size={14} />

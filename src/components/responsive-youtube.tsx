@@ -1,6 +1,5 @@
 import React, { useState, useCallback } from "react";
 import { FaPlay } from "react-icons/fa";
-import { trackEventDeduped } from "../utils/analytics";
 import { youTubeHQThumb, youTubeMaxResThumb } from "../utils/youtube";
 
 type Props = {
@@ -12,15 +11,6 @@ const ResponsiveYouTube: React.FC<Props> = ({ videoId }) => {
   const [thumbSrc, setThumbSrc] = useState(youTubeMaxResThumb(videoId));
 
   const handlePlay = useCallback(() => {
-    trackEventDeduped(
-      "video_play",
-      {
-        provider: "youtube",
-        video_id: videoId,
-        location: "responsive_youtube",
-      },
-      { key: `yt:${videoId}` }
-    );
     setPlaying(true);
   }, [videoId]);
 

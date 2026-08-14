@@ -7,17 +7,6 @@ interface R2AudioPlayerProps {
   showDownload?: boolean
 }
 
-const trackAudioEvent = (action: string, url: string, title?: string, value?: number) => {
-  if (typeof window !== 'undefined' && (window as any).gtag) {
-    (window as any).gtag('event', action, {
-      event_category: 'Audio Player',
-      event_label: title || url,
-      audio_url: url,
-      value,
-    })
-  }
-}
-
 const formatTime = (time: number) => {
   if (isNaN(time)) return '0:00'
   const minutes = Math.floor(time / 60)
@@ -32,16 +21,13 @@ const R2AudioPlayer = ({ url, title, showDownload = true }: R2AudioPlayerProps) 
   const [duration, setDuration] = useState(0)
   const [volume, setVolume] = useState(1)
   const [isMuted, setIsMuted] = useState(false)
-  const [trackedMilestones, setTrackedMilestones] = useState<Set<number>>(new Set())
 
   const togglePlay = () => {
     if (!audioRef.current) return
     if (isPlaying) {
       audioRef.current.pause()
-      trackAudioEvent('pause', url, title, Math.round(currentTime))
     } else {
       audioRef.current.play()
-      trackAudioEvent('play', url, title, Math.round(currentTime))
     }
     setIsPlaying(!isPlaying)
   }
@@ -49,15 +35,6 @@ const R2AudioPlayer = ({ url, title, showDownload = true }: R2AudioPlayerProps) 
   const handleTimeUpdate = () => {
     if (!audioRef.current) return
     setCurrentTime(audioRef.current.currentTime)
-    if (duration > 0) {
-      const progress = (audioRef.current.currentTime / duration) * 100
-      ;[25, 50, 75, 100].forEach((milestone) => {
-        if (progress >= milestone && !trackedMilestones.has(milestone)) {
-          trackAudioEvent(`playback_${milestone}%`, url, title, milestone)
-          setTrackedMilestones((prev) => new Set(prev).add(milestone))
-        }
-      })
-    }
   }
 
   const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -79,7 +56,6 @@ const R2AudioPlayer = ({ url, title, showDownload = true }: R2AudioPlayerProps) 
   }
 
   const handleDownload = () => {
-    trackAudioEvent('download', url, title)
     const link = document.createElement('a')
     link.href = url
     link.download = title || 'audio.mp3'

@@ -174,7 +174,7 @@ const AboutPage = () => {
       {/* ── Intro ── */}
       <div className="max-w-[820px] mx-auto px-4 md:px-12 py-12 border-t border-fg/12">
         <p className="text-base text-fg/75 leading-[1.8]">
-          100% vinyl, start to finish. We dig for the records, build the systems that play
+          all vinyl, start to finish. We dig for the records, build the systems that play
           them, and put on the music that moves us — global rhythms, deep grooves, no filler.
         </p>
       </div>

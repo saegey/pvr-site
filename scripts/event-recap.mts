@@ -31,68 +31,16 @@ import { createInterface } from 'node:readline/promises'
 import { stdin as input, stdout as output } from 'node:process'
 import { uploadFile, r2PublicUrl } from './lib/r2.mts'
 import { readEvents, writeEvents, isPastEvent, publicEventsPath } from './lib/events.mts'
+import { listPlaylists, fetchPlaylistTracks } from './lib/groovenet.mts'
 import type { PublicEvent } from '../src/data/public-events.ts'
-import type { TrackItem } from '../src/types/content.ts'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const root = resolve(__dirname, '..')
 const dryRun = process.argv.includes('--dry-run')
 
-const GROOVENET_BIN =
-  process.env.GROOVENET_BIN ||
-  join(homedir(), 'Projects/dj-playlist/packages/groovenet-cli/build/bin/groovenet.js')
-
 const MP3_BITRATE = '192k'
 
 const rel = (p: string) => p.replace(`${root}/`, '')
-
-// ── groovenet CLI (returns parsed JSON from `<command> --json`) ──
-function groovenetJson<T>(args: string[]): T {
-  if (!existsSync(GROOVENET_BIN)) {
-    throw new Error(
-      `groovenet CLI not found at ${GROOVENET_BIN}. Build it or set GROOVENET_BIN to the built groovenet.js.`
-    )
-  }
-  // groovenet's API uses a cert signed by a private/local CA. Node doesn't use
-  // the macOS keychain, so trust the system store via --use-system-ca (Node
-  // >=22.15). If NODE_EXTRA_CA_CERTS is set, defer to that CA bundle instead.
-  const tlsArgs = process.env.NODE_EXTRA_CA_CERTS ? [] : ['--use-system-ca']
-  const stdout = execFileSync('node', [...tlsArgs, GROOVENET_BIN, ...args, '--json'], {
-    encoding: 'utf8',
-    maxBuffer: 32 * 1024 * 1024,
-  })
-  try {
-    return JSON.parse(stdout) as T
-  } catch {
-    throw new Error(`Could not parse JSON from: groovenet ${args.join(' ')} --json`)
-  }
-}
-
-type CliPlaylist = { id: string | number; name: string; tracks?: unknown[] }
-type CliTrack = {
-  track_id: string
-  title: string
-  artist: string
-  album?: string | null
-  year?: string | number | null
-  duration_seconds?: number | null
-  discogs_url?: string | null
-  apple_music_url?: string | null
-  youtube_url?: string | null
-}
-
-// Map to the shared TrackItem shape (snake_case) used by the show + event
-// tracklist components. Spotify is intentionally omitted for event recaps.
-const toTrack = (t: CliTrack): TrackItem => ({
-  title: t.title,
-  artist: t.artist,
-  ...(t.album ? { album: t.album } : {}),
-  ...(t.year != null && t.year !== '' ? { year: String(t.year) } : {}),
-  ...(t.duration_seconds != null ? { duration_seconds: t.duration_seconds } : {}),
-  ...(t.discogs_url ? { discogs_url: t.discogs_url } : {}),
-  ...(t.apple_music_url ? { apple_music_url: t.apple_music_url } : {}),
-  ...(t.youtube_url ? { youtube_url: t.youtube_url } : {}),
-})
 
 const fmtBytes = (n: number) =>
   n > 1024 * 1024 ? `${(n / 1024 / 1024).toFixed(1)} MB` : `${(n / 1024).toFixed(0)} KB`
@@ -126,16 +74,15 @@ async function main() {
 
     // 2) Link a playlist + pull tracklist
     console.log('\nFetching playlists from groovenet…')
-    const playlists = groovenetJson<CliPlaylist[]>(['playlists', 'list'])
+    const playlists = listPlaylists()
     if (playlists.length === 0) throw new Error('No playlists returned by groovenet.')
     playlists.forEach((p) =>
       console.log(`  ${p.id}  ${p.name}${p.tracks ? `  (${p.tracks.length} tracks)` : ''}`)
     )
     const playlistId = await ask('Playlist id')
     if (!playlistId) throw new Error('A playlist id is required.')
-    const cliTracks = groovenetJson<CliTrack[]>(['playlists', 'show', playlistId])
-    if (cliTracks.length === 0) throw new Error('That playlist is empty.')
-    const tracklist = cliTracks.map(toTrack)
+    const tracklist = fetchPlaylistTracks(playlistId)
+    if (tracklist.length === 0) throw new Error('That playlist is empty.')
 
     console.log(`\nTracklist (${tracklist.length}):`)
     tracklist.forEach((t, i) => {

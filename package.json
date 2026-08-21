@@ -32,6 +32,8 @@
     "event:new": "node scripts/event-new.mts",
     "event:recap": "op run --env-file=.env.r2.op -- node scripts/event-recap.mts",
     "event:recap:dry": "op run --env-file=.env.r2.op -- node scripts/event-recap.mts --dry-run",
+    "event:tracklist": "node scripts/event-tracklist.mts",
+    "event:tracklist:dry": "node scripts/event-tracklist.mts --dry-run",
     "event:photos": "op run --env-file=.env.r2.op -- node scripts/event-photos.mts",
     "event:photos:dry": "op run --env-file=.env.r2.op -- node scripts/event-photos.mts --dry-run"
   },

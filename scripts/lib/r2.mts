@@ -25,27 +25,37 @@ function requireEnv(keys: string[]): void {
   }
 }
 
+/**
+ * The bucket's PUBLIC base URL — the r2.dev subdomain or a custom domain.
+ * NOT the S3 API endpoint (<account>.r2.cloudflarestorage.com), which needs
+ * signed requests and can't be fetched by a browser (audio/img tags).
+ */
+function publicBaseUrl(): string {
+  requireEnv(['R2_PUBLIC_BASE_URL'])
+  const base = process.env.R2_PUBLIC_BASE_URL!.replace(/\/$/, '')
+  if (base.includes('r2.cloudflarestorage.com')) {
+    throw new Error(
+      `R2_PUBLIC_BASE_URL is set to the private S3 API endpoint (${base}), which is not publicly readable. ` +
+        `Use the bucket's public URL instead — enable the r2.dev subdomain (https://pub-xxxxx.r2.dev) or a custom domain.`
+    )
+  }
+  return base
+}
+
 function config(): R2Config {
-  requireEnv([
-    'R2_ACCOUNT_ID',
-    'R2_ACCESS_KEY_ID',
-    'R2_SECRET_ACCESS_KEY',
-    'R2_BUCKET',
-    'R2_PUBLIC_BASE_URL',
-  ])
+  requireEnv(['R2_ACCOUNT_ID', 'R2_ACCESS_KEY_ID', 'R2_SECRET_ACCESS_KEY', 'R2_BUCKET'])
   return {
     accountId: process.env.R2_ACCOUNT_ID!,
     accessKeyId: process.env.R2_ACCESS_KEY_ID!,
     secretAccessKey: process.env.R2_SECRET_ACCESS_KEY!,
     bucket: process.env.R2_BUCKET!,
-    publicBaseUrl: process.env.R2_PUBLIC_BASE_URL!.replace(/\/$/, ''),
+    publicBaseUrl: publicBaseUrl(),
   }
 }
 
 /** Public URL for a key. Only needs R2_PUBLIC_BASE_URL (safe in dry runs). */
 export function r2PublicUrl(key: string): string {
-  requireEnv(['R2_PUBLIC_BASE_URL'])
-  return `${process.env.R2_PUBLIC_BASE_URL!.replace(/\/$/, '')}/${key}`
+  return `${publicBaseUrl()}/${key}`
 }
 
 let client: S3Client | undefined

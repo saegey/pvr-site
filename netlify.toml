@@ -5,3 +5,14 @@
 
 [build.environment]
   NODE_VERSION = "22"
+
+# Local dev (npm run dev → netlify dev). Run Gatsby as a custom framework and
+# wait on its port explicitly, so Netlify doesn't time out during Gatsby's slow
+# cold start (~25–30s: bootstrap + image jobs + dev bundle). Netlify proxies on
+# `port`, forwarding to Gatsby on `targetPort`.
+[dev]
+  command = "gatsby develop"
+  framework = "#custom"
+  targetPort = 8000
+  port = 8888
+  autoLaunch = false

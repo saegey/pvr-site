@@ -12,13 +12,12 @@
  * The recap renders on the event page via public-event-template.tsx.
  *
  * Usage:
- *   op run --env-file=.env.op -- node scripts/event-recap.mts
- *   op run --env-file=.env.op -- node scripts/event-recap.mts --dry-run
- *   npm run event:recap
+ *   npm run event:recap            (= op run --env-file=.env.r2.op -- node scripts/event-recap.mts)
+ *   npm run event:recap:dry        (adds --dry-run)
  *
  * Requirements:
  *   - ffmpeg on PATH
- *   - R2 credentials in the environment (see .env.example): R2_ACCOUNT_ID,
+ *   - R2 credentials in the environment (see .env.r2.op / .env.example): R2_ACCOUNT_ID,
  *     R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY, R2_BUCKET, R2_PUBLIC_BASE_URL
  *   - The groovenet CLI build. Path resolves from GROOVENET_BIN or defaults to
  *     ~/Projects/dj-playlist/packages/groovenet-cli/build/bin/groovenet.js

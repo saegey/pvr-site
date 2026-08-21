@@ -29,7 +29,11 @@
     "order:list:live": "op run --env-file=.env.op -- node scripts/order-list.mts --env=live",
     "order:ship:sandbox": "op run --env-file=.env.op -- node scripts/order-ship.mts --env=sandbox",
     "order:ship:live": "op run --env-file=.env.op -- node scripts/order-ship.mts --env=live",
-    "event:new": "node scripts/event-new.mts"
+    "event:new": "node scripts/event-new.mts",
+    "event:recap": "op run --env-file=.env.op -- node scripts/event-recap.mts",
+    "event:recap:dry": "op run --env-file=.env.op -- node scripts/event-recap.mts --dry-run",
+    "event:photos": "op run --env-file=.env.op -- node scripts/event-photos.mts",
+    "event:photos:dry": "op run --env-file=.env.op -- node scripts/event-photos.mts --dry-run"
   },
   "overrides": {
     "eslint-config-react-app": {
@@ -39,6 +43,7 @@
     }
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "3.1114.0",
     "@mdx-js/react": "^2.3.0",
     "@netlify/blobs": "8.2.0",
     "@types/pdfkit": "0.17.6",

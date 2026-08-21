@@ -1,4 +1,5 @@
 import publicEventsData from './public-events.data.json'
+import type { TrackItem } from '../types/content'
 
 export type PublicEvent = {
   slug: string
@@ -22,6 +23,14 @@ export type PublicEvent = {
   posterAlt?: string
   /** Optional gallery of flyer variants shown in a carousel. */
   flyers?: { original: string; thumbnail?: string; description?: string }[]
+  /** Public URL of the recorded set (MP3 on R2), shown as a player after the event. */
+  audioUrl?: string
+  /** Groovenet playlist id this recap was pulled from. Stored for provenance; not rendered as a public link (groovenet is Tailscale-only). */
+  playlistId?: string
+  /** Ordered tracklist pulled from the groovenet playlist. Shares the show tracklist shape. */
+  tracklist?: TrackItem[]
+  /** Post-event photos (hosted on R2), shown as a collage that opens a carousel. */
+  photos?: { original: string; thumbnail?: string; description?: string }[]
 }
 
 export const PUBLIC_EVENTS: PublicEvent[] = publicEventsData as PublicEvent[]

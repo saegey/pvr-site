@@ -7,7 +7,9 @@
     "venue": "Sound Break Bike House",
     "location": "115 S. Jackson St., Pioneer Square",
     "description": "An evening of all-vinyl selections by Public Vinyl Radio at the Sound Break Bike House grand opening. Summer vibes with sounds from the water: cumbia, surf rock, tropic, afrobeats, and more.",
-    "djs": ["Public Vinyl Radio"],
+    "djs": [
+      "Public Vinyl Radio"
+    ],
     "maxPlusOnes": 1,
     "rsvpEnabled": true,
     "partnerLogo": "/images/soundbreak-logo.png",
@@ -23,12 +25,392 @@
     "venue": "Human People Beer Café",
     "location": "6105a Roosevelt Way NE, Roosevelt",
     "description": "Beneath every conversation is another frequency. Inner Signals invites you to tune into an evening of analog sound—records chosen for the moments between genres, where rhythm, texture, and atmosphere take over.",
-    "djs": ["Public Vinyl Radio"],
+    "djs": [
+      "Public Vinyl Radio"
+    ],
     "maxPlusOnes": 1,
     "rsvpEnabled": true,
     "partnerLogo": "/images/human-people-logo.png",
     "partnerLogoAlt": "Human People Beer Café",
     "poster": "/images/inner-signals/inner-signals.webp",
-    "posterAlt": "Inner Signals at Human People Beer Café — Public Vinyl Radio, August 15, 5–8 PM"
+    "posterAlt": "Inner Signals at Human People Beer Café — Public Vinyl Radio, August 15, 5–8 PM",
+    "playlistId": "176",
+    "tracklist": [
+      {
+        "title": "Memphis Underground",
+        "artist": "Herbie Mann",
+        "album": "Hold On, I'm Comin'",
+        "year": "1973",
+        "duration_seconds": 787,
+        "discogs_url": "https://www.discogs.com/release/2413177-Herbie-Mann-Hold-On-Im-Comin",
+        "apple_music_url": "https://music.apple.com/us/album/memphis-underground/65129025?i=65128924"
+      },
+      {
+        "title": "Power",
+        "artist": "Ray Barretto",
+        "album": "Barretto Power",
+        "year": "1970",
+        "duration_seconds": 366,
+        "discogs_url": "https://www.discogs.com/release/16109264-Ray-Barretto-Barretto-Power",
+        "apple_music_url": "https://music.apple.com/us/album/power/1535124574?i=1535124981"
+      },
+      {
+        "title": "Feelings",
+        "artist": "Cuco",
+        "album": "Para Mi",
+        "year": "2019",
+        "duration_seconds": 190,
+        "discogs_url": "https://www.discogs.com/release/13916746-Cuco-6-Para-Mi",
+        "apple_music_url": "https://music.apple.com/us/album/feelings/1467222895?i=1467223184"
+      },
+      {
+        "title": "(Exchange)",
+        "artist": "Massive Attack",
+        "album": "Mezzanine",
+        "year": "1998",
+        "duration_seconds": 251,
+        "discogs_url": "https://www.discogs.com/release/5077187-Massive-Attack-Mezzanine",
+        "apple_music_url": "https://music.apple.com/us/album/exchange/724466069?i=724466848",
+        "youtube_url": "https://www.youtube.com/watch?v=wlc7cikBpg4"
+      },
+      {
+        "title": "Money Yoga",
+        "artist": "Shabazz Palaces",
+        "album": "The Don Of Diamond Dreams",
+        "year": "2020",
+        "duration_seconds": 330,
+        "discogs_url": "https://www.discogs.com/release/15134744-Shabazz-Palaces-The-Don-Of-Diamond-Dreams",
+        "apple_music_url": "https://music.apple.com/us/album/money-yoga-feat-darrius/1494246347?i=1494246356"
+      },
+      {
+        "title": "Prahok In My Suitcase",
+        "artist": "Dengue Fever",
+        "album": "Ting Mong",
+        "year": "2023",
+        "duration_seconds": 237,
+        "discogs_url": "https://www.discogs.com/release/28275772-Dengue-Fever-Ting-Mong",
+        "apple_music_url": "https://music.apple.com/us/album/prahok-in-my-suitcase/1686636948?i=1686637414"
+      },
+      {
+        "title": "Radio Tripidad",
+        "artist": "Ritmos Tropicosmos",
+        "album": "La Vida Es Pa' Vivir",
+        "year": "2024",
+        "duration_seconds": 190,
+        "discogs_url": "https://www.discogs.com/release/31187320-Ritmos-Tropicosmos-La-Vida-Es-Pa-Vivir",
+        "apple_music_url": "https://music.apple.com/us/album/radio-tripidad/1757443514?i=1757443884"
+      },
+      {
+        "title": "Que Pasó?",
+        "artist": "Prince Of Queens",
+        "album": "Merida",
+        "year": "2024",
+        "duration_seconds": 240,
+        "discogs_url": "https://www.discogs.com/release/31463444-Prince-Of-Queens-Merida",
+        "apple_music_url": "https://music.apple.com/us/album/que-pas%C3%B3/1757606201?i=1757606203"
+      },
+      {
+        "title": "Pa' Bailar",
+        "artist": "Martín López Y Sus Estrellas",
+        "album": "Cocinando",
+        "year": "1971",
+        "duration_seconds": 150,
+        "discogs_url": "https://www.discogs.com/release/31815821-Martín-López-Y-Sus-Estrellas-Cocinando",
+        "apple_music_url": "https://music.apple.com/us/album/pa-bailar/1595157285?i=1595158236"
+      },
+      {
+        "title": "Inner City Blues",
+        "artist": "Sixto Rodriguez",
+        "album": "Cold Fact",
+        "year": "1970",
+        "duration_seconds": 207,
+        "discogs_url": "https://www.discogs.com/release/10920153-Rodriguez-Cold-Fact",
+        "apple_music_url": "https://music.apple.com/us/album/inner-city-blues/1423936491?i=1423937212"
+      },
+      {
+        "title": "Fermin",
+        "artist": "Almendra",
+        "album": "Almendra",
+        "year": "1970",
+        "duration_seconds": 197,
+        "discogs_url": "https://www.discogs.com/release/7065476-Almendra-Almendra",
+        "apple_music_url": "https://music.apple.com/us/album/ferm%C3%ADn/1492113349?i=1492113582"
+      },
+      {
+        "title": "Errante- Doncella Rimbombante",
+        "artist": "Meridian Brothers",
+        "album": "Meridian Brothers VII",
+        "year": "2012",
+        "duration_seconds": 406,
+        "discogs_url": "https://www.discogs.com/release/33993126-Meridian-Brothers-Meridian-Brothers-VII",
+        "apple_music_url": "https://music.apple.com/us/album/errante-doncella-rimbombante/686813633?i=686813959"
+      },
+      {
+        "title": "Ponte Bajo El Sol",
+        "artist": "Elia y Elizabeth",
+        "album": "La Onda De Elia y Elizabeth",
+        "year": "2014",
+        "duration_seconds": 127,
+        "discogs_url": "https://www.discogs.com/release/6279169-Elia-y-Elizabeth-La-Onda-De-Elia-y-Elizabeth",
+        "apple_music_url": "https://music.apple.com/us/album/ponte-bajo-el-sol/930582206?i=930582282",
+        "youtube_url": "https://www.youtube.com/watch?v=ZCXkhkKngAk"
+      },
+      {
+        "title": "Tamalla",
+        "artist": "Vieux Farka Touré Et Khruangbin",
+        "album": "Ali",
+        "year": "2022",
+        "duration_seconds": 355,
+        "discogs_url": "https://www.discogs.com/release/24597749-Vieux-Farka-Touré-Et-Khruangbin-Ali",
+        "apple_music_url": "https://music.apple.com/us/album/tamalla/1632445912?i=1632445924"
+      },
+      {
+        "title": "Como Estoy En Los Sesenta",
+        "artist": "Meridian Brothers",
+        "album": "¿Dónde Estás María?",
+        "year": "2017",
+        "duration_seconds": 268,
+        "discogs_url": "https://www.discogs.com/release/10849706-Meridian-Brothers-Dónde-Estás-María",
+        "apple_music_url": "https://music.apple.com/us/album/como-estoy-en-los-sesenta/1612407739?i=1612407750"
+      },
+      {
+        "title": "Concorde ",
+        "artist": "Mexican Institute Of Sound, Meridian brothers",
+        "album": "Ruido Tovar",
+        "year": "2026",
+        "duration_seconds": 242,
+        "discogs_url": "https://www.discogs.com/release/37417227-Mexican-Institute-Of-Sound-Meridian-brothers-Ruido-Tovar",
+        "apple_music_url": "https://music.apple.com/us/album/concorde/1886011968?i=1886012105",
+        "youtube_url": "https://www.youtube.com/watch?v=vxebGxSyvb0"
+      },
+      {
+        "title": "Moment",
+        "artist": "Holy Fuck",
+        "album": "Deleter",
+        "year": "2020",
+        "duration_seconds": 300,
+        "discogs_url": "https://www.discogs.com/release/14674279-Holy-Fuck-Deleter",
+        "apple_music_url": "https://music.apple.com/us/album/moment/1480894689?i=1480895076"
+      },
+      {
+        "title": "Fabienk",
+        "artist": "Angine De Poitrine",
+        "album": "Vol. II",
+        "year": "2026",
+        "duration_seconds": 391,
+        "discogs_url": "https://www.discogs.com/release/37609422-Angine-De-Poitrine-Vol-II",
+        "apple_music_url": "https://music.apple.com/us/album/fabienk/1876355936?i=1876355939",
+        "youtube_url": "https://www.youtube.com/watch?v=ZYNRaq_4OcU"
+      },
+      {
+        "title": "El Palteado",
+        "artist": "Los Palteados",
+        "album": "El Palteado / Alkali",
+        "year": "2019",
+        "duration_seconds": 345,
+        "discogs_url": "https://www.discogs.com/release/13577955-Los-Palteados-La-Sonora-Roza-El-Palteado-Alkali",
+        "youtube_url": "https://www.youtube.com/watch?v=fr4vINlB8M0"
+      },
+      {
+        "title": "Shida",
+        "artist": "Khruangbin",
+        "album": "Mordechai",
+        "year": "2020",
+        "duration_seconds": 235,
+        "discogs_url": "https://www.discogs.com/release/15516948-Khruangbin-Mordechai",
+        "apple_music_url": "https://music.apple.com/us/album/shida/1501585499?i=1501585813"
+      },
+      {
+        "title": "Glaucus Atlanticus",
+        "artist": "Punta Diamante",
+        "album": "Afrodelia",
+        "year": "2020",
+        "duration_seconds": 205,
+        "discogs_url": "https://www.discogs.com/release/14539820-Punta-Diamante-Afrodelia",
+        "apple_music_url": "https://music.apple.com/us/album/glaucus-atlanticus/1500960017?i=1500960020"
+      },
+      {
+        "title": "AIO",
+        "artist": "BALTHVS",
+        "album": "Harvest",
+        "year": "2024",
+        "duration_seconds": 234,
+        "discogs_url": "https://www.discogs.com/release/31305114-BALTHVS-Harvest",
+        "apple_music_url": "https://music.apple.com/us/album/aio/1745044218?i=1745044230"
+      },
+      {
+        "title": "El Camino Negro",
+        "artist": "Tommy Guerrero",
+        "album": "Road To Knowhere ",
+        "year": "2016",
+        "duration_seconds": 309,
+        "discogs_url": "https://www.discogs.com/release/15394747-Tommy-Guerrero-Road-To-Knowhere-",
+        "apple_music_url": "https://music.apple.com/us/album/el-camino-negro/1437846004?i=1437846192"
+      },
+      {
+        "title": "Starry Nights",
+        "artist": "Adrian Quesada",
+        "album": "Jaguar Sound",
+        "year": "2022",
+        "duration_seconds": 205,
+        "discogs_url": "https://www.discogs.com/release/25230337-Adrian-Quesada-Jaguar-Sound",
+        "apple_music_url": "https://music.apple.com/us/album/starry-nights-feat-neal-francis/1645443130?i=1645443474"
+      },
+      {
+        "title": "Finally Alone",
+        "artist": "Mac Demarco",
+        "album": "Here Comes The Cowboy",
+        "year": "2019",
+        "duration_seconds": 145,
+        "discogs_url": "https://www.discogs.com/release/13608711-Mac-Demarco-Here-Comes-The-Cowboy",
+        "apple_music_url": "https://music.apple.com/us/album/finally-alone/1452955644?i=1452955713"
+      },
+      {
+        "title": "Primos",
+        "artist": "Adrian Quesada",
+        "album": "Boleros Psicodélicos II",
+        "year": "2025",
+        "duration_seconds": 170,
+        "discogs_url": "https://www.discogs.com/release/34360147-Adrian-Quesada-Boleros-Psicodélicos-II",
+        "apple_music_url": "https://music.apple.com/us/album/primos/1801970393?i=1801970399",
+        "youtube_url": "https://www.youtube.com/watch?v=IacxS9A8keo"
+      },
+      {
+        "title": "Fla De La Frontera",
+        "artist": "Melenas",
+        "album": "Ahora",
+        "year": "2023",
+        "duration_seconds": 256,
+        "discogs_url": "https://www.discogs.com/release/28514305-Melenas-Ahora",
+        "apple_music_url": "https://music.apple.com/us/album/flor-de-la-frontera/1678825656?i=1678826137"
+      },
+      {
+        "title": "Simple",
+        "artist": "Traffic Sound",
+        "album": "Virgin",
+        "year": "1970",
+        "duration_seconds": 208,
+        "discogs_url": "https://www.discogs.com/release/30363023-Traffic-Sound-Virgin",
+        "apple_music_url": "https://music.apple.com/us/album/simple/1678144337?i=1678144537"
+      },
+      {
+        "title": "I Don't Really Mind",
+        "artist": "Tame Impala",
+        "album": "Innerspeaker",
+        "year": "2010",
+        "duration_seconds": 228,
+        "discogs_url": "https://www.discogs.com/release/21303601-Tame-Impala-Innerspeaker",
+        "apple_music_url": "https://music.apple.com/us/album/i-dont-really-mind/1439752048?i=1439752122"
+      },
+      {
+        "title": "The Haunting Idle",
+        "artist": "War On Drugs, The",
+        "album": "Lost In The Dream",
+        "year": "2014",
+        "duration_seconds": 188,
+        "discogs_url": "https://www.discogs.com/release/22419418-The-War-On-Drugs-Lost-In-The-Dream",
+        "apple_music_url": "https://music.apple.com/us/album/the-haunting-idle/765568650?i=765568676"
+      },
+      {
+        "title": "Recently Played",
+        "artist": "Crumb",
+        "album": "Crumb / Locket",
+        "year": "2017",
+        "duration_seconds": 121,
+        "discogs_url": "https://www.discogs.com/release/18802660-Crumb-9-Crumb-Locket",
+        "apple_music_url": "https://music.apple.com/us/album/recently-played/1465125802?i=1465125983"
+      },
+      {
+        "title": "Flesh And Blood",
+        "artist": "Cindy Lee",
+        "album": "Diamond Jubilee",
+        "year": "2025",
+        "duration_seconds": 314,
+        "discogs_url": "https://www.discogs.com/release/33132765-Cindy-Lee-Diamond-Jubilee",
+        "youtube_url": "https://www.youtube.com/watch?v=YDjBXVBVCro"
+      },
+      {
+        "title": "When We Meet",
+        "artist": "Cuco",
+        "album": "Wannabewithu",
+        "year": "2016",
+        "duration_seconds": 277,
+        "discogs_url": "https://www.discogs.com/release/23156720-Cuco-6-Wannabewithu",
+        "apple_music_url": "https://music.apple.com/us/album/when-we-meet/1405075387?i=1405076678"
+      },
+      {
+        "title": "Eventually",
+        "artist": "Tame Impala",
+        "album": "Currents",
+        "year": "2015",
+        "duration_seconds": 319,
+        "discogs_url": "https://www.discogs.com/release/22474430-Tame-Impala-Currents",
+        "apple_music_url": "https://music.apple.com/us/album/eventually/1440838039?i=1440838298"
+      },
+      {
+        "title": "Length Of Love",
+        "artist": "Interpol",
+        "album": "Antics",
+        "year": "2004",
+        "duration_seconds": 247,
+        "discogs_url": "https://www.discogs.com/release/32169039-Interpol-Antics",
+        "apple_music_url": "https://music.apple.com/us/album/length-of-love/1589250507?i=1589251376"
+      },
+      {
+        "title": "In/Flux",
+        "artist": "DJ Shadow",
+        "album": "Preemptive Strike",
+        "year": "1998",
+        "duration_seconds": 734,
+        "discogs_url": "https://www.discogs.com/release/7827789-DJ-Shadow-Preemptive-Strike",
+        "apple_music_url": "https://music.apple.com/us/album/in-flux/1660563908?i=1660564373"
+      },
+      {
+        "title": "Walk 4 Ground",
+        "artist": "Gyedu Blay Ambolley",
+        "album": "Ketan",
+        "year": "2017",
+        "duration_seconds": 458,
+        "discogs_url": "https://www.discogs.com/release/31606174-Blay-Ambolley-Ketan",
+        "apple_music_url": "https://music.apple.com/us/album/walk-4-ground/1214005871?i=1214005893"
+      },
+      {
+        "title": "Na Mi Do Gbé Hué Nu",
+        "artist": "Honoré Avolonto",
+        "album": "Legends Of Benin",
+        "year": "2009",
+        "duration_seconds": 407,
+        "discogs_url": "https://www.discogs.com/release/1901494-Various-Legends-Of-Benin",
+        "apple_music_url": "https://music.apple.com/us/album/na-mi-do-gb%C3%A9-hu%C3%A9-nu/1485779973?i=1485780265"
+      },
+      {
+        "title": "Guayaquil",
+        "artist": "Hermanos Gutiérrez",
+        "album": "El Camino De Mi Alma",
+        "year": "2018",
+        "duration_seconds": 329,
+        "discogs_url": "https://www.discogs.com/release/29596552-Hermanos-Gutiérrez-2-El-Camino-De-Mi-Alma",
+        "apple_music_url": "https://music.apple.com/us/album/guayaquil/1743247984?i=1743247994"
+      },
+      {
+        "title": "Tres Meses De Vida",
+        "artist": "Carlos Díaz Y Su Orquesta",
+        "album": "Picó (Sound System Culture From The Colombian Caribbean)",
+        "year": "2025",
+        "duration_seconds": 177,
+        "discogs_url": "https://www.discogs.com/release/34293148-Edna-Martínez-Presents-Various-Picó-Sound-System-Culture-From-The-Colombian-Caribbean",
+        "apple_music_url": "https://music.apple.com/us/album/tres-meses-de-vida/1806092511?i=1806092534"
+      },
+      {
+        "title": "Adwoa",
+        "artist": "Gyedu Blay Ambolley",
+        "album": "Simigwa",
+        "year": "1975",
+        "duration_seconds": 251,
+        "discogs_url": "https://www.discogs.com/release/12550981-Gyedu-Blay-Ambolley-Simigwa",
+        "apple_music_url": "https://music.apple.com/us/album/adwoa/1755550423?i=1755550550"
+      }
+    ],
+    "audioUrl": "https://c32a012737099152bdc0136cdd3d95f9.r2.cloudflarestorage.com/events/human-people-inner-signals.mp3"
   }
 ]

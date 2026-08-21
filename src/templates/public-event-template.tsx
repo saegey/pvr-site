@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react'
 import { graphql, Link, HeadProps } from 'gatsby'
 import SEO from '../components/seo'
 import ImageCarousel from '../components/image-carousel'
+import R2AudioPlayer from '../components/r2-audio-player'
+import TracklistRow from '../components/tracklist-row'
+import PhotoCollage from '../components/photo-collage'
 import {
   formatEventDate,
   formatTimeRange,
@@ -129,6 +132,31 @@ const PublicEventTemplate: React.FC<{ pageContext: { event: PublicEvent } }> = (
                 <p>{event.location}</p>
                 <p className="mt-3">{formatTimeRange(event.startDateTime, event.endDateTime)} · with {event.djs.join(', ')}</p>
               </div>
+
+              {(event.audioUrl ||
+                (event.tracklist && event.tracklist.length > 0) ||
+                (event.photos && event.photos.length > 0)) && (
+                <div className="mt-10 border-t border-fg/12 pt-8">
+                  <p className="text-xs tracking-[2px] uppercase text-fg/55">Recap</p>
+                  {event.audioUrl && (
+                    <div className="mt-5">
+                      <R2AudioPlayer url={event.audioUrl} title={event.title} showDownload={false} />
+                    </div>
+                  )}
+                  {event.tracklist && event.tracklist.length > 0 && (
+                    <div className="mt-6">
+                      {event.tracklist.map((track, index) => (
+                        <TracklistRow key={`${track.artist}-${track.title}-${index}`} track={track} index={index} />
+                      ))}
+                    </div>
+                  )}
+                  {event.photos && event.photos.length > 0 && (
+                    <div className="mt-8">
+                      <PhotoCollage photos={event.photos} />
+                    </div>
+                  )}
+                </div>
+              )}
 
               <div className="mt-10 border-t border-fg/12 pt-8">
                 {isPast ? (

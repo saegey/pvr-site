@@ -13,6 +13,7 @@ interface ImageCarouselProps {
   showThumbnails?: boolean
   autoPlay?: boolean
   showFullscreenButton?: boolean
+  startIndex?: number
 }
 
 const Chevron: React.FC<{ dir: 'left' | 'right' }> = ({ dir }) => (
@@ -36,6 +37,7 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
   showThumbnails = true,
   autoPlay = false,
   showFullscreenButton = true,
+  startIndex = 0,
 }) => {
   if (!images || images.length === 0) return null
 
@@ -82,8 +84,10 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
         .image-gallery-thumbnail.active { border: 1px solid rgba(236,236,230,0.4); }
         .image-gallery-index { background: rgba(0,0,0,0.4); color: white; padding: 8px 12px; font-size: 14px; }
       `}</style>
+      {/* startIndex is spread in because react-image-gallery's bundled types omit it (supported at runtime). */}
       <ImageGallery
         items={images}
+        {...({ startIndex } as any)}
         showThumbnails={shouldShowThumbnails}
         autoPlay={autoPlay}
         showPlayButton={false}

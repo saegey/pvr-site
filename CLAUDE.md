@@ -217,9 +217,18 @@ Content here...
 
 ## Cloudflare R2 Integration
 
-Audio files are hosted on Cloudflare R2 (object storage).
+Cloudflare R2 (S3-compatible object storage) hosts:
+- **Set audio** — MP3s streamed by `R2AudioPlayer` / `R2PlaylistPlayer`
+- **Event photos** — post-event `.webp` collages uploaded by `scripts/event-photos.mts`
 
-**R2 URL Format:** `https://pub-{bucket-id}.r2.dev/path/to/file.mp3`
+**R2 URL Format:** `https://pub-{bucket-id}.r2.dev/path/to/file.mp3` (or a custom domain)
+
+**Key layout used by the event scripts:**
+```
+events/<slug>.mp3                     # recap audio (event-recap.mts)
+events/<slug>/photos/<name>.webp      # full photo, 1600px (event-photos.mts)
+events/<slug>/photos/<name>-thumb.webp # 600×600 collage thumbnail
+```
 
 ### CORS Configuration Required:
 ```json
@@ -233,6 +242,46 @@ Audio files are hosted on Cloudflare R2 (object storage).
   }
 ]
 ```
+
+### Credentials (uploads)
+
+The upload scripts read these from `process.env` — **they do not require 1Password**:
+
+| Env var | What it is |
+| --- | --- |
+| `R2_ACCOUNT_ID` | Cloudflare account id (endpoint is `<id>.r2.cloudflarestorage.com`) |
+| `R2_ACCESS_KEY_ID` | R2 API token access key |
+| `R2_SECRET_ACCESS_KEY` | R2 API token secret |
+| `R2_BUCKET` | Target bucket name |
+| `R2_PUBLIC_BASE_URL` | Public base for the bucket, e.g. `https://pub-xxxxx.r2.dev` (no trailing slash) |
+
+Create the token in Cloudflare → **R2 → Manage R2 API Tokens → Create** (Object Read & Write, scoped to the bucket).
+
+**Bootstrapping without the maintainer's 1Password:** the `npm run event:*` scripts wrap the run in `op run --env-file=.env.op`, which resolves `op://Homelab/PVR R2/*` references from the maintainer's private vault — you won't have access. Two options instead:
+
+1. **Your own 1Password item** — create one and update the `op://` refs in `.env.op` to match your vault/item/field names:
+   ```sh
+   op item create --category "API Credential" --title "PVR R2" --vault "<your-vault>" \
+     "R2_ACCOUNT_ID[text]=..." "R2_ACCESS_KEY_ID[text]=..." \
+     "R2_SECRET_ACCESS_KEY[password]=..." "R2_BUCKET[text]=..." \
+     "R2_PUBLIC_BASE_URL[text]=https://pub-xxxxx.r2.dev"
+   # verify: op run --env-file=.env.op -- printenv R2_ACCOUNT_ID
+   ```
+2. **Skip 1Password entirely** — export the five vars (or put them in a gitignored `.env` and `source` it) and run the script directly, bypassing the `op run` wrapper:
+   ```sh
+   node scripts/event-photos.mts        # or scripts/event-recap.mts
+   ```
+
+### Post-event workflow (recap audio + photos)
+
+Both scripts are interactive, pick from **past** public events, support `--dry-run`, and write into `src/data/public-events.data.json` (rendered by `public-event-template.tsx` in a "Recap" section).
+
+- **`npm run event:recap`** (`scripts/event-recap.mts`) — links a groovenet playlist (pulls the tracklist), compresses a WAV → MP3 (192 kbps, needs `ffmpeg`), uploads to R2, and writes `audioUrl` + `playlistId` + `tracklist`. Needs the groovenet CLI (path via `GROOVENET_BIN`) reachable — see the groovenet note below.
+- **`npm run event:photos`** (`scripts/event-photos.mts`) — resizes a folder of photos to `.webp` (via `sharp`), uploads to R2, and writes a `photos[]` array (append or replace). Renders as a grayscale `PhotoCollage` that opens a fullscreen carousel.
+- Dry runs: `npm run event:recap:dry`, `npm run event:photos:dry`.
+- Shared helpers: `scripts/lib/r2.mts` (uploads) and `scripts/lib/events.mts` (event read/write).
+
+**Groovenet CLI note:** `event-recap.mts` shells out to the groovenet CLI (`GROOVENET_BIN` or `~/Projects/dj-playlist/packages/groovenet-cli/build/bin/groovenet.js`). Set its API base with `groovenet config set api_base <url>`. If the API uses a private/local CA (e.g. a `.home.arpa` host), the script runs the CLI with `--use-system-ca` so Node trusts the macOS keychain; alternatively set `NODE_EXTRA_CA_CERTS=<ca.pem>`.
 
 ## Styling
 

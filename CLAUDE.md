@@ -257,15 +257,17 @@ The upload scripts read these from `process.env` — **they do not require 1Pass
 
 Create the token in Cloudflare → **R2 → Manage R2 API Tokens → Create** (Object Read & Write, scoped to the bucket).
 
-**Bootstrapping without the maintainer's 1Password:** the `npm run event:*` scripts wrap the run in `op run --env-file=.env.op`, which resolves `op://Homelab/PVR R2/*` references from the maintainer's private vault — you won't have access. Two options instead:
+R2 references live in **`.env.r2.op`** (separate from `.env.op`), loaded only by the event scripts. This is deliberate: `op run` resolves *every* reference in an env file at launch, so keeping R2 out of `.env.op` means an uncreated/missing R2 item can't block `npm run dev` — it only affects `event:recap` / `event:photos`.
 
-1. **Your own 1Password item** — create one and update the `op://` refs in `.env.op` to match your vault/item/field names:
+**Bootstrapping without the maintainer's 1Password:** `.env.r2.op` points at `op://Homelab/PVR R2/*` in the maintainer's private vault — you won't have access. Two options:
+
+1. **Your own 1Password item** — create one and update the `op://` refs in `.env.r2.op` to match your vault/item/field names:
    ```sh
    op item create --category "API Credential" --title "PVR R2" --vault "<your-vault>" \
      "R2_ACCOUNT_ID[text]=..." "R2_ACCESS_KEY_ID[text]=..." \
      "R2_SECRET_ACCESS_KEY[password]=..." "R2_BUCKET[text]=..." \
      "R2_PUBLIC_BASE_URL[text]=https://pub-xxxxx.r2.dev"
-   # verify: op run --env-file=.env.op -- printenv R2_ACCOUNT_ID
+   # verify: op run --env-file=.env.r2.op -- printenv R2_ACCOUNT_ID
    ```
 2. **Skip 1Password entirely** — export the five vars (or put them in a gitignored `.env` and `source` it) and run the script directly, bypassing the `op run` wrapper:
    ```sh

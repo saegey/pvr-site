@@ -21,15 +21,19 @@ const R2AudioPlayer = ({ url, title, showDownload = true }: R2AudioPlayerProps) 
   const [duration, setDuration] = useState(0)
   const [volume, setVolume] = useState(1)
   const [isMuted, setIsMuted] = useState(false)
+  const [error, setError] = useState(false)
 
   const togglePlay = () => {
-    if (!audioRef.current) return
-    if (isPlaying) {
-      audioRef.current.pause()
+    const audio = audioRef.current
+    if (!audio) return
+    if (audio.paused) {
+      // play() returns a promise that rejects if the source can't be loaded
+      // (bad/private URL, CORS, unsupported codec). Catch it so a failure shows
+      // a graceful state instead of an unhandled runtime error.
+      audio.play().catch(() => setError(true))
     } else {
-      audioRef.current.play()
+      audio.pause()
     }
-    setIsPlaying(!isPlaying)
   }
 
   const handleTimeUpdate = () => {
@@ -76,9 +80,21 @@ const R2AudioPlayer = ({ url, title, showDownload = true }: R2AudioPlayerProps) 
         src={url}
         onTimeUpdate={handleTimeUpdate}
         onLoadedMetadata={() => audioRef.current && setDuration(audioRef.current.duration)}
+        onPlay={() => {
+          setIsPlaying(true)
+          setError(false)
+        }}
+        onPause={() => setIsPlaying(false)}
         onEnded={() => setIsPlaying(false)}
+        onError={() => setError(true)}
         preload="metadata"
       />
+
+      {error && (
+        <p className="mb-4 text-xs text-fg/50">
+          Audio couldn’t be loaded. The file may be missing or its URL isn’t publicly accessible.
+        </p>
+      )}
 
       {/* Header row */}
       <div className="flex items-center gap-4 mb-5">

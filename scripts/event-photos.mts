@@ -14,12 +14,11 @@
  * fullscreen carousel, on the event page via public-event-template.tsx.
  *
  * Usage:
- *   op run --env-file=.env.op -- node scripts/event-photos.mts
- *   op run --env-file=.env.op -- node scripts/event-photos.mts --dry-run
- *   npm run event:photos
+ *   npm run event:photos           (= op run --env-file=.env.r2.op -- node scripts/event-photos.mts)
+ *   npm run event:photos:dry       (adds --dry-run)
  *
  * Requirements:
- *   - R2 credentials in the environment (see .env.example)
+ *   - R2 credentials in the environment (see .env.r2.op / .env.example)
  */
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs'
 import { basename, extname, isAbsolute, join, resolve } from 'node:path'

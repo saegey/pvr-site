@@ -280,8 +280,9 @@ Both scripts are interactive, pick from **past** public events, support `--dry-r
 
 - **`npm run event:recap`** (`scripts/event-recap.mts`) — links a groovenet playlist (pulls the tracklist), compresses a WAV → MP3 (192 kbps, needs `ffmpeg`), uploads to R2, and writes `audioUrl` + `playlistId` + `tracklist`. Needs the groovenet CLI (path via `GROOVENET_BIN`) reachable — see the groovenet note below.
 - **`npm run event:photos`** (`scripts/event-photos.mts`) — resizes a folder of photos to `.webp` (via `sharp`), uploads to R2, and writes a `photos[]` array (append or replace). Renders as a grayscale `PhotoCollage` that opens a fullscreen carousel.
-- Dry runs: `npm run event:recap:dry`, `npm run event:photos:dry`.
-- Shared helpers: `scripts/lib/r2.mts` (uploads) and `scripts/lib/events.mts` (event read/write).
+- **`npm run event:tracklist`** (`scripts/event-tracklist.mts`) — re-syncs *only* the tracklist from groovenet (via the event's stored `playlistId`), leaving audio/photos untouched. For corrections: fix the tracks in groovenet, then run this; it shows an old→new diff before writing. No R2 creds needed (groovenet only), so it doesn't use the `op` wrapper.
+- Dry runs: `npm run event:recap:dry`, `npm run event:photos:dry`, `npm run event:tracklist:dry`.
+- Shared helpers: `scripts/lib/r2.mts` (uploads), `scripts/lib/events.mts` (event read/write), `scripts/lib/groovenet.mts` (CLI calls + track mapping).
 
 **Groovenet CLI note:** `event-recap.mts` shells out to the groovenet CLI (`GROOVENET_BIN` or `~/Projects/dj-playlist/packages/groovenet-cli/build/bin/groovenet.js`). Set its API base with `groovenet config set api_base <url>`. If the API uses a private/local CA (e.g. a `.home.arpa` host), the script runs the CLI with `--use-system-ca` so Node trusts the macOS keychain; alternatively set `NODE_EXTRA_CA_CERTS=<ca.pem>`.
 

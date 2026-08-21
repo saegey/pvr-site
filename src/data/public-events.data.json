@@ -37,13 +37,13 @@
     "playlistId": "176",
     "tracklist": [
       {
-        "title": "Memphis Underground",
+        "title": "(Gimme Some Of That Good Old) Soul Beat Momma",
         "artist": "Herbie Mann",
         "album": "Hold On, I'm Comin'",
         "year": "1973",
-        "duration_seconds": 787,
+        "duration_seconds": 456,
         "discogs_url": "https://www.discogs.com/release/2413177-Herbie-Mann-Hold-On-Im-Comin",
-        "apple_music_url": "https://music.apple.com/us/album/memphis-underground/65129025?i=65128924"
+        "apple_music_url": "https://music.apple.com/us/album/gimme-some-of-that-good-old-soul-beat-momma/65129025?i=65128767"
       },
       {
         "title": "Power",
@@ -348,13 +348,14 @@
         "apple_music_url": "https://music.apple.com/us/album/eventually/1440838039?i=1440838298"
       },
       {
-        "title": "Length Of Love",
+        "title": "Evil",
         "artist": "Interpol",
         "album": "Antics",
         "year": "2004",
-        "duration_seconds": 247,
+        "duration_seconds": 216,
         "discogs_url": "https://www.discogs.com/release/32169039-Interpol-Antics",
-        "apple_music_url": "https://music.apple.com/us/album/length-of-love/1589250507?i=1589251376"
+        "apple_music_url": "https://music.apple.com/us/album/evil/1589250507?i=1589250944",
+        "youtube_url": "https://www.youtube.com/watch?v=uUOMQzQdU34"
       },
       {
         "title": "In/Flux",

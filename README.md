@@ -6,7 +6,7 @@ The official website for Public Vinyl Radio, a Seattle-based music collective sh
 
 - **Framework:** Gatsby 5 (React-based static site generator)
 - **Language:** TypeScript
-- **Styling:** Theme UI (CSS-in-JS with design tokens)
+- **Styling:** Tailwind CSS v4 (utility classes, configured in `src/styles/global.css`)
 - **Content:** MDX (Markdown + React components)
 - **Hosting:** Netlify
 - **Audio Storage:** Cloudflare R2
@@ -15,10 +15,15 @@ The official website for Public Vinyl Radio, a Seattle-based music collective sh
 
 - **Audio Streaming:** Custom-built audio players for streaming MP3s from Cloudflare R2
 - **Show Pages:** Dynamic pages for each radio show/episode with metadata and tracklists
-- **Responsive Design:** Mobile-first design with dark/light mode support
+- **Merch Store:** Product catalog and pages (`/shop`, `/shop/<id>`) with a cart and Stripe checkout; order management via CLI scripts
+- **Public Events:** Event listing (`/events`) with post-event recaps — recap audio, photo collages, and tracklists
+- **Private Events & RSVP:** Access-code event pages (`/e/<code>`) with RSVP, an organizer admin view (`/e/<code>/admin`), and RSVP cancellation
+- **Collaborators:** Host/collaborator profile pages (`/collaborators/<slug>`)
+- **Newsletter Signup:** Email capture via a serverless API route
 - **SEO Optimized:** Automatic meta tags, Open Graph images, and structured data
 - **Image Optimization:** Automatic image processing via Gatsby Image
 - **Embedded Media:** Support for YouTube, Spotify, and Apple Music embeds
+- **Responsive Design:** Mobile-first, dark-themed UI (light mode scaffolded but not yet enabled)
 
 ## Getting Started
 
@@ -128,6 +133,55 @@ Your content here...
 - `isActive` - Set to `false` to hide from listings
 - `coverImage` - Path to cover image (shown if no YouTube video)
 - `youtubeId` - YouTube video ID for embedding
+
+## Events
+
+Events are data-driven (no MDX), backed by two JSON files that the CLI scripts
+read and write:
+
+- `src/data/public-events.data.json` — public events, listed on `/events` and
+  rendered at `/events/<slug>`.
+- `src/data/events.data.json` — private listening sessions, reachable only via an
+  access code at `/e/<code>` (organizer view at `/e/<code>/admin`).
+
+Lifecycle: **create** an event (`event:new`), then after it happens **enrich**
+the public event's recap (`event:recap` / `event:photos` / `event:audio` /
+`event:tracklist`).
+
+### Creating events
+
+Use the interactive event builder for public events and private listening
+sessions. It validates the shared event slug, writes the appropriate data file,
+and creates `static/images/events/<slug>/` for event assets.
+
+```bash
+npm run event:new
+npm run event:new -- --dry-run  # review the generated event without writing files
+```
+
+Private sessions are unlisted. The builder generates a five-character link at
+`/e/<code>`; share that link directly with guests rather than linking it from
+the public site.
+
+### Post-event recaps
+
+After a **public** event happens, enrich its `/events/<slug>` page with a recap.
+Each script is interactive, lets you pick from past events, and supports
+`--dry-run`. They write into `src/data/public-events.data.json`; the audio/photo
+scripts also upload to Cloudflare R2 (see the Stripe/1Password and R2 notes for
+credential setup).
+
+```bash
+npm run audio:prep       # prep a raw set recording: join splits, trim silence -> WAV/MP3
+npm run event:recap      # upload the set audio + pull a tracklist; writes audioUrl + tracklist
+npm run event:photos     # resize a folder of photos to .webp, upload, add a photo collage
+npm run event:audio      # swap only the recap audio for an event
+npm run event:tracklist  # re-sync only the tracklist (after fixing it upstream)
+```
+
+Add `:dry` for a no-write preview, e.g. `npm run event:recap:dry`. See
+`CLAUDE.md` for the full event lifecycle, data files, and the groovenet/R2
+details.
 
 ## Shop
 
@@ -251,21 +305,6 @@ Netlify and the local environment used by the CLI (for example, as 1Password
 references in `.env.op`). The command records the Resend email ID and timestamp
 in Stripe and will refuse to send another shipment email unless
 `--resend-email` is provided.
-
-### Creating events
-
-Use the interactive event builder for public events and private listening
-sessions. It validates the shared event slug, writes the appropriate data file,
-and creates `static/images/events/<slug>/` for event assets.
-
-```bash
-npm run event:new
-npm run event:new -- --dry-run  # review the generated event without writing files
-```
-
-Private sessions are unlisted. The builder generates a five-character link at
-`/e/<code>`; share that link directly with guests rather than linking it from
-the public site.
 
 ### Stripe credentials via 1Password
 

@@ -33,11 +33,9 @@ pvr-site/
 │   │   └── show-template.tsx        # Template for show pages
 │   ├── pages/             # Gatsby pages
 │   └── gatsby-types.d.ts  # Auto-generated TypeScript types
-├── scripts/
-│   └── migrate-shows.sh   # Helper script to migrate shows to new structure
+├── scripts/               # Event/shop/order tooling (.mts) + shared lib/
 ├── gatsby-config.ts       # Gatsby configuration
 ├── gatsby-node.ts         # Gatsby Node API customization
-├── MIGRATION_GUIDE.md     # Guide for migrating to organized structure
 └── package.json
 ```
 
@@ -145,15 +143,6 @@ shows/
 │       ├── photo-2.jpg
 │       └── photo-3.jpg
 ```
-
-### Migrating Existing Shows
-
-Use the migration script to reorganize existing flat-file shows:
-```bash
-./scripts/migrate-shows.sh show-slug
-```
-
-See `MIGRATION_GUIDE.md` for detailed migration instructions.
 
 ### Required Frontmatter Fields:
 ```yaml
@@ -361,15 +350,6 @@ mkdir -p src/content/shows/my-show/gallery
 touch src/content/shows/my-show/index.mdx
 # Add your cover.jpg and gallery images
 ```
-
-### Migrating an Existing Show
-1. Run migration script: `./scripts/migrate-shows.sh show-slug`
-2. Move cover image to show directory as `cover.jpg`
-3. Move gallery photos to `gallery/` subdirectory
-4. Update frontmatter paths (script handles import paths automatically)
-5. Add `carouselImages` array to frontmatter if using gallery
-
-See `MIGRATION_GUIDE.md` for detailed instructions.
 
 ### Adding Carousel Images to a Show
 1. Place images in the show's `gallery/` directory

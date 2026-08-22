@@ -7,7 +7,7 @@ This document provides context for Claude Code when working with the Public Viny
 Public Vinyl Radio is a Seattle-based music collective showcasing DJ sets, radio shows, and live performances. This is the public-facing website built with Gatsby and hosted on Netlify.
 
 **Live Site:** Public Vinyl Radio (deployed on Netlify)
-**Tech Stack:** Gatsby 5, TypeScript, Theme UI, React, MDX
+**Tech Stack:** Gatsby 5, TypeScript, Tailwind CSS v4, React, MDX
 
 ## Project Structure
 
@@ -263,9 +263,32 @@ R2 references live in **`.env.r2.op`** (separate from `.env.op`), loaded only by
    node scripts/event-photos.mts        # or scripts/event-recap.mts
    ```
 
+## Events
+
+Events are **data-driven** (no MDX). Two JSON files back them, both read/written by the CLI scripts:
+
+- `src/data/public-events.data.json` — public events, listed on `/events` and rendered at `/events/<slug>` by `public-event-template.tsx`.
+- `src/data/events.data.json` — private listening sessions, reached only via an access code at `/e/<code>` (`event-template.tsx`), with an organizer view at `/e/<code>/admin` (`admin-template.tsx`).
+
+**Lifecycle:** `event:new` (create) → *(event happens)* → `event:recap` / `event:photos` / `event:audio` / `event:tracklist` (enrich the public event's recap).
+
+### Creating an event (`event:new`)
+
+```bash
+npm run event:new                # interactive
+npm run event:new -- --dry-run   # preview without writing (no dedicated :dry alias)
+```
+
+Interactive prompt (`scripts/event-new.mts`) that asks **public or private**, then title, slug (auto-suggested from title), date (`YYYY-MM-DD`), time, description, DJs/hosts, and max plus-ones. It rejects duplicate slugs, then:
+
+- **public** → appends to `public-events.data.json` (also asks venue, public location, RSVP on/off, optional partner logo + alt text).
+- **private** → appends to `events.data.json`, auto-generates a unique `accessCode`, and prints the share link `/e/<code>` (also asks capacity, public location, optional private address/instructions).
+
+Either way it creates the photo folder `static/images/events/<slug>/`. No secrets/R2 needed — it only edits local JSON.
+
 ### Post-event workflow (recap audio + photos)
 
-Both scripts are interactive, pick from **past** public events, support `--dry-run`, and write into `src/data/public-events.data.json` (rendered by `public-event-template.tsx` in a "Recap" section).
+These enrich an existing **public** event. All are interactive, pick from **past** public events, support `--dry-run`, and write into `src/data/public-events.data.json` (rendered by `public-event-template.tsx` in a "Recap" section).
 
 - **`npm run audio:prep`** (`scripts/audio-prep.mts`) — pre-processing step for the set recording: joins a recorder's split files (lossless concat), auto-detects and trims leading/trailing silence (with manual timestamp override), and exports a trimmed WAV/MP3. All `ffmpeg`/`ffprobe`; no secrets. The output WAV feeds `event:recap`.
 - **`npm run event:recap`** (`scripts/event-recap.mts`) — links a groovenet playlist (pulls the tracklist), compresses a WAV → MP3 (192 kbps, needs `ffmpeg`), uploads to R2, and writes `audioUrl` + `playlistId` + `tracklist`. Needs the groovenet CLI (path via `GROOVENET_BIN`) reachable — see the groovenet note below.
@@ -279,18 +302,18 @@ Both scripts are interactive, pick from **past** public events, support `--dry-r
 
 ## Styling
 
-**Theme System:** Theme UI
-- Colors, typography, and spacing defined in theme configuration
-- `sx` prop for component-level styling
-- Responsive arrays: `[mobile, tablet, desktop]`
-- Color modes: automatic dark/light theme switching
+**Styling system:** Tailwind CSS v4 (utility classes via `className`)
+- Compiled through `gatsby-plugin-postcss`; the single entry is `src/styles/global.css` (imported in `gatsby-browser.js`).
+- Tailwind v4 is configured **in CSS** — there is no `tailwind.config.js`. Design tokens (colors, fonts) live in the `@theme { … }` block in `global.css` and become utilities (e.g. `--color-bg` → `bg-bg`, `--font-family-display` → `font-display`).
+- Custom fonts (JetBrains Mono, ITC Lubalin Graph) are declared via `@font-face` in `global.css` and preloaded in `gatsby-ssr`.
+- Raw channel CSS vars (`--pvr-fg`/`--pvr-bg`) are exposed on `:root` for inline styles that need alpha, e.g. `rgb(var(--pvr-fg) / 0.4)`.
+- Responsive design uses Tailwind breakpoint prefixes (`md:`, `lg:`); dark-first palette, with a light-mode `@media (prefers-color-scheme: light)` block scaffolded in `global.css` (currently commented out).
 
-**Example Responsive Styling:**
+**Example styling:**
 ```tsx
-<Box sx={{
-  display: ['none', 'flex'],  // hidden on mobile, flex on tablet+
-  padding: [2, 3, 4],          // 2 on mobile, 3 on tablet, 4 on desktop
-}}>
+<div className="hidden md:flex p-2 md:p-3 lg:p-4 bg-bg text-fg font-display">
+  {/* hidden on mobile, flex on md+, padding scales up by breakpoint */}
+</div>
 ```
 
 ## Development
@@ -377,10 +400,10 @@ touch src/content/shows/my-show/index.mdx
 
 ## Troubleshooting
 
-**TypeScript Errors on `sx` prop:**
-- These are warnings from Theme UI's sx prop
-- Safe to ignore - the code works correctly
-- Theme UI extends HTML elements with the `sx` prop
+**Tailwind classes not applying:**
+- Ensure the class exists / is spelled correctly and that any custom token is defined in the `@theme` block in `src/styles/global.css`
+- Restart the dev server after editing `global.css` (PostCSS/Tailwind picks up token changes on rebuild)
+- Clear the Gatsby cache if styles seem stale: `gatsby clean && gatsby develop`
 
 **Audio Not Playing:**
 - Check R2 bucket CORS configuration

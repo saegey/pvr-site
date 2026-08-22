@@ -160,7 +160,7 @@ const AboutPage = () => {
           {/* Right: photo — full width on mobile, constrained on desktop */}
           <div className="overflow-hidden grayscale w-full" style={{ aspectRatio: '4/3' }}>
             <StaticImage
-              src="../images/DSC00847.png"
+              src="../images/DSC00847.jpg"
               alt="Public Vinyl Radio"
               placeholder="blurred"
               formats={['auto', 'webp']}

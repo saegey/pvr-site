@@ -455,5 +455,791 @@
         "thumbnail": "https://pub-67071468b10c4a7dac3df5cf90c980a8.r2.dev/events/human-people-inner-signals/photos/dsc02219-thumb.webp"
       }
     ]
+  },
+  {
+    "slug": "human-vibrations",
+    "startDateTime": "2025-12-13T17:00:00-08:00",
+    "endDateTime": "2025-12-13T21:00:00-08:00",
+    "title": "Human Vibrations",
+    "venue": "Human People Beer Café",
+    "location": "6105a Roosevelt Way NE, Roosevelt",
+    "description": "A packed, cozy night in Roosevelt: beer, pizza, warm lighting, and the debut of our new custom Seattle made Baltic high sensitivity birch speakers.",
+    "djs": [
+      "Saegey",
+      "TOPYEN"
+    ],
+    "maxPlusOnes": 0,
+    "rsvpEnabled": false,
+    "partnerLogo": "/images/human-people-logo.png",
+    "partnerLogoAlt": "Human People Beer Café",
+    "poster": "/images/human-vibrations/human-vibes-poster.webp",
+    "posterAlt": "Human Vibrations at Human People Beer Café — Public Vinyl Radio, December 13, 5–9 PM",
+    "tracklist": [
+      {
+        "title": "Lifeworld Part 1",
+        "artist": "Moon B",
+        "year": "2015",
+        "album": "Lifeworld",
+        "discogs_url": "https://www.discogs.com/release/7280023-Moon-B-Lifeworld",
+        "duration_seconds": 883,
+        "apple_music_url": "https://music.apple.com/us/album/lifeworld-part-1/943554974?i=943563041"
+      },
+      {
+        "title": "Lihue",
+        "artist": "Nohelani Cypriano",
+        "year": "2015",
+        "album": "Nohelani",
+        "discogs_url": "https://www.discogs.com/release/7140234-Nohelani-Cypriano-Nohelani",
+        "duration_seconds": 200,
+        "apple_music_url": "https://music.apple.com/us/album/lihue/210758088?i=210758942"
+      },
+      {
+        "title": "Sera A Posillipo",
+        "artist": "Rosa (49)",
+        "year": "2020",
+        "album": "Acqua Di Sale",
+        "discogs_url": "https://www.discogs.com/release/14681612-Rosa-49-Acqua-Di-Sale",
+        "duration_seconds": 286,
+        "apple_music_url": "https://music.apple.com/us/album/sera-a-posillipo/1579372721?i=1579372722"
+      },
+      {
+        "title": "Liza... Liza",
+        "artist": "Elias Rahbani And His Orchestra",
+        "year": "2017",
+        "album": "Mr Bongo Record Club Volume Two",
+        "discogs_url": "https://www.discogs.com/release/11056329-Various-Mr-Bongo-Record-Club-Volume-Two",
+        "duration_seconds": 325,
+        "apple_music_url": "https://music.apple.com/us/album/liza-liza/1640478517?i=1640479510"
+      },
+      {
+        "title": "Lady Jones",
+        "artist": "Over Drive",
+        "year": "2015",
+        "album": "French Disco Boogie Sounds (1975-1984)",
+        "discogs_url": "https://www.discogs.com/release/6843722-Various-French-Disco-Boogie-Sounds-1975-1984",
+        "duration_seconds": 269,
+        "youtube_url": "https://youtu.be/xPGfEQQy1H8?si=Vaxux50XJ-w6Y5oO"
+      },
+      {
+        "title": "Caucciù (Damecuta Version)",
+        "artist": "Pellegrino S. Snichelotto Pres. Zodyaco",
+        "year": "2020",
+        "album": "Caucciù",
+        "discogs_url": "https://www.discogs.com/release/14693895-Pellegrino-Pres-Zodyaco-Caucciù",
+        "duration_seconds": 262,
+        "youtube_url": "https://www.youtube.com/watch?v=NIEr38vmOR4"
+      },
+      {
+        "title": "Relax (Extended Waxist Version)",
+        "artist": "Painel De Controle",
+        "year": "2015",
+        "album": "Brazilian Disco Boogie Sounds (Extended 12\" Versions)",
+        "discogs_url": "https://www.discogs.com/release/7137088-Various-Brazilian-Disco-Boogie-Sounds-Extended-12-Versions",
+        "duration_seconds": 358,
+        "youtube_url": "https://www.youtube.com/watch?v=rTAF2gBtT_M"
+      },
+      {
+        "title": "Let's Boogie Now",
+        "artist": "Hangmen",
+        "year": "2009",
+        "album": "Let's Boogie Now / Naghihintay",
+        "discogs_url": "https://www.discogs.com/release/1761197-The-Hangmen-Soul-Jugglers-Lets-Boogie-Now-Naghihintay",
+        "duration_seconds": 151,
+        "youtube_url": "https://www.youtube.com/watch?v=1DCo1FnK5TI"
+      },
+      {
+        "title": "Are You Lonely?",
+        "artist": "Hipnotic",
+        "year": "2011",
+        "album": "Are You Lonely?",
+        "discogs_url": "https://www.discogs.com/release/3807297-Hipnotic-2-Are-You-Lonely",
+        "duration_seconds": 315,
+        "youtube_url": "https://www.youtube.com/watch?v=GiBwmMs8Ac0"
+      },
+      {
+        "title": "Who's Been Kissing You?",
+        "artist": "Hot Cuisine",
+        "year": "1981",
+        "album": "Who's Been Kissing You? / All Fired Up",
+        "discogs_url": "https://www.discogs.com/release/1780491-Hot-Cuisine-Whos-Been-Kissing-You-All-Fired-Up",
+        "duration_seconds": 335,
+        "youtube_url": "https://www.youtube.com/watch?v=SyOi_QPUnPc"
+      },
+      {
+        "title": "Enjoy Your Life",
+        "artist": "Oby Onyioha",
+        "year": "2016",
+        "album": "Doing It In Lagos (Boogie, Pop & Disco In 1980s Nigeria)",
+        "discogs_url": "https://www.discogs.com/release/9425519-Various-Doing-It-In-Lagos-Boogie-Pop-Disco-In-1980s-Nigeria",
+        "duration_seconds": 377,
+        "apple_music_url": "https://music.apple.com/us/album/enjoy-your-life/1612411157?i=1612411161"
+      },
+      {
+        "title": "Untamed Dub",
+        "artist": "Peter Hunnigale",
+        "year": "2017",
+        "album": "Untamed Love",
+        "discogs_url": "https://www.discogs.com/release/9874353-Peter-Hunnigale-Untamed-Love",
+        "duration_seconds": 378,
+        "apple_music_url": "https://music.apple.com/us/album/untamed-dub/1331980296?i=1331980640"
+      },
+      {
+        "title": "Ain't Nobody",
+        "artist": "Yvonne Archer",
+        "year": "2020",
+        "album": "Ain't Nobody",
+        "discogs_url": "https://www.discogs.com/release/14684986-Yvonne-Archer-Aint-Nobody",
+        "duration_seconds": 439,
+        "apple_music_url": "https://music.apple.com/us/album/aint-nobody-mix/1812821309?i=1812821310"
+      },
+      {
+        "title": "Don't Challenge Me",
+        "artist": "Makers",
+        "year": "2020",
+        "album": "Don't Challenge Me / You're Shy ",
+        "discogs_url": "https://www.discogs.com/release/15697400-Makers-Dont-Challenge-Me-Youre-Shy-",
+        "duration_seconds": 199,
+        "youtube_url": "https://youtu.be/ViN6qSpLgg4?si=EmTScGfBFs9HA4Ot"
+      },
+      {
+        "title": "American Love (Remix '87)",
+        "artist": "Rose Laurens",
+        "year": "1987",
+        "album": "American Love (Remix)",
+        "discogs_url": "https://www.discogs.com/release/774544-Rose-Laurens-American-Love-Remix",
+        "duration_seconds": 393,
+        "apple_music_url": "https://music.apple.com/us/album/american-love-remix/988460815?i=988460821"
+      },
+      {
+        "title": "Paratebueno (Porrocumbé)",
+        "artist": "Frente Cumbiero",
+        "year": "2025",
+        "album": "Inconcreto & Asociados",
+        "discogs_url": "https://www.discogs.com/release/34221052-Frente-Cumbiero-Inconcreto-Asociados",
+        "duration_seconds": 235,
+        "apple_music_url": "https://music.apple.com/us/album/paratebueno-feat-theon-cross/1803225733?i=1803225737"
+      },
+      {
+        "title": "Sonido Amazónico",
+        "artist": "Ranil Y Su Conjunto Tropical",
+        "year": "2025",
+        "album": "Sonido Amazónico",
+        "discogs_url": "https://www.discogs.com/release/34257718-Ranil-Y-Su-Conjunto-Tropical-Los-Wemblers-De-Iquitos-Sonido-Amazónico",
+        "duration_seconds": 191,
+        "apple_music_url": "https://music.apple.com/us/album/sonido-amaz%C3%B3nico/1823676120?i=1823676478"
+      },
+      {
+        "title": "Gaitana",
+        "artist": "La Sonora Mazuren",
+        "year": "2024",
+        "album": "Magnetismo Animal",
+        "discogs_url": "https://www.discogs.com/release/32122278-La-Sonora-Mazurén-Magnetismo-Animal",
+        "duration_seconds": 238,
+        "apple_music_url": "https://music.apple.com/us/album/gaitana/1762687031?i=1762687359"
+      },
+      {
+        "title": "La Anticuchera",
+        "artist": "Toño Y Sus Sicodelicos",
+        "year": "1968",
+        "album": "Sicodelico Tono",
+        "discogs_url": "https://www.discogs.com/release/9465196-Toño-Y-Sus-Sicodelicos-Sicodelico-Tono",
+        "duration_seconds": 131,
+        "apple_music_url": "https://music.apple.com/us/album/la-anticuchera/1734390134?i=1734390533"
+      },
+      {
+        "title": "Cubiamba",
+        "artist": "El Sexteto Miramar",
+        "year": "2023",
+        "album": "Cumbia Cumbia Cumbia!!! Vol. 1",
+        "discogs_url": "https://www.discogs.com/release/27878661-Various-Cumbia-Cumbia-Cumbia-Vol-1",
+        "duration_seconds": 152,
+        "apple_music_url": "https://music.apple.com/us/album/cumbiamba/1312644744?i=1312644951"
+      },
+      {
+        "title": "Tiene Sabor, Tiene Sazón",
+        "artist": "Ondatrópica",
+        "year": "2019",
+        "album": "Ondatrópica",
+        "discogs_url": "https://www.discogs.com/release/13293033-Ondatrópica-Ondatrópica",
+        "duration_seconds": 273,
+        "apple_music_url": "https://music.apple.com/us/album/tiene-sabor-tiene-saz%C3%B3n/1612414665?i=1612414668"
+      },
+      {
+        "title": "Chinito Rulo",
+        "artist": "Ranil Y Su Conjunto Tropical",
+        "year": "2025",
+        "album": "Sonido Amazonico",
+        "discogs_url": "https://www.discogs.com/release/34926212-Ranil-Y-Su-Conjunto-Tropical-Sonido-Amazonico",
+        "duration_seconds": 167,
+        "apple_music_url": "https://music.apple.com/us/album/chinito-rulo/1823676120?i=1823676476"
+      },
+      {
+        "title": "La Pesadilla",
+        "artist": "Meridian Brothers, Conjunto Media Luna",
+        "year": "2021",
+        "album": "Paz En La Tierra",
+        "discogs_url": "https://www.discogs.com/release/20777644-Meridian-Brothers-Conjunto-Media-Luna-Paz-En-La-Tierra",
+        "duration_seconds": 239,
+        "apple_music_url": "https://music.apple.com/us/album/la-pesadilla/1579557110?i=1579557416",
+        "spotify_url": "https://open.spotify.com/track/0u2XQPmiBGflgpn7dRUlSA"
+      },
+      {
+        "title": "Cumbia Roja",
+        "artist": "Amantes del Futuro",
+        "year": "2020",
+        "album": "Sabor Sónico",
+        "discogs_url": "https://www.discogs.com/release/22969529-Amantes-del-Futuro-Sabor-Sónico",
+        "duration_seconds": 250,
+        "apple_music_url": "https://music.apple.com/us/album/cumbia-roja/1462947052?i=1462947240"
+      },
+      {
+        "title": "La Danza de los Mirlos",
+        "artist": "Amantes del Futuro, Los Mirlos",
+        "year": "2024",
+        "album": "La danza de los Mirlos / La danza de los Mirlos (Amantes del Futuro Remix)",
+        "discogs_url": "https://www.discogs.com/release/32696106-Amantes-del-Futuro-Los-Mirlos-La-danza-de-los-Mirlos-La-danza-de-los-Mirlos-Amantes-del-Futuro-Remix",
+        "duration_seconds": 309,
+        "apple_music_url": "https://music.apple.com/us/album/la-danza-de-los-mirlos-remix/1817913306?i=1817913307"
+      },
+      {
+        "title": "I​ñ​ot",
+        "artist": "Columna De Fuego",
+        "year": "2024",
+        "album": "Pensamiento / I​ñ​ot",
+        "discogs_url": "https://www.discogs.com/release/31816439-Piper-Pimienta-Y-Su-Orquesta-Columna-De-Fuego-Pensamiento-Iñot",
+        "duration_seconds": 213,
+        "apple_music_url": "https://music.apple.com/us/album/i%C3%B1ot/1701968169?i=1701969091"
+      },
+      {
+        "title": "Santo Domingo",
+        "artist": "Los Cumbiamberos De Pacheco",
+        "year": "2009",
+        "album": "A Orillas Del Magdalena - Coastal Cumbias From Colombia's Discos Fuentes",
+        "discogs_url": "https://www.discogs.com/release/2005135-Various-A-Orillas-Del-Magdalena-Coastal-Cumbias-From-Colombias-Discos-Fuentes",
+        "duration_seconds": 174,
+        "apple_music_url": "https://music.apple.com/us/album/santo-domingo/344155290?i=344155480"
+      },
+      {
+        "title": "La Palmerita",
+        "artist": "Fresa Juvenil De Tarapoto",
+        "year": "2022",
+        "album": "Perú Selv​á​tico - Sonic Expedition Into The Peruvian Amazon 1972​-​1986",
+        "discogs_url": "https://www.discogs.com/release/25446994-Various-Perú-Selvático-Sonic-Expedition-Into-The-Peruvian-Amazon-1972-1986",
+        "duration_seconds": 177,
+        "apple_music_url": "https://music.apple.com/us/album/la-palmerita/1651145955?i=1651146179"
+      },
+      {
+        "title": "Arequipeñita",
+        "artist": "Silvestre Montez Y Sus Guantanameros",
+        "year": "2025",
+        "album": "Cumbia Cumbia Cumbia!!! (Vol. 3)",
+        "discogs_url": "https://www.discogs.com/release/33416876-Various-Cumbia-Cumbia-Cumbia-Vol-3",
+        "duration_seconds": 183,
+        "apple_music_url": "https://music.apple.com/us/album/arequipe%C3%B1ita/1793174787?i=1793175421"
+      },
+      {
+        "title": "Sí, Llegó La Primavera",
+        "artist": "Los Reyes 73",
+        "year": "2024",
+        "album": "Baila Mi Son",
+        "discogs_url": "https://www.discogs.com/release/31537918-Los-Reyes-73-Baila-Mi-Son",
+        "duration_seconds": 181,
+        "apple_music_url": "https://music.apple.com/us/album/si-llego-la-primavera/1620091254?i=1620091679"
+      },
+      {
+        "title": "En El Caribe Estoy Triste",
+        "artist": "Meridian Brothers",
+        "year": "2024",
+        "album": "Mi Latinoamérica Sufre",
+        "discogs_url": "https://www.discogs.com/release/31241104-Meridian-Brothers-Mi-Latinoamérica-Sufre",
+        "duration_seconds": 304,
+        "apple_music_url": "https://music.apple.com/us/album/en-el-caribe-estoy-triste/1773299751?i=1773299762"
+      },
+      {
+        "title": "Tequila! (Rebajada Remix)",
+        "artist": "Chicha Libre, Son Rompe Pera",
+        "year": "2024",
+        "album": "Tequila y Aguardiente ",
+        "discogs_url": "https://www.discogs.com/release/31134938-Chicha-Libre-Con-La-Sonora-Mazuren-Y-Son-Rompe-Pera-Tequila-y-Aguardiente-",
+        "duration_seconds": 286,
+        "youtube_url": "https://www.youtube.com/watch?v=kihGldprZcI"
+      },
+      {
+        "title": "Cumbia Triste",
+        "artist": "Antonio Leon Y Su Conjunto",
+        "year": "2024",
+        "album": "Cumbia Cumbia Cumbia!!! Vol. 2",
+        "discogs_url": "https://www.discogs.com/release/30705941-Various-Cumbia-Cumbia-Cumbia-Vol-2",
+        "duration_seconds": 172,
+        "apple_music_url": "https://music.apple.com/us/album/cumbia-triste/1711829724?i=1711829734"
+      },
+      {
+        "title": "The Lunatic Theme",
+        "artist": "Wally Badarou",
+        "year": "1990",
+        "album": "The Lunatic / The Lunatic Theme",
+        "discogs_url": "https://www.discogs.com/release/2910624-Admiral-Tibet-Wally-Badarou-The-Lunatic-The-Lunatic-Theme",
+        "duration_seconds": 115,
+        "youtube_url": "https://www.youtube.com/watch?v=7X5hmnV4zEc"
+      },
+      {
+        "title": "Dear Neptune,",
+        "artist": "Airships",
+        "year": "2015",
+        "album": "Edits",
+        "discogs_url": "https://www.discogs.com/release/7802474-Airships-2-Edits",
+        "duration_seconds": 236,
+        "youtube_url": "https://youtu.be/2PKUHDwyzmk?si=pEYHeCru0XgY7t3-"
+      },
+      {
+        "title": "Stop Bajon (Club Mix)",
+        "artist": "Tullio De Piscopo",
+        "year": "2018",
+        "album": "Stop Bajon",
+        "discogs_url": "https://www.discogs.com/release/12040730-Tullio-De-Piscopo-Stop-Bajon",
+        "duration_seconds": 434,
+        "apple_music_url": "https://music.apple.com/us/album/stop-bajon-club-mix/1339814218?i=1339814227"
+      },
+      {
+        "title": "Low Down Dirty Rhythm",
+        "artist": "Sarah Dash",
+        "year": "1983",
+        "album": "Low Down Dirty Rhythm",
+        "discogs_url": "https://www.discogs.com/release/134914-Sarah-Dash-Low-Down-Dirty-Rhythm",
+        "duration_seconds": 404,
+        "apple_music_url": "https://music.apple.com/us/album/low-down-dirty-rhythm/292204391?i=292204460"
+      },
+      {
+        "title": "I Believe In Miracle (Original Version)",
+        "artist": "Jackson Sisters",
+        "year": "0",
+        "album": "I Believe In Miracle",
+        "discogs_url": "https://www.discogs.com/release/3125248-Jackson-Sisters-I-Believe-In-Miracle",
+        "duration_seconds": 289,
+        "apple_music_url": "https://music.apple.com/us/album/i-believe-in-miracles/1443061549?i=1443061567"
+      },
+      {
+        "title": "Queen Of The Highway",
+        "artist": "Ja'net DuBois",
+        "year": "2020",
+        "album": "Queen Of The Highway / Standing There",
+        "discogs_url": "https://www.discogs.com/release/14920169-Janet-DuBois-Jady-Kurrent-Queen-Of-The-Highway-Standing-There",
+        "duration_seconds": 268,
+        "youtube_url": "https://www.youtube.com/watch?v=JD3K0crWlDE"
+      },
+      {
+        "title": "That's Where I Come In",
+        "artist": "The Verdict",
+        "year": "2024",
+        "album": "That's Where I Come In",
+        "discogs_url": "https://www.discogs.com/release/30948118-The-Verdict-2-Thats-Where-I-Come-In",
+        "duration_seconds": 255,
+        "apple_music_url": "https://music.apple.com/us/album/thats-where-i-come-in/1781103543?i=1781103548"
+      },
+      {
+        "title": "Over And Over",
+        "artist": "Shalamar",
+        "year": "1983",
+        "album": "Over And Over",
+        "discogs_url": "https://www.discogs.com/release/10054235-Shalamar-Over-And-Over",
+        "duration_seconds": 274,
+        "apple_music_url": "https://music.apple.com/us/album/over-and-over/292770691?i=292770699"
+      },
+      {
+        "title": "Un Fait Divers & Rien De Plus (Re-Re-Mix)",
+        "artist": "Le Club",
+        "year": "2015",
+        "album": "French Disco Boogie Sounds (1975-1984)",
+        "discogs_url": "https://www.discogs.com/release/6843722-Various-French-Disco-Boogie-Sounds-1975-1984",
+        "duration_seconds": 339,
+        "apple_music_url": "https://music.apple.com/us/album/un-fait-divers-et-rien-de-plus-re-re-mix/977939279?i=977940222"
+      },
+      {
+        "title": "(Xtra) Special",
+        "artist": "Dolette McDonald",
+        "year": "2021",
+        "album": "(Xtra) Special",
+        "discogs_url": "https://www.discogs.com/release/21461563-Dõlette-McDonald-Xtra-Special",
+        "duration_seconds": 427,
+        "youtube_url": "https://www.youtube.com/watch?v=CsNcxetgieE"
+      },
+      {
+        "title": "Honey Baby",
+        "artist": "U-Neak",
+        "year": "2024",
+        "album": "Pink Heat",
+        "discogs_url": "https://www.discogs.com/release/31974707-U-Neak-Pink-Heat",
+        "duration_seconds": 222,
+        "youtube_url": "https://www.youtube.com/watch?v=-_vCfHflWnM"
+      },
+      {
+        "title": "Do It For You",
+        "artist": "Mac Band Featuring The McCampbell Brothers",
+        "year": "2024",
+        "album": "Do It For You",
+        "discogs_url": "https://www.discogs.com/release/29602348-MAC-Band-Do-It-For-You",
+        "duration_seconds": 224,
+        "youtube_url": "https://youtu.be/niXG_k2hhN4?si=PY7NVd-gwqPpu21U"
+      },
+      {
+        "title": "Loving Sweet Devotion (Sweeter Mix)",
+        "artist": "Idiater Edwards",
+        "year": "2016",
+        "album": "Loving Sweet Devotion ",
+        "discogs_url": "https://www.discogs.com/release/9415035-Idiater-Edwards-Loving-Sweet-Devotion-",
+        "duration_seconds": 318,
+        "youtube_url": "https://youtu.be/-WJNNH6sruU?si=ZA2kztAoyKQDUqJ-"
+      },
+      {
+        "title": "Rated X",
+        "artist": "Psychic Mirrors",
+        "year": "2020",
+        "album": "Nature Of Evil",
+        "discogs_url": "https://www.discogs.com/release/14877491-Psychic-Mirrors-Nature-Of-Evil",
+        "duration_seconds": 260,
+        "apple_music_url": "https://music.apple.com/us/album/rated-x/1094938317?i=1094938489"
+      },
+      {
+        "title": " Pueblo",
+        "artist": "Grupo Celeste",
+        "year": "2023",
+        "album": "..El Fabuloso!",
+        "discogs_url": "https://www.discogs.com/release/28583425-Grupo-Celeste-El-Fabuloso",
+        "duration_seconds": 170,
+        "apple_music_url": "https://music.apple.com/us/album/pueblo-original-master-tapes/1711368044?i=1711368525"
+      },
+      {
+        "title": "El Pescador De Barú",
+        "artist": "Los Warahuaco",
+        "year": "2023",
+        "album": "Cumbia Cumbia Cumbia!!! Vol. 1",
+        "discogs_url": "https://www.discogs.com/release/27878661-Various-Cumbia-Cumbia-Cumbia-Vol-1",
+        "duration_seconds": 172,
+        "apple_music_url": "https://music.apple.com/us/album/el-pescador-de-bar%C3%BA/1686414302?i=1686416169"
+      },
+      {
+        "title": "El Bravo",
+        "artist": "Candeleros",
+        "year": "2023",
+        "album": "Club Coco: ¡AHORA! The Latin Sound Of Now",
+        "discogs_url": "https://www.discogs.com/release/27842745-Various-Club-Coco-AHORA-The-Latin-Sound-Of-Now",
+        "duration_seconds": 255,
+        "apple_music_url": "https://music.apple.com/us/album/el-bravo/1683811757?i=1683811772",
+        "spotify_url": "https://open.spotify.com/track/60wrggimdVozItF7Fj1XDx"
+      },
+      {
+        "title": "Cariñito",
+        "artist": "Los Hijos Del Sol",
+        "year": "2023",
+        "album": "The Roots Of Chicha (Psychedelic Cumbias From Peru)",
+        "discogs_url": "https://www.discogs.com/release/26715224-Various-The-Roots-Of-Chicha-Psychedelic-Cumbias-From-Peru",
+        "duration_seconds": 245,
+        "apple_music_url": "https://music.apple.com/us/album/cari%C3%B1ito/1248496107?i=1248496927",
+        "spotify_url": "https://open.spotify.com/track/2jQj5bsJeOad1YoaPWjJHm"
+      },
+      {
+        "title": "Alibaba",
+        "artist": "Los Zheros",
+        "year": "2022",
+        "album": "Perú Selv​á​tico - Sonic Expedition Into The Peruvian Amazon 1972​-​1986",
+        "discogs_url": "https://www.discogs.com/release/25446994-Various-Perú-Selvático-Sonic-Expedition-Into-The-Peruvian-Amazon-1972-1986",
+        "duration_seconds": 163,
+        "apple_music_url": "https://music.apple.com/us/album/alibaba/1651145955?i=1651146178"
+      },
+      {
+        "title": "El Diablo",
+        "artist": "Compay Quinto",
+        "year": "2023",
+        "album": "The Roots Of Chicha (Psychedelic Cumbias From Peru)",
+        "discogs_url": "https://www.discogs.com/release/26715224-Various-The-Roots-Of-Chicha-Psychedelic-Cumbias-From-Peru",
+        "duration_seconds": 166,
+        "apple_music_url": "https://music.apple.com/us/album/el-diablo/1469446127?i=1469446277"
+      },
+      {
+        "title": "La Luna Y La Playa",
+        "artist": "Los Golden Boys",
+        "year": "2022",
+        "album": "Cumbia De Juventud",
+        "discogs_url": "https://www.discogs.com/release/23102750-Los-Golden-Boys-Cumbia-De-Juventud",
+        "duration_seconds": 172,
+        "apple_music_url": "https://music.apple.com/us/album/la-luna-y-la-playa-with-benny-marquez/1577963264?i=1577963272"
+      },
+      {
+        "title": "Emerita",
+        "artist": "Tulio Enrique Leon",
+        "year": "1967",
+        "album": "La Pollera Corta / Sin Un Porque / Guarapera / Emerita",
+        "discogs_url": "https://www.discogs.com/release/15639215-Tulio-Enrique-Leon-La-Pollera-Corta-Sin-Un-Porque-Guarapera-Emerita",
+        "duration_seconds": 125,
+        "apple_music_url": "https://music.apple.com/us/album/emerita/1735905301?i=1735906321"
+      },
+      {
+        "title": "Salomé",
+        "artist": "Manzanita Y Su Conjunto",
+        "year": "2021",
+        "album": "Trujillo - Perú 1971-1974 ",
+        "discogs_url": "https://www.discogs.com/release/19319503-Manzanita-Y-Su-Conjunto-Trujillo-Peru-1971-1974-",
+        "duration_seconds": 168,
+        "apple_music_url": "https://music.apple.com/us/album/salom%C3%A9/1568128829?i=1568129171"
+      },
+      {
+        "title": "Volando Con Los Destellos",
+        "artist": "Los Destellos",
+        "year": "2019",
+        "album": "Sicodélicos",
+        "discogs_url": "https://www.discogs.com/release/13491658-Los-Destellos-Sicodélicos",
+        "duration_seconds": 206,
+        "apple_music_url": "https://music.apple.com/us/album/volando-con-los-destellos/1160319413?i=1160319716",
+        "spotify_url": "https://open.spotify.com/track/78NxO2CB9crWfEKC2gVaID"
+      },
+      {
+        "title": "Mi Caprichito",
+        "artist": "Los Wembler's De Iquitos",
+        "year": "2020",
+        "album": "Lamento Selvatico",
+        "discogs_url": "https://www.discogs.com/release/15428408-Los-Wemblers-De-Iquitos-Lamento-Selvatico",
+        "duration_seconds": 280,
+        "apple_music_url": "https://music.apple.com/us/album/mi-caprichito/1476086888?i=1476087168",
+        "spotify_url": "https://open.spotify.com/track/6BDQ2cvAZ0rKAfd6mKC8LJ"
+      },
+      {
+        "title": "Lobos Al Escape",
+        "artist": "Los Orientales De Paramonga",
+        "year": "2019",
+        "album": "Cumbia Beat Vol. 1 (Experimental Guitar-Driven Tropical Sounds From Perú 1966 1976)",
+        "discogs_url": "https://www.discogs.com/release/13437015-Various-Cumbia-Beat-Vol-1-Experimental-Guitar-Driven-Tropical-Sounds-From-Perú-1966-1976",
+        "duration_seconds": 153,
+        "apple_music_url": "https://music.apple.com/us/album/lobos-al-escape/1459146957?i=1459146967",
+        "spotify_url": "https://open.spotify.com/track/2UMTGUu66hP2dW3rvQJIgL"
+      },
+      {
+        "title": "Esperando Por Ti",
+        "artist": "Afrosound",
+        "year": "2021",
+        "album": "La Danza de Los Mirlos",
+        "discogs_url": "https://www.discogs.com/release/17963395-Afrosound-La-Danza-de-Los-Mirlos",
+        "duration_seconds": 188,
+        "apple_music_url": "https://music.apple.com/us/album/esperando-por-ti-instrumental/1391687485?i=1391688064"
+      },
+      {
+        "title": "La Cumbia Del Zapatero",
+        "artist": "Chicha Libre",
+        "year": "2019",
+        "album": "¡Sonido Amazonico!",
+        "discogs_url": "https://www.discogs.com/release/13453290-Chicha-Libre-Sonido-Amazonico",
+        "duration_seconds": 161,
+        "apple_music_url": "https://music.apple.com/us/album/la-cumbia-del-zapatero/274656134?i=274656331"
+      },
+      {
+        "title": "La Bollera",
+        "artist": "Joe Arroyo Y La Verdad",
+        "year": "1981",
+        "album": "Arroyando",
+        "discogs_url": "https://www.discogs.com/release/15263536-Joe-Arroyo-Y-La-Verdad-Arroyando",
+        "duration_seconds": 192,
+        "apple_music_url": "https://music.apple.com/us/album/la-bollera/277918310?i=277918346"
+      },
+      {
+        "title": "Descalzo",
+        "artist": "Terror/Cactus",
+        "year": "2025",
+        "album": "La Pantera",
+        "discogs_url": "https://www.discogs.com/release/34225120-Terror-Cactus-La-Pantera",
+        "duration_seconds": 207,
+        "apple_music_url": "https://music.apple.com/us/album/descalzo/1812882208?i=1812882211"
+      },
+      {
+        "title": "Lo Que Me Das",
+        "artist": "Miramar",
+        "year": "2025",
+        "album": "Entre Tus Flores ",
+        "discogs_url": "https://www.discogs.com/release/34245901-Miramar-7-Entre-Tus-Flores-",
+        "duration_seconds": 166,
+        "apple_music_url": "https://music.apple.com/us/album/lo-que-me-das/1770161737?i=1770162100"
+      },
+      {
+        "title": "Cumbia Disco Energy",
+        "artist": "Sonido Gallo Negro",
+        "year": "2022",
+        "discogs_url": "https://www.discogs.com/release/28676287-Sonido-Gallo-Negro-Paganismo",
+        "duration_seconds": 238,
+        "apple_music_url": "https://music.apple.com/us/album/cumbia-disco-energy-feat-polymarchs/1733066640?i=1733066645"
+      }
+    ],
+    "audioUrl": "https://pub-67071468b10c4a7dac3df5cf90c980a8.r2.dev/human-vibrations.mp3",
+    "photos": [
+      {
+        "original": "https://pub-67071468b10c4a7dac3df5cf90c980a8.r2.dev/events/human-vibrations/photos/dsc01619.webp",
+        "thumbnail": "https://pub-67071468b10c4a7dac3df5cf90c980a8.r2.dev/events/human-vibrations/photos/dsc01619-thumb.webp"
+      },
+      {
+        "original": "https://pub-67071468b10c4a7dac3df5cf90c980a8.r2.dev/events/human-vibrations/photos/dsc01619.webp",
+        "thumbnail": "https://pub-67071468b10c4a7dac3df5cf90c980a8.r2.dev/events/human-vibrations/photos/dsc01619-thumb.webp"
+      },
+      {
+        "original": "https://pub-67071468b10c4a7dac3df5cf90c980a8.r2.dev/events/human-vibrations/photos/dsc01622.webp",
+        "thumbnail": "https://pub-67071468b10c4a7dac3df5cf90c980a8.r2.dev/events/human-vibrations/photos/dsc01622-thumb.webp"
+      },
+      {
+        "original": "https://pub-67071468b10c4a7dac3df5cf90c980a8.r2.dev/events/human-vibrations/photos/dsc01623.webp",
+        "thumbnail": "https://pub-67071468b10c4a7dac3df5cf90c980a8.r2.dev/events/human-vibrations/photos/dsc01623-thumb.webp"
+      },
+      {
+        "original": "https://pub-67071468b10c4a7dac3df5cf90c980a8.r2.dev/events/human-vibrations/photos/dsc01625.webp",
+        "thumbnail": "https://pub-67071468b10c4a7dac3df5cf90c980a8.r2.dev/events/human-vibrations/photos/dsc01625-thumb.webp"
+      },
+      {
+        "original": "https://pub-67071468b10c4a7dac3df5cf90c980a8.r2.dev/events/human-vibrations/photos/dsc01635.webp",
+        "thumbnail": "https://pub-67071468b10c4a7dac3df5cf90c980a8.r2.dev/events/human-vibrations/photos/dsc01635-thumb.webp"
+      },
+      {
+        "original": "https://pub-67071468b10c4a7dac3df5cf90c980a8.r2.dev/events/human-vibrations/photos/dsc01636.webp",
+        "thumbnail": "https://pub-67071468b10c4a7dac3df5cf90c980a8.r2.dev/events/human-vibrations/photos/dsc01636-thumb.webp"
+      },
+      {
+        "original": "https://pub-67071468b10c4a7dac3df5cf90c980a8.r2.dev/events/human-vibrations/photos/dsc01638.webp",
+        "thumbnail": "https://pub-67071468b10c4a7dac3df5cf90c980a8.r2.dev/events/human-vibrations/photos/dsc01638-thumb.webp"
+      },
+      {
+        "original": "https://pub-67071468b10c4a7dac3df5cf90c980a8.r2.dev/events/human-vibrations/photos/dsc01639.webp",
+        "thumbnail": "https://pub-67071468b10c4a7dac3df5cf90c980a8.r2.dev/events/human-vibrations/photos/dsc01639-thumb.webp"
+      },
+      {
+        "original": "https://pub-67071468b10c4a7dac3df5cf90c980a8.r2.dev/events/human-vibrations/photos/dsc01640.webp",
+        "thumbnail": "https://pub-67071468b10c4a7dac3df5cf90c980a8.r2.dev/events/human-vibrations/photos/dsc01640-thumb.webp"
+      },
+      {
+        "original": "https://pub-67071468b10c4a7dac3df5cf90c980a8.r2.dev/events/human-vibrations/photos/dsc01645.webp",
+        "thumbnail": "https://pub-67071468b10c4a7dac3df5cf90c980a8.r2.dev/events/human-vibrations/photos/dsc01645-thumb.webp"
+      },
+      {
+        "original": "https://pub-67071468b10c4a7dac3df5cf90c980a8.r2.dev/events/human-vibrations/photos/dsc01648.webp",
+        "thumbnail": "https://pub-67071468b10c4a7dac3df5cf90c980a8.r2.dev/events/human-vibrations/photos/dsc01648-thumb.webp"
+      },
+      {
+        "original": "https://pub-67071468b10c4a7dac3df5cf90c980a8.r2.dev/events/human-vibrations/photos/dsc01651.webp",
+        "thumbnail": "https://pub-67071468b10c4a7dac3df5cf90c980a8.r2.dev/events/human-vibrations/photos/dsc01651-thumb.webp"
+      },
+      {
+        "original": "https://pub-67071468b10c4a7dac3df5cf90c980a8.r2.dev/events/human-vibrations/photos/dsc01670.webp",
+        "thumbnail": "https://pub-67071468b10c4a7dac3df5cf90c980a8.r2.dev/events/human-vibrations/photos/dsc01670-thumb.webp"
+      },
+      {
+        "original": "https://pub-67071468b10c4a7dac3df5cf90c980a8.r2.dev/events/human-vibrations/photos/dsc01676.webp",
+        "thumbnail": "https://pub-67071468b10c4a7dac3df5cf90c980a8.r2.dev/events/human-vibrations/photos/dsc01676-thumb.webp"
+      },
+      {
+        "original": "https://pub-67071468b10c4a7dac3df5cf90c980a8.r2.dev/events/human-vibrations/photos/dsc01677.webp",
+        "thumbnail": "https://pub-67071468b10c4a7dac3df5cf90c980a8.r2.dev/events/human-vibrations/photos/dsc01677-thumb.webp"
+      },
+      {
+        "original": "https://pub-67071468b10c4a7dac3df5cf90c980a8.r2.dev/events/human-vibrations/photos/dsc01679.webp",
+        "thumbnail": "https://pub-67071468b10c4a7dac3df5cf90c980a8.r2.dev/events/human-vibrations/photos/dsc01679-thumb.webp"
+      },
+      {
+        "original": "https://pub-67071468b10c4a7dac3df5cf90c980a8.r2.dev/events/human-vibrations/photos/dsc01680.webp",
+        "thumbnail": "https://pub-67071468b10c4a7dac3df5cf90c980a8.r2.dev/events/human-vibrations/photos/dsc01680-thumb.webp"
+      },
+      {
+        "original": "https://pub-67071468b10c4a7dac3df5cf90c980a8.r2.dev/events/human-vibrations/photos/dsc01681.webp",
+        "thumbnail": "https://pub-67071468b10c4a7dac3df5cf90c980a8.r2.dev/events/human-vibrations/photos/dsc01681-thumb.webp"
+      },
+      {
+        "original": "https://pub-67071468b10c4a7dac3df5cf90c980a8.r2.dev/events/human-vibrations/photos/dsc01686.webp",
+        "thumbnail": "https://pub-67071468b10c4a7dac3df5cf90c980a8.r2.dev/events/human-vibrations/photos/dsc01686-thumb.webp"
+      },
+      {
+        "original": "https://pub-67071468b10c4a7dac3df5cf90c980a8.r2.dev/events/human-vibrations/photos/dsc01693.webp",
+        "thumbnail": "https://pub-67071468b10c4a7dac3df5cf90c980a8.r2.dev/events/human-vibrations/photos/dsc01693-thumb.webp"
+      },
+      {
+        "original": "https://pub-67071468b10c4a7dac3df5cf90c980a8.r2.dev/events/human-vibrations/photos/dsc01698.webp",
+        "thumbnail": "https://pub-67071468b10c4a7dac3df5cf90c980a8.r2.dev/events/human-vibrations/photos/dsc01698-thumb.webp"
+      },
+      {
+        "original": "https://pub-67071468b10c4a7dac3df5cf90c980a8.r2.dev/events/human-vibrations/photos/dsc01700.webp",
+        "thumbnail": "https://pub-67071468b10c4a7dac3df5cf90c980a8.r2.dev/events/human-vibrations/photos/dsc01700-thumb.webp"
+      },
+      {
+        "original": "https://pub-67071468b10c4a7dac3df5cf90c980a8.r2.dev/events/human-vibrations/photos/dsc01704.webp",
+        "thumbnail": "https://pub-67071468b10c4a7dac3df5cf90c980a8.r2.dev/events/human-vibrations/photos/dsc01704-thumb.webp"
+      },
+      {
+        "original": "https://pub-67071468b10c4a7dac3df5cf90c980a8.r2.dev/events/human-vibrations/photos/dsc01707.webp",
+        "thumbnail": "https://pub-67071468b10c4a7dac3df5cf90c980a8.r2.dev/events/human-vibrations/photos/dsc01707-thumb.webp"
+      },
+      {
+        "original": "https://pub-67071468b10c4a7dac3df5cf90c980a8.r2.dev/events/human-vibrations/photos/dsc01711.webp",
+        "thumbnail": "https://pub-67071468b10c4a7dac3df5cf90c980a8.r2.dev/events/human-vibrations/photos/dsc01711-thumb.webp"
+      },
+      {
+        "original": "https://pub-67071468b10c4a7dac3df5cf90c980a8.r2.dev/events/human-vibrations/photos/dsc01712.webp",
+        "thumbnail": "https://pub-67071468b10c4a7dac3df5cf90c980a8.r2.dev/events/human-vibrations/photos/dsc01712-thumb.webp"
+      },
+      {
+        "original": "https://pub-67071468b10c4a7dac3df5cf90c980a8.r2.dev/events/human-vibrations/photos/dsc01713.webp",
+        "thumbnail": "https://pub-67071468b10c4a7dac3df5cf90c980a8.r2.dev/events/human-vibrations/photos/dsc01713-thumb.webp"
+      },
+      {
+        "original": "https://pub-67071468b10c4a7dac3df5cf90c980a8.r2.dev/events/human-vibrations/photos/dsc01715.webp",
+        "thumbnail": "https://pub-67071468b10c4a7dac3df5cf90c980a8.r2.dev/events/human-vibrations/photos/dsc01715-thumb.webp"
+      },
+      {
+        "original": "https://pub-67071468b10c4a7dac3df5cf90c980a8.r2.dev/events/human-vibrations/photos/dsc01719.webp",
+        "thumbnail": "https://pub-67071468b10c4a7dac3df5cf90c980a8.r2.dev/events/human-vibrations/photos/dsc01719-thumb.webp"
+      },
+      {
+        "original": "https://pub-67071468b10c4a7dac3df5cf90c980a8.r2.dev/events/human-vibrations/photos/dsc01724.webp",
+        "thumbnail": "https://pub-67071468b10c4a7dac3df5cf90c980a8.r2.dev/events/human-vibrations/photos/dsc01724-thumb.webp"
+      },
+      {
+        "original": "https://pub-67071468b10c4a7dac3df5cf90c980a8.r2.dev/events/human-vibrations/photos/dsc01726.webp",
+        "thumbnail": "https://pub-67071468b10c4a7dac3df5cf90c980a8.r2.dev/events/human-vibrations/photos/dsc01726-thumb.webp"
+      },
+      {
+        "original": "https://pub-67071468b10c4a7dac3df5cf90c980a8.r2.dev/events/human-vibrations/photos/dsc01728.webp",
+        "thumbnail": "https://pub-67071468b10c4a7dac3df5cf90c980a8.r2.dev/events/human-vibrations/photos/dsc01728-thumb.webp"
+      },
+      {
+        "original": "https://pub-67071468b10c4a7dac3df5cf90c980a8.r2.dev/events/human-vibrations/photos/dsc01729.webp",
+        "thumbnail": "https://pub-67071468b10c4a7dac3df5cf90c980a8.r2.dev/events/human-vibrations/photos/dsc01729-thumb.webp"
+      },
+      {
+        "original": "https://pub-67071468b10c4a7dac3df5cf90c980a8.r2.dev/events/human-vibrations/photos/dsc01731.webp",
+        "thumbnail": "https://pub-67071468b10c4a7dac3df5cf90c980a8.r2.dev/events/human-vibrations/photos/dsc01731-thumb.webp"
+      },
+      {
+        "original": "https://pub-67071468b10c4a7dac3df5cf90c980a8.r2.dev/events/human-vibrations/photos/dsc01740.webp",
+        "thumbnail": "https://pub-67071468b10c4a7dac3df5cf90c980a8.r2.dev/events/human-vibrations/photos/dsc01740-thumb.webp"
+      },
+      {
+        "original": "https://pub-67071468b10c4a7dac3df5cf90c980a8.r2.dev/events/human-vibrations/photos/dsc01742.webp",
+        "thumbnail": "https://pub-67071468b10c4a7dac3df5cf90c980a8.r2.dev/events/human-vibrations/photos/dsc01742-thumb.webp"
+      },
+      {
+        "original": "https://pub-67071468b10c4a7dac3df5cf90c980a8.r2.dev/events/human-vibrations/photos/dsc01744.webp",
+        "thumbnail": "https://pub-67071468b10c4a7dac3df5cf90c980a8.r2.dev/events/human-vibrations/photos/dsc01744-thumb.webp"
+      },
+      {
+        "original": "https://pub-67071468b10c4a7dac3df5cf90c980a8.r2.dev/events/human-vibrations/photos/dsc01748.webp",
+        "thumbnail": "https://pub-67071468b10c4a7dac3df5cf90c980a8.r2.dev/events/human-vibrations/photos/dsc01748-thumb.webp"
+      },
+      {
+        "original": "https://pub-67071468b10c4a7dac3df5cf90c980a8.r2.dev/events/human-vibrations/photos/dsc01750.webp",
+        "thumbnail": "https://pub-67071468b10c4a7dac3df5cf90c980a8.r2.dev/events/human-vibrations/photos/dsc01750-thumb.webp"
+      },
+      {
+        "original": "https://pub-67071468b10c4a7dac3df5cf90c980a8.r2.dev/events/human-vibrations/photos/dsc01751.webp",
+        "thumbnail": "https://pub-67071468b10c4a7dac3df5cf90c980a8.r2.dev/events/human-vibrations/photos/dsc01751-thumb.webp"
+      },
+      {
+        "original": "https://pub-67071468b10c4a7dac3df5cf90c980a8.r2.dev/events/human-vibrations/photos/dsc01757.webp",
+        "thumbnail": "https://pub-67071468b10c4a7dac3df5cf90c980a8.r2.dev/events/human-vibrations/photos/dsc01757-thumb.webp"
+      },
+      {
+        "original": "https://pub-67071468b10c4a7dac3df5cf90c980a8.r2.dev/events/human-vibrations/photos/dsc01759.webp",
+        "thumbnail": "https://pub-67071468b10c4a7dac3df5cf90c980a8.r2.dev/events/human-vibrations/photos/dsc01759-thumb.webp"
+      }
+    ]
   }
 ]

@@ -140,7 +140,7 @@ const PublicEventTemplate: React.FC<{ pageContext: { event: PublicEvent } }> = (
                   <p className="text-xs tracking-[2px] uppercase text-fg/55">Recap</p>
                   {event.audioUrl && (
                     <div className="mt-5">
-                      <R2AudioPlayer url={event.audioUrl} title={event.title} showDownload={false} />
+                      <R2AudioPlayer url={event.audioUrl} title={event.title} showDownload={true} />
                     </div>
                   )}
                   {event.tracklist && event.tracklist.length > 0 && (

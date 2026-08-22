@@ -3,7 +3,7 @@ import { graphql, Link, HeadProps } from 'gatsby'
 import SEO from '../components/seo'
 import ImageCarousel from '../components/image-carousel'
 import R2AudioPlayer from '../components/r2-audio-player'
-import TracklistRow from '../components/tracklist-row'
+import Tracklist from '../components/tracklist'
 import PhotoCollage from '../components/photo-collage'
 import {
   formatEventDate,
@@ -145,9 +145,7 @@ const PublicEventTemplate: React.FC<{ pageContext: { event: PublicEvent } }> = (
                   )}
                   {event.tracklist && event.tracklist.length > 0 && (
                     <div className="mt-6">
-                      {event.tracklist.map((track, index) => (
-                        <TracklistRow key={`${track.artist}-${track.title}-${index}`} track={track} index={index} />
-                      ))}
+                      <Tracklist tracks={event.tracklist} />
                     </div>
                   )}
                   {event.photos && event.photos.length > 0 && (

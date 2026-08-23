@@ -302,7 +302,7 @@ const ProductCard = ({ product }: { product: Product }) => {
 
       {lightboxIndex !== null && (
         <Lightbox
-          images={product.images}
+          images={product.images.map(cardImageSrc)}
           index={lightboxIndex}
           onClose={() => setLightboxIndex(null)}
         />

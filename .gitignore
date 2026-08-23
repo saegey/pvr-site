@@ -11,3 +11,11 @@ src/gatsby-types.d.ts
 
 # Locally generated customer order PDFs
 .generated/orders/
+
+# Shop image sources — only the generated .webp derivatives are tracked/served.
+# Keep originals outside git; `npm run shop:images` reads them locally to
+# regenerate webp when you drop them back into static/images/shop/<id>/.
+static/images/shop/**/*.png
+static/images/shop/**/*.jpg
+static/images/shop/**/*.jpeg
+static/images/shop/**/*.psd

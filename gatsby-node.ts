@@ -77,7 +77,14 @@ exports.createPages = async ({
   actions: any;
   graphql: any;
 }) => {
-  const { createPage } = actions;
+  const { createPage, createRedirect } = actions;
+
+  // Halloween Bassment moved from a show to a public event.
+  createRedirect({
+    fromPath: `/shows/halloween-bassment`,
+    toPath: `/events/halloween-bassment`,
+    isPermanent: true,
+  });
 
   const result = await graphql(`
     query CreatePagesAllMdxQuery {

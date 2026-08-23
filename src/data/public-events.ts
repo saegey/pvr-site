@@ -23,6 +23,8 @@ export type PublicEvent = {
   posterAlt?: string
   /** Optional gallery of flyer variants shown in a carousel. */
   flyers?: { original: string; thumbnail?: string; description?: string }[]
+  /** YouTube video id for a recap video, shown in the Recap section when set. */
+  youtubeId?: string
   /** Public URL of the recorded set (MP3 on R2), shown as a player after the event. */
   audioUrl?: string
   /** Groovenet playlist id this recap was pulled from. Stored for provenance; not rendered as a public link (groovenet is Tailscale-only). */

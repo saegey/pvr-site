@@ -5,6 +5,7 @@ import ImageCarousel from '../components/image-carousel'
 import R2AudioPlayer from '../components/r2-audio-player'
 import Tracklist from '../components/tracklist'
 import PhotoCollage from '../components/photo-collage'
+import ResponsiveYouTube from '../components/youtube'
 import {
   formatEventDate,
   formatTimeRange,
@@ -133,11 +134,17 @@ const PublicEventTemplate: React.FC<{ pageContext: { event: PublicEvent } }> = (
                 <p className="mt-3">{formatTimeRange(event.startDateTime, event.endDateTime)} · with {event.djs.join(', ')}</p>
               </div>
 
-              {(event.audioUrl ||
+              {(event.youtubeId ||
+                event.audioUrl ||
                 (event.tracklist && event.tracklist.length > 0) ||
                 (event.photos && event.photos.length > 0)) && (
                 <div className="mt-10 border-t border-fg/12 pt-8">
                   <p className="text-xs tracking-[2px] uppercase text-fg/55">Recap</p>
+                  {event.youtubeId && (
+                    <div className="mt-5">
+                      <ResponsiveYouTube videoId={event.youtubeId} />
+                    </div>
+                  )}
                   {event.audioUrl && (
                     <div className="mt-5">
                       <R2AudioPlayer url={event.audioUrl} title={event.title} showDownload={true} />

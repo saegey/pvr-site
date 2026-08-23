@@ -59,7 +59,7 @@ const ProductTemplate = ({ pageContext }: { pageContext: ProductPageContext }) =
                     sizes="(max-width: 1023px) 100vw, 58vw"
                   />
                   <img
-                    src={activeImage}
+                    src={activeWebpImage}
                     alt={`${product.name} — image ${imageIndex + 1}`}
                     className="w-full h-full object-cover"
                     decoding="async"
@@ -92,7 +92,7 @@ const ProductTemplate = ({ pageContext }: { pageContext: ProductPageContext }) =
                   >
                     <picture className="block w-full h-full">
                       <source type="image/webp" srcSet={thumbnailImageSrc(image)} />
-                      <img src={image} alt="" className="w-full h-full object-cover" loading="lazy" decoding="async" />
+                      <img src={thumbnailImageSrc(image)} alt="" className="w-full h-full object-cover" loading="lazy" decoding="async" />
                     </picture>
                   </button>
                 ))}
@@ -164,7 +164,7 @@ export const Head = ({ pageContext }: HeadProps<object, ProductPageContext>) => 
   const { product } = pageContext
   const productUrl = `https://publicvinylradio.com/shop/${product.id}`
   const socialImage = product.images[0]
-    ? `https://publicvinylradio.com${product.images[0]}`
+    ? `https://publicvinylradio.com${webpImageSrc(product.images[0])}`
     : undefined
   return (
     <SEO

@@ -62,8 +62,14 @@ const PhotoCollage: React.FC<{ photos: CollagePhoto[] }> = ({ photos }) => {
           aria-modal="true"
           aria-label="Event photos"
         >
+          {/* Fullscreen viewer: override ImageCarousel's fixed 500px slide so the
+              photo fills the viewport on desktop. Scoped to .pc-fullscreen so
+              inline gallery/flyer carousels keep their default height. */}
+          <style>{`
+            .pc-fullscreen .image-gallery-slide { height: calc(100vh - 200px); }
+          `}</style>
           <div className="shrink-0 bg-bg border-b border-fg/12">
-            <div className="max-w-3xl mx-auto px-8 py-5 sm:px-12 flex items-center justify-between gap-4">
+            <div className="max-w-[1600px] mx-auto px-8 py-5 sm:px-12 flex items-center justify-between gap-4">
               <p className="text-xs tracking-[2px] uppercase text-fg/55">
                 Photos · {photos.length}
               </p>
@@ -77,7 +83,7 @@ const PhotoCollage: React.FC<{ photos: CollagePhoto[] }> = ({ photos }) => {
             </div>
           </div>
           <div className="flex-1 min-h-0 flex items-center">
-            <div className="w-full max-w-3xl mx-auto px-4 sm:px-12">
+            <div className="pc-fullscreen w-full max-w-[1600px] mx-auto px-4 sm:px-12">
               <ImageCarousel
                 images={photos}
                 startIndex={openIndex ?? 0}

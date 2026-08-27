@@ -47,10 +47,21 @@ const Layout = ({ children, pathname }: { children: ReactNode; pathname?: string
 
   useEffect(() => { setMounted(true) }, [])
 
-  // Lock body scroll when menu is open
+  // Lock body scroll when the menu is open. Uses position:fixed (not just
+  // overflow:hidden, which iOS Safari ignores for touch) and restores the
+  // scroll position on close.
   useEffect(() => {
-    document.body.style.overflow = menuOpen ? 'hidden' : ''
-    return () => { document.body.style.overflow = '' }
+    if (!menuOpen) return
+    const scrollY = window.scrollY
+    document.body.style.position = 'fixed'
+    document.body.style.top = `-${scrollY}px`
+    document.body.style.width = '100%'
+    return () => {
+      document.body.style.position = ''
+      document.body.style.top = ''
+      document.body.style.width = ''
+      window.scrollTo(0, scrollY)
+    }
   }, [menuOpen])
 
   return (
@@ -107,9 +118,8 @@ const Layout = ({ children, pathname }: { children: ReactNode; pathname?: string
             <ThemeToggle />
           </nav>
 
-          {/* Mobile: theme + hamburger */}
+          {/* Mobile: hamburger (theme toggle now lives in the menu) */}
           <div className="flex items-center gap-4 md:hidden ml-auto">
-            <ThemeToggle />
           <button
             className="relative flex w-8 h-8 shrink-0 items-center justify-center"
             onClick={() => setMenuOpen((v) => !v)}
@@ -143,38 +153,36 @@ const Layout = ({ children, pathname }: { children: ReactNode; pathname?: string
 
       {/* Mobile full-screen overlay */}
       {menuOpen && (
-        <div className="fixed inset-0 z-40 bg-bg flex flex-col px-8 pt-24 pb-12">
+        <div className="fixed inset-0 z-40 bg-bg flex flex-col px-8 pt-24 pb-12 overflow-y-auto overscroll-contain">
           <nav className="flex flex-col gap-2 flex-1">
             {NAV_LINKS.map(({ label, to }) => (
               <Link
                 key={to}
                 to={to}
                 onClick={() => setMenuOpen(false)}
-                className="text-fg/80 hover:text-fg transition-colors duration-150 py-4 border-b border-fg/12"
-                style={{
-                  fontFamily: 'var(--font-display)',
-                  fontSize: 'clamp(36px, 10vw, 56px)',
-                  letterSpacing: '-0.5px',
-                }}
+                className="font-mono font-medium uppercase tracking-[3px] text-xl text-fg/80 hover:text-fg transition-colors duration-150 py-4 border-b border-fg/12"
               >
                 {label}
               </Link>
             ))}
           </nav>
 
-          {/* External links at bottom */}
-          <div className="flex gap-6 pt-8 border-t border-fg/12">
-            {EXTERNAL_LINKS.map(({ label, href }) => (
-              <a
-                key={href}
-                href={href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-xs tracking-[2px] uppercase text-fg/55 hover:text-fg/70 transition-colors"
-              >
-                {label}
-              </a>
-            ))}
+          {/* External links + theme toggle at bottom */}
+          <div className="flex items-center justify-between gap-6 pt-8 border-t border-fg/12">
+            <div className="flex gap-6">
+              {EXTERNAL_LINKS.map(({ label, href }) => (
+                <a
+                  key={href}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-xs tracking-[2px] uppercase text-fg/55 hover:text-fg/70 transition-colors"
+                >
+                  {label}
+                </a>
+              ))}
+            </div>
+            <ThemeToggle />
           </div>
         </div>
       )}

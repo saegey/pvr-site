@@ -210,7 +210,7 @@ html, body {
    multiplies onto the cream page (white drops out → dark marks); in dark mode
    it's inverted and screened onto the near-black page (black drops out → light
    marks). Reusable per page — override the image and scale inline:
-     style={{ '--grunge-image': "url('/images/weave-texture.webp')",
+     style={{ '--grunge-image': "url('/images/your-texture.webp')",
               '--grunge-size': '500px' } as React.CSSProperties} */
 .hero-grunge {
   --grunge-size: 640px;

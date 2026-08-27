@@ -37,22 +37,19 @@ export default function ShowsArchivePage({ data }: PageProps<DataProps>) {
       <div className="relative overflow-hidden">
         <div
           className="hero-grunge absolute inset-0 pointer-events-none"
-          style={{ opacity: 0.12, '--grunge-image': "url('/images/lines-reverse.webp')", '--grunge-size': '160px' } as React.CSSProperties}
+          style={{ opacity: 0.12, '--grunge-image': "url('/images/lines-wiggle.webp')", '--grunge-size': '200px' } as React.CSSProperties}
           aria-hidden="true"
         />
         <div className="relative max-w-[1320px] mx-auto px-4 md:px-12 pt-16 pb-12">
           <p className="text-xs tracking-[2px] uppercase font-medium text-fg/80 mb-6">Archive</p>
           <h1 className="text-fg leading-tight mb-10" style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(34px, 4.5vw, 60px)', letterSpacing: '-0.5px' }}>Recorded Live on Vinyl</h1>
-          <div className="border-t border-fg/12 pt-8 max-w-[640px]">
+          <div className="max-w-[640px]">
             <p className="font-text font-medium text-base text-fg/85 leading-[1.8]">Recorded vinyl sets, track-by-track journeys, and live selections from PVR.</p>
           </div>
         </div>
       </div>
 
-      {/* Full-bleed rule below the hero */}
-      <div className="border-t border-fg/12" aria-hidden="true" />
-
-      <section className="max-w-[1320px] mx-auto px-4 md:px-12 pb-12">
+      <section className="max-w-[1320px] mx-auto px-4 md:px-12 pt-10 pb-12">
         <div className="border-b border-fg/12 py-4 flex justify-between text-xs tracking-[1px] text-fg/55">
           <span className="uppercase">All shows</span>
           <span>{Math.min(visible, shows.length)} of {shows.length}</span>

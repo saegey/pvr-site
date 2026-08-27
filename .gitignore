@@ -1,6 +1,12 @@
 node_modules/
 .cache/
 public
+
+# The global ~/.gitignore has an "Icon?" rule (for macOS Icon\r files) that,
+# on a case-insensitive filesystem, also matches the "icons" directory and
+# silently ignores new files in src/icons/. Re-include it so SVGs get tracked.
+!/src/icons/
+!/src/icons/**
 src/gatsby-types.d.ts
 .DS_Store
 **/.DS_Store

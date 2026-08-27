@@ -42,10 +42,25 @@ const PublicEventTemplate: React.FC<{ pageContext: { event: PublicEvent } }> = (
   const [summary, setSummary] = useState<RsvpSummary | null>(null)
   // Resolved after mount so SSR matches; a passed event hides its RSVP form.
   const [isPast, setIsPast] = useState(false)
+  const [posterOpen, setPosterOpen] = useState(false)
 
   useEffect(() => {
     setIsPast(isPastEvent(event))
   }, [event])
+
+  // Flyer lightbox: close on Escape, lock body scroll while open.
+  useEffect(() => {
+    if (!posterOpen) return
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setPosterOpen(false)
+    }
+    document.addEventListener('keydown', onKey)
+    document.body.style.overflow = 'hidden'
+    return () => {
+      document.removeEventListener('keydown', onKey)
+      document.body.style.overflow = ''
+    }
+  }, [posterOpen])
 
   useEffect(() => {
     fetch(`/api/rsvp?slug=${encodeURIComponent(event.slug)}`)
@@ -104,7 +119,7 @@ const PublicEventTemplate: React.FC<{ pageContext: { event: PublicEvent } }> = (
               >
                 {event.title}
               </h1>
-              <p className="mt-6 max-w-2xl text-base leading-relaxed text-fg/75 md:text-lg">
+              <p className="font-text mt-6 max-w-2xl text-lg leading-relaxed text-fg/75 md:text-xl">
                 {event.description}
               </p>
 
@@ -113,17 +128,27 @@ const PublicEventTemplate: React.FC<{ pageContext: { event: PublicEvent } }> = (
                   <ImageCarousel
                     images={event.flyers}
                     showThumbnails={event.flyers.length > 1}
-                    showFullscreenButton={false}
+                    showFullscreenButton={true}
                   />
                 </div>
               ) : (
                 event.poster && (
-                  <div className="mt-10">
-                    <img
-                      src={event.poster}
-                      alt={event.posterAlt ?? event.title}
-                      className="w-full max-w-xl border border-fg/15"
-                    />
+                  <div className="mt-10 flex flex-col items-center">
+                    <button
+                      type="button"
+                      onClick={() => setPosterOpen(true)}
+                      className="group block w-full max-w-xs md:max-w-sm cursor-zoom-in"
+                      aria-label="Enlarge flyer"
+                    >
+                      <img
+                        src={event.poster}
+                        alt={event.posterAlt ?? event.title}
+                        className="w-full border border-fg/15 transition-opacity group-hover:opacity-90"
+                      />
+                      <span className="mt-2 block text-center text-[11px] tracking-[1px] uppercase text-fg/45 group-hover:text-fg/70 transition-colors">
+                        Tap to enlarge
+                      </span>
+                    </button>
                   </div>
                 )
               )}
@@ -239,21 +264,21 @@ const PublicEventTemplate: React.FC<{ pageContext: { event: PublicEvent } }> = (
 
               <div className="mt-10 border-t border-fg/12 pt-8">
                 <div className="flex items-center gap-4 md:gap-6">
-                  <div className="flex h-16 flex-1 items-center justify-center border border-white/20 px-4 md:h-24">
+                  <div className="flex h-16 flex-1 items-center justify-center border border-fg/20 px-4 md:h-24">
                     <img
                       src="/images/pvr-logo-white.svg"
                       alt="Public Vinyl Radio"
-                      className="max-h-10 w-full object-contain md:max-h-14"
+                      className="logo-adaptive max-h-10 w-full object-contain md:max-h-14"
                     />
                   </div>
                   {event.partnerLogo && (
                     <>
-                      <span className="text-white/40 text-lg">×</span>
-                      <div className="flex h-16 flex-1 items-center justify-center border border-white/20 px-4 md:h-24">
+                      <span className="text-fg/40 text-lg">×</span>
+                      <div className="flex h-16 flex-1 items-center justify-center border border-fg/20 px-4 md:h-24">
                         <img
                           src={event.partnerLogo}
                           alt={event.partnerLogoAlt ?? 'Partner logo'}
-                          className="max-h-10 w-full object-contain md:max-h-14"
+                          className={`${event.partnerLogoInvert === false ? '' : 'logo-adaptive'} max-h-10 w-full object-contain md:max-h-14`}
                         />
                       </div>
                     </>
@@ -264,6 +289,32 @@ const PublicEventTemplate: React.FC<{ pageContext: { event: PublicEvent } }> = (
           </section>
         </div>
       </main>
+
+      {/* Flyer lightbox — full-detail view */}
+      {posterOpen && event.poster && (
+        <div
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 p-4 md:p-8"
+          onClick={() => setPosterOpen(false)}
+          role="dialog"
+          aria-modal="true"
+          aria-label={event.posterAlt ?? `${event.title} flyer`}
+        >
+          <img
+            src={event.poster}
+            alt={event.posterAlt ?? event.title}
+            className="max-h-[92vh] max-w-[95vw] object-contain shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          />
+          <button
+            type="button"
+            onClick={() => setPosterOpen(false)}
+            aria-label="Close"
+            className="absolute top-4 right-4 flex h-10 w-10 items-center justify-center text-2xl leading-none text-white/70 hover:text-white transition-colors"
+          >
+            ✕
+          </button>
+        </div>
+      )}
     </>
   )
 }

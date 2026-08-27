@@ -14,7 +14,7 @@ const NotFoundPage = () => (
 
     <section className="relative z-10 min-h-screen max-w-[1320px] mx-auto px-5 md:px-12 py-10 md:py-14 flex flex-col">
       <Link to="/" className="self-start">
-        <img src="/images/pvr-logo-white.svg" alt="Public Vinyl Radio" width={160} height={50} />
+        <img src="/images/pvr-logo-white.svg" alt="Public Vinyl Radio" width={160} height={50} className="logo-adaptive" />
       </Link>
 
       <div className="flex-1 grid lg:grid-cols-[1.1fr_0.9fr] items-center gap-12 py-16 md:py-24">

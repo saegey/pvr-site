@@ -5,8 +5,15 @@
   --color-bg: rgb(11 11 10);
   --color-fg: rgb(236 236 230);
 
-  --font-family-display: "ITC Lubalin Graph Std Demi", Georgia, serif;
-  --font-family-mono: "JetBrains Mono", "Courier New", monospace;
+  /* Display = Zilla Slab (headlines; slab cousin to the Lubalin logo, which is
+     now logo-only since the header logo is an SVG). Text = Literata (reading
+     prose). Mono = JetBrains, kept as an accent for labels/meta/tracklists.
+     Tailwind v4's font namespace is
+     `--font-*` (NOT `--font-family-*`); these generate the .font-display /
+     .font-text / .font-mono utilities and expose the vars for inline styles. */
+  --font-display: "Zilla Slab", "ITC Lubalin Graph Std Demi", Georgia, serif;
+  --font-text: "Literata", Georgia, serif;
+  --font-mono: "JetBrains Mono", "Courier New", monospace;
 }
 
 /* ─── Font: JetBrains Mono ─── */
@@ -42,19 +49,85 @@
 /* ─── CSS variables for inline style references ─── */
 /* --pvr-fg/bg are raw channel values so rgb(var(--pvr-fg) / 0.4) works in inline styles */
 :root {
+  color-scheme: dark;
   --pvr-bg: 11 11 10;
   --pvr-fg: 236 236 230;
-  --font-display: "ITC Lubalin Graph Std Demi", Georgia, serif;
+  /* Subtle button/hairline border; carries a stronger alpha in light mode
+     (below) so inline-styled borders that CSS can't override still adapt. */
+  --pvr-line: rgb(var(--pvr-fg) / 0.25);
+  --font-display: "Zilla Slab", "ITC Lubalin Graph Std Demi", Georgia, serif;
+  --font-text: "Literata", Georgia, serif;
   --font-mono: "JetBrains Mono", "Courier New", monospace;
 }
 
-/* Light mode — uncomment and fill values when ready
+/* ─── Light mode ───
+   Dark is the default (above / in @theme). Light applies either when the user
+   explicitly picks it (`data-theme="light"` on <html>, set by the toggle) or,
+   when they haven't chosen (`:not([data-theme])`), from the OS preference.
+   The Tailwind `bg-bg`/`text-fg` utilities and the `--pvr-*` channels both read
+   these variables, so overriding them here flips the whole site at runtime. */
+:root[data-theme="light"] {
+  color-scheme: light;
+  --color-bg: rgb(245 245 240);
+  --color-fg: rgb(11 11 10);
+  --pvr-bg: 245 245 240;
+  --pvr-fg: 11 11 10;
+  --pvr-line: rgb(var(--pvr-fg) / 0.40);
+}
+
 @media (prefers-color-scheme: light) {
-  @theme {
+  :root:not([data-theme]) {
+    color-scheme: light;
     --color-bg: rgb(245 245 240);
     --color-fg: rgb(11 11 10);
+    --pvr-bg: 245 245 240;
+    --pvr-fg: 11 11 10;
+    --pvr-line: rgb(var(--pvr-fg) / 0.40);
   }
-} */
+}
+
+/* Grayscale/antialiased smoothing thins text out — great for light-on-dark
+   (dark mode), but it makes dark text on a light background look too faint.
+   In light mode, fall back to the browser's normal (heavier) antialiasing. */
+:root[data-theme="light"] body {
+  -webkit-font-smoothing: auto;
+  -moz-osx-font-smoothing: auto;
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme]) body {
+    -webkit-font-smoothing: auto;
+    -moz-osx-font-smoothing: auto;
+  }
+}
+
+/* Low-opacity fg borders (hairlines, button/badge outlines) read fine as
+   light-on-dark but nearly vanish as dark-on-light. Boost the faint steps in
+   light mode so their perceived weight matches dark mode. /30+ is left as-is. */
+:root[data-theme="light"] .border-fg\/10 { border-color: rgb(var(--pvr-fg) / 0.18); }
+:root[data-theme="light"] .border-fg\/12 { border-color: rgb(var(--pvr-fg) / 0.22); }
+:root[data-theme="light"] .border-fg\/15 { border-color: rgb(var(--pvr-fg) / 0.27); }
+:root[data-theme="light"] .border-fg\/16 { border-color: rgb(var(--pvr-fg) / 0.28); }
+:root[data-theme="light"] .border-fg\/20 { border-color: rgb(var(--pvr-fg) / 0.34); }
+:root[data-theme="light"] .border-fg\/25 { border-color: rgb(var(--pvr-fg) / 0.40); }
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme]) .border-fg\/10 { border-color: rgb(var(--pvr-fg) / 0.18); }
+  :root:not([data-theme]) .border-fg\/12 { border-color: rgb(var(--pvr-fg) / 0.22); }
+  :root:not([data-theme]) .border-fg\/15 { border-color: rgb(var(--pvr-fg) / 0.27); }
+  :root:not([data-theme]) .border-fg\/16 { border-color: rgb(var(--pvr-fg) / 0.28); }
+  :root:not([data-theme]) .border-fg\/20 { border-color: rgb(var(--pvr-fg) / 0.34); }
+  :root:not([data-theme]) .border-fg\/25 { border-color: rgb(var(--pvr-fg) / 0.40); }
+}
+
+/* The PVR wordmark ships as a pure-white SVG. Invert it to dark in light mode
+   so it stays visible on a light background. (Partner logos are left as-is.) */
+:root[data-theme="light"] .logo-adaptive {
+  filter: invert(1);
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme]) .logo-adaptive {
+    filter: invert(1);
+  }
+}
 
 /* ─── Base reset ─── */
 *, *::before, *::after {
@@ -71,11 +144,107 @@ html {
 }
 
 html, body {
-  background-color: rgb(11 11 10);
-  color: rgb(236 236 230);
+  background-color: var(--color-bg);
+  color: var(--color-fg);
   font-family: "JetBrains Mono", "Courier New", monospace;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* Zilla Slab (display) reads too thin at Tailwind's preflight-reset weight
+   (headings drop to normal). Default every display-font element to 600 — this
+   matches both inline `font-family: var(--font-display)` styles and the
+   `.font-display` utility. An explicit inline font-weight still overrides it. */
+[style*="--font-display"],
+.font-display {
+  font-weight: 600;
+}
+
+/* Card / list-item titles (event rows, show cards, homepage recap grid).
+   Single control point: to switch every card heading back to the mono
+   "catalog" style, set font-family to var(--font-mono) and font-weight to 700
+   here — no per-card edits needed. */
+.card-title {
+  font-family: var(--font-display);
+  font-weight: 600;
+}
+
+/* ─── Halftone fade ───
+   A field of dots that dissolves from transparent to the ink colour along an
+   axis — theme-aware (near-white dots in dark mode, near-black in light).
+   Drop it in as an absolutely-positioned overlay:
+     <div className="halftone-fade absolute inset-0 pointer-events-none" />
+   Tunables (override inline or in a wrapper rule):
+     --halftone-dir   : gradient direction    (default: to right)
+     --halftone-size  : dot spacing           (default: 6px)
+     --halftone-dot   : solid-dot radius stop (default: 22%)
+     --halftone-start : where the dots start ramping in (default: 0%) — raise it
+                        (e.g. 55%) to keep the dots to just one edge.
+   Set `color` to rgb(var(--pvr-bg)) to dissolve into the page background, or
+   leave the default rgb(var(--pvr-fg)) for ink-coloured dots.
+   Add `halftone-fade--grain` to blend the film-grain texture over the dots.
+   NOTE: dot *size* is constant (this is an opacity dissolve). For a true
+   halftone where dots grow with intensity, an SVG feImage/feTile source or a
+   baked PNG is needed — ask and I'll wire that up. */
+.halftone-fade {
+  --halftone-dir: to right;
+  --halftone-size: 6px;
+  --halftone-dot: 22%;
+  --halftone-start: 0%;
+  color: rgb(var(--pvr-fg));
+  background-image: radial-gradient(currentColor var(--halftone-dot), transparent calc(var(--halftone-dot) + 1%));
+  background-size: var(--halftone-size) var(--halftone-size);
+  -webkit-mask-image: linear-gradient(var(--halftone-dir), transparent var(--halftone-start), #000);
+          mask-image: linear-gradient(var(--halftone-dir), transparent var(--halftone-start), #000);
+}
+.halftone-fade--grain {
+  background-image:
+    radial-gradient(currentColor var(--halftone-dot), transparent calc(var(--halftone-dot) + 1%)),
+    url('/images/grain.webp');
+  background-size: var(--halftone-size) var(--halftone-size), 256px 256px;
+  background-blend-mode: overlay;
+}
+
+/* ─── Grunge/texture hero overlay ───
+   Tiled rasterized texture, theme-aware: in light mode a black-on-white source
+   multiplies onto the cream page (white drops out → dark marks); in dark mode
+   it's inverted and screened onto the near-black page (black drops out → light
+   marks). Reusable per page — override the image and scale inline:
+     style={{ '--grunge-image': "url('/images/weave-texture.webp')",
+              '--grunge-size': '500px' } as React.CSSProperties} */
+.hero-grunge {
+  --grunge-size: 640px;
+  --grunge-image: url('/images/grunge-texture.webp');
+  background-image: var(--grunge-image);
+  background-repeat: repeat;
+  background-size: var(--grunge-size);
+  filter: invert(1);        /* dark (default): light marks */
+  mix-blend-mode: screen;
+}
+:root[data-theme="light"] .hero-grunge {
+  filter: none;             /* black speckles */
+  mix-blend-mode: multiply;
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme]) .hero-grunge {
+    filter: none;
+    mix-blend-mode: multiply;
+  }
+}
+
+/* Modifier for a WHITE-on-black source (opposite polarity to the default
+   black-on-white). Blend modes stay the same; only the invert flips: use the
+   source as-is in dark mode, invert it in light mode. */
+.hero-grunge--invert-source {
+  filter: none;
+}
+:root[data-theme="light"] .hero-grunge--invert-source {
+  filter: invert(1);
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme]) .hero-grunge--invert-source {
+    filter: invert(1);
+  }
 }
 
 a {

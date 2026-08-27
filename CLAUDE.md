@@ -156,6 +156,7 @@ slug: 'show-slug'
 host: ['DJ Name']
 template: show
 isActive: true  # Set to false to hide from listings
+featured: true  # Optional: pin THIS show to the homepage "From the archive" slot (default false). Only set it on one show; if none set it, the homepage show section is hidden.
 coverImage: './cover.jpg'  # Relative to show directory
 carouselImages:  # Optional: array of gallery images
   - './gallery/photo-1.jpg'
@@ -293,6 +294,7 @@ These enrich an existing **public** event. All are interactive, pick from **past
 - **`npm run audio:prep`** (`scripts/audio-prep.mts`) — pre-processing step for the set recording: joins a recorder's split files (lossless concat), auto-detects and trims leading/trailing silence (with manual timestamp override), and exports a trimmed WAV/MP3. All `ffmpeg`/`ffprobe`; no secrets. The output WAV feeds `event:recap`.
 - **`npm run event:recap`** (`scripts/event-recap.mts`) — links a groovenet playlist (pulls the tracklist), compresses a WAV → MP3 (192 kbps, needs `ffmpeg`), uploads to R2, and writes `audioUrl` + `playlistId` + `tracklist`. Needs the groovenet CLI (path via `GROOVENET_BIN`) reachable — see the groovenet note below.
 - **`npm run event:photos`** (`scripts/event-photos.mts`) — resizes a folder of photos to `.webp` (via `sharp`), uploads to R2, and writes a `photos[]` array (append or replace). Renders as a grayscale `PhotoCollage` that opens a fullscreen carousel.
+  - **Cover photo:** the event's *representative* image (used for the `/events` row thumbnail, the `/events` hero collage, and the homepage recap card) defaults to the first photo. To pick a different one, add `"cover": true` to any single object in that event's `photos[]` in `public-events.data.json`. Resolved via `eventCoverSrc()` / `eventCoverPhoto()` in `src/data/public-events.ts`; the full collage on the event page is unaffected.
 - **`npm run event:audio`** (`scripts/event-audio.mts`) — swaps *only* the recap audio: pick a past event, point it at a new WAV/MP3 (WAV is compressed to 192 kbps MP3, MP3 uploads as-is), uploads to R2, and rewrites `audioUrl`. Tracklist/photos untouched. The key is deterministic (`events/<slug>.mp3`), so the re-upload overwrites the old object in place — no orphan to delete, and `audioUrl` is unchanged (so a CDN/browser cache may serve the old file briefly). Pairs with `audio:prep`.
 - **`npm run event:tracklist`** (`scripts/event-tracklist.mts`) — re-syncs *only* the tracklist from groovenet (via the event's stored `playlistId`), leaving audio/photos untouched. For corrections: fix the tracks in groovenet, then run this; it shows an old→new diff before writing. No R2 creds needed (groovenet only), so it doesn't use the `op` wrapper.
 - Dry runs: `npm run event:recap:dry`, `npm run event:audio:dry`, `npm run event:photos:dry`, `npm run event:tracklist:dry`.
@@ -307,7 +309,9 @@ These enrich an existing **public** event. All are interactive, pick from **past
 - Tailwind v4 is configured **in CSS** — there is no `tailwind.config.js`. Design tokens (colors, fonts) live in the `@theme { … }` block in `global.css` and become utilities (e.g. `--color-bg` → `bg-bg`, `--font-family-display` → `font-display`).
 - Custom fonts (JetBrains Mono, ITC Lubalin Graph) are declared via `@font-face` in `global.css` and preloaded in `gatsby-ssr`.
 - Raw channel CSS vars (`--pvr-fg`/`--pvr-bg`) are exposed on `:root` for inline styles that need alpha, e.g. `rgb(var(--pvr-fg) / 0.4)`.
-- Responsive design uses Tailwind breakpoint prefixes (`md:`, `lg:`); dark-first palette, with a light-mode `@media (prefers-color-scheme: light)` block scaffolded in `global.css` (currently commented out).
+- Responsive design uses Tailwind breakpoint prefixes (`md:`, `lg:`); dark-first palette.
+- **Light mode** is enabled. Dark is the default; light applies when the user picks it via the header toggle (`ThemeToggle`, sets `data-theme="light"` on `<html>` + `localStorage.theme`) or, with no explicit choice, from the OS (`prefers-color-scheme`). A no-flash inline script in `gatsby-ssr.tsx` applies a saved choice before first paint. Palette overrides live in the `:root[data-theme="light"]` / `@media (prefers-color-scheme: light)` blocks in `global.css`.
+  - For theme-aware colors, use the `bg-bg`/`text-fg`/`border-fg/NN` utilities or the `rgb(var(--pvr-fg) / α)` / `rgb(var(--pvr-bg) / α)` channels for inline styles — **not** hardcoded `rgb(236 236 230)` / `rgb(11 11 10)` literals (those won't flip). The white PVR wordmark SVG uses the `logo-adaptive` class to invert in light mode. Intentionally fixed-contrast UI (e.g. the press-kit preview swatches in `press.tsx`) is left theme-independent.
 
 **Example styling:**
 ```tsx

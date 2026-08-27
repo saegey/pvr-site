@@ -68,7 +68,7 @@ const ProductTemplate = ({ pageContext }: { pageContext: ProductPageContext }) =
               ) : (
                 <div
                   className="w-full h-full"
-                  style={{ background: 'repeating-linear-gradient(135deg, #141412, #141412 8px, #1a1a17 8px, #1a1a17 16px)' }}
+                  style={{ background: 'repeating-linear-gradient(135deg, rgb(var(--pvr-fg) / 0.04), rgb(var(--pvr-fg) / 0.04) 8px, rgb(var(--pvr-fg) / 0.08) 8px, rgb(var(--pvr-fg) / 0.08) 16px)' }}
                 />
               )}
             </div>

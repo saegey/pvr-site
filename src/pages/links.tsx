@@ -48,8 +48,8 @@ export default function LinksPage({ data }: { data: DataProps }) {
     <div
       className="min-h-screen font-mono"
       style={{
-        backgroundColor: 'rgb(11 11 10)',
-        color: 'rgb(236 236 230)',
+        backgroundColor: 'rgb(var(--pvr-bg))',
+        color: 'rgb(var(--pvr-fg))',
       }}
     >
       <div className="max-w-[480px] mx-auto px-5 pt-12 pb-20">
@@ -61,6 +61,7 @@ export default function LinksPage({ data }: { data: DataProps }) {
             alt="Public Vinyl Radio"
             width={180}
             height={52}
+            className="logo-adaptive"
           />
         </div>
 
@@ -77,19 +78,19 @@ export default function LinksPage({ data }: { data: DataProps }) {
                 rel={isExternal ? 'noopener noreferrer' : undefined}
                 className="flex items-center justify-center gap-2.5 py-3.5 px-4 border transition-colors duration-150"
                 style={{
-                  borderColor: 'rgb(236 236 230 / 0.3)',
-                  color: 'rgb(236 236 230 / 0.92)',
+                  borderColor: 'var(--pvr-line)',
+                  color: 'rgb(var(--pvr-fg) / 0.92)',
                   fontSize: '13px',
                   letterSpacing: '2px',
                   textTransform: 'uppercase',
                 }}
                 onMouseEnter={e => {
-                  (e.currentTarget as HTMLElement).style.borderColor = 'rgb(236 236 230 / 0.6)'
-                  ;(e.currentTarget as HTMLElement).style.color = 'rgb(236 236 230)'
+                  (e.currentTarget as HTMLElement).style.borderColor = 'rgb(var(--pvr-fg) / 0.6)'
+                  ;(e.currentTarget as HTMLElement).style.color = 'rgb(var(--pvr-fg))'
                 }}
                 onMouseLeave={e => {
-                  (e.currentTarget as HTMLElement).style.borderColor = 'rgb(236 236 230 / 0.3)'
-                  ;(e.currentTarget as HTMLElement).style.color = 'rgb(236 236 230 / 0.92)'
+                  (e.currentTarget as HTMLElement).style.borderColor = 'var(--pvr-line)'
+                  ;(e.currentTarget as HTMLElement).style.color = 'rgb(var(--pvr-fg) / 0.92)'
                 }}
               >
                 {SvgIcon && (
@@ -97,7 +98,7 @@ export default function LinksPage({ data }: { data: DataProps }) {
                     width={16}
                     height={16}
                     aria-hidden
-                    style={{ color: 'rgb(236 236 230 / 0.75)' }}
+                    style={{ color: 'rgb(var(--pvr-fg) / 0.75)' }}
                   />
                 )}
                 {link.title}
@@ -111,9 +112,9 @@ export default function LinksPage({ data }: { data: DataProps }) {
           <div className="mb-10">
             <div
               className="flex items-baseline justify-between pb-3 mb-0"
-              style={{ borderBottom: '1px solid rgb(236 236 230 / 0.12)' }}
+              style={{ borderBottom: '1px solid rgb(var(--pvr-fg) / 0.12)' }}
             >
-              <span style={{ fontSize: '11px', letterSpacing: '2px', textTransform: 'uppercase', color: 'rgb(236 236 230 / 0.6)' }}>
+              <span style={{ fontSize: '11px', letterSpacing: '2px', textTransform: 'uppercase', color: 'rgb(var(--pvr-fg) / 0.6)' }}>
                 Public Events
               </span>
             </div>
@@ -123,11 +124,11 @@ export default function LinksPage({ data }: { data: DataProps }) {
                 key={event.slug}
                 to={`/events/${event.slug}`}
                 className="flex gap-3 py-4 -mx-1 px-1 transition-colors duration-150"
-                style={{ borderBottom: '1px solid rgb(236 236 230 / 0.08)' }}
+                style={{ borderBottom: '1px solid rgb(var(--pvr-fg) / 0.08)' }}
               >
                 <span
                   className="shrink-0 tabular-nums pt-0.5"
-                  style={{ fontSize: '12px', color: 'rgb(236 236 230 / 0.4)', width: '18px' }}
+                  style={{ fontSize: '12px', color: 'rgb(var(--pvr-fg) / 0.4)', width: '18px' }}
                 >
                   {String(i + 1).padStart(2, '0')}
                 </span>
@@ -139,14 +140,14 @@ export default function LinksPage({ data }: { data: DataProps }) {
                       fontFamily: 'var(--font-mono)',
                       fontWeight: 700,
                       fontSize: '16px',
-                      color: 'rgb(236 236 230)',
+                      color: 'rgb(var(--pvr-fg))',
                     }}
                   >
                     {event.title}
                   </p>
                   <p
                     className="mt-0.5 truncate"
-                    style={{ fontSize: '13px', color: 'rgb(236 236 230 / 0.7)' }}
+                    style={{ fontSize: '13px', color: 'rgb(var(--pvr-fg) / 0.7)' }}
                   >
                     {formatEventDate(event.startDateTime)} · {event.venue}
                   </p>
@@ -162,9 +163,9 @@ export default function LinksPage({ data }: { data: DataProps }) {
             {/* Section header */}
             <div
               className="flex items-baseline justify-between pb-3 mb-0"
-              style={{ borderBottom: '1px solid rgb(236 236 230 / 0.12)' }}
+              style={{ borderBottom: '1px solid rgb(var(--pvr-fg) / 0.12)' }}
             >
-              <span style={{ fontSize: '11px', letterSpacing: '2px', textTransform: 'uppercase', color: 'rgb(236 236 230 / 0.6)' }}>
+              <span style={{ fontSize: '11px', letterSpacing: '2px', textTransform: 'uppercase', color: 'rgb(var(--pvr-fg) / 0.6)' }}>
                 Latest Shows
               </span>
             </div>
@@ -179,12 +180,12 @@ export default function LinksPage({ data }: { data: DataProps }) {
                   key={show.id}
                   to={`/shows/${show.frontmatter.slug}`}
                   className="flex gap-3 py-4 -mx-1 px-1 transition-colors duration-150"
-                  style={{ borderBottom: '1px solid rgb(236 236 230 / 0.08)' }}
+                  style={{ borderBottom: '1px solid rgb(var(--pvr-fg) / 0.08)' }}
                 >
                   {/* Index */}
                   <span
                     className="shrink-0 tabular-nums pt-0.5"
-                    style={{ fontSize: '12px', color: 'rgb(236 236 230 / 0.4)', width: '18px' }}
+                    style={{ fontSize: '12px', color: 'rgb(var(--pvr-fg) / 0.4)', width: '18px' }}
                   >
                     {String(i + 1).padStart(2, '0')}
                   </span>
@@ -192,7 +193,7 @@ export default function LinksPage({ data }: { data: DataProps }) {
                   {/* Thumbnail */}
                   <div
                     className="shrink-0 overflow-hidden grayscale"
-                    style={{ width: '72px', aspectRatio: '16/9', background: 'rgb(236 236 230 / 0.05)' }}
+                    style={{ width: '72px', aspectRatio: '16/9', background: 'rgb(var(--pvr-fg) / 0.05)' }}
                   >
                     {show.frontmatter.youtubeId ? (
                       <img
@@ -224,14 +225,14 @@ export default function LinksPage({ data }: { data: DataProps }) {
                         fontFamily: 'var(--font-mono)',
                         fontWeight: 700,
                         fontSize: '16px',
-                        color: 'rgb(236 236 230)',
+                        color: 'rgb(var(--pvr-fg))',
                       }}
                     >
                       {show.frontmatter.title}
                     </p>
                     <p
                       className="mt-0.5 truncate"
-                      style={{ fontSize: '13px', color: 'rgb(236 236 230 / 0.7)' }}
+                      style={{ fontSize: '13px', color: 'rgb(var(--pvr-fg) / 0.7)' }}
                     >
                       {format(new Date(show.frontmatter.date), 'MMM d, yyyy')}
                       {show.frontmatter.host?.length > 0 && (

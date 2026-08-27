@@ -71,7 +71,7 @@ const R2AudioPlayer = ({ url, title, showDownload = true }: R2AudioPlayerProps) 
   const pct = duration > 0 ? (currentTime / duration) * 100 : 0
   const volPct = (isMuted ? 0 : volume) * 100
   const trackStyle = (fill: number) =>
-    `linear-gradient(to right, rgb(236 236 230) 0%, rgb(236 236 230) ${fill}%, rgba(236,236,230,0.15) ${fill}%, rgba(236,236,230,0.15) 100%)`
+    `linear-gradient(to right, rgb(var(--pvr-fg)) 0%, rgb(var(--pvr-fg)) ${fill}%, rgb(var(--pvr-fg) / 0.15) ${fill}%, rgb(var(--pvr-fg) / 0.15) 100%)`
 
   return (
     <div className="border border-fg/16 p-6 my-8">

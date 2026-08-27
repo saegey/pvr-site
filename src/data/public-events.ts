@@ -18,6 +18,12 @@ export type PublicEvent = {
   rsvpUrl?: string
   partnerLogo?: string
   partnerLogoAlt?: string
+  /**
+   * Partner logos are usually white (for the dark theme) and get inverted in
+   * light mode so they stay visible. Set false for an already-dark/colored
+   * logo that shouldn't be inverted.
+   */
+  partnerLogoInvert?: boolean
   /** Primary flyer/poster image shown on the event page. */
   poster?: string
   posterAlt?: string
@@ -31,11 +37,26 @@ export type PublicEvent = {
   playlistId?: string
   /** Ordered tracklist pulled from the groovenet playlist. Shares the show tracklist shape. */
   tracklist?: TrackItem[]
-  /** Post-event photos (hosted on R2), shown as a collage that opens a carousel. */
-  photos?: { original: string; thumbnail?: string; description?: string }[]
+  /**
+   * Post-event photos (hosted on R2), shown as a collage that opens a carousel.
+   * Mark one photo `cover: true` to use it as the event's representative image
+   * (row thumbnails, homepage recap card, events hero collage). Falls back to
+   * the first photo when none is marked.
+   */
+  photos?: { original: string; thumbnail?: string; description?: string; cover?: boolean }[]
 }
 
 export const PUBLIC_EVENTS: PublicEvent[] = publicEventsData as PublicEvent[]
+
+/** The event's representative photo: the one flagged `cover`, else the first. */
+export const eventCoverPhoto = (e: PublicEvent) =>
+  e.photos?.find((p) => p.cover) ?? e.photos?.[0]
+
+/** URL for the event's representative image (cover photo, else poster). */
+export const eventCoverSrc = (e: PublicEvent): string | undefined => {
+  const c = eventCoverPhoto(e)
+  return c?.thumbnail || c?.original || e.poster || undefined
+}
 
 /** All events are Seattle-based; render/compute in Pacific regardless of viewer TZ. */
 const TZ = 'America/Los_Angeles'

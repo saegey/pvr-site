@@ -106,7 +106,7 @@ const ShowTemplate: React.FC<PageProps<DataProps>> = ({ data, children }) => {
           className="w-full border-b border-fg/12"
           style={{
             height: '320px',
-            background: 'repeating-linear-gradient(135deg, #141412, #141412 8px, #1a1a17 8px, #1a1a17 16px)',
+            background: 'repeating-linear-gradient(135deg, rgb(var(--pvr-fg) / 0.04), rgb(var(--pvr-fg) / 0.04) 8px, rgb(var(--pvr-fg) / 0.08) 8px, rgb(var(--pvr-fg) / 0.08) 16px)',
           }}
         />
       )}
@@ -172,7 +172,7 @@ const ShowTemplate: React.FC<PageProps<DataProps>> = ({ data, children }) => {
         {/* Description */}
         {description && (
           <p
-            className="text-sm text-fg/75 leading-[1.8] mb-10"
+            className="font-text text-base text-fg/75 leading-[1.8] mb-10"
             style={{ maxWidth: '640px' }}
           >
             {description}
@@ -183,6 +183,14 @@ const ShowTemplate: React.FC<PageProps<DataProps>> = ({ data, children }) => {
         <div className="mb-10">
           <MDXProvider
             components={{
+              p: (props) => <p className="font-text text-fg/80 leading-[1.85]" {...props} />,
+              li: (props) => <li className="font-text text-fg/80" {...props} />,
+              h2: (props) => (
+                <h2 className="font-display text-fg mt-10 mb-4" style={{ fontSize: 'clamp(24px, 4vw, 32px)' }} {...props} />
+              ),
+              h3: (props) => (
+                <h3 className="font-display text-fg mt-8 mb-3" style={{ fontSize: '20px' }} {...props} />
+              ),
               ShowCarousel: () =>
                 carouselData.length > 0 ? (
                   <div className="my-10">

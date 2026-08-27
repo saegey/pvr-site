@@ -1,7 +1,10 @@
 import React, { ReactNode, useState, useEffect, lazy, Suspense } from 'react'
 import { Link } from 'gatsby'
+import { IoCartOutline } from 'react-icons/io5'
 import HeadIcon from '../icons/head.svg'
+import PVRLogo from '../icons/pvr-logo.svg'
 import { useCart } from '../context/cart-context'
+import ThemeToggle from './theme-toggle'
 
 const CartDrawer = lazy(() => import('./cart-drawer'))
 
@@ -17,10 +20,30 @@ const EXTERNAL_LINKS = [
   { label: 'IG', href: 'https://www.instagram.com/PublicVinylRadio' },
 ]
 
-const Layout = ({ children }: { children: ReactNode }) => {
+// Floating cart — only rendered inside the shop, so it never disturbs the
+// header/nav layout on the rest of the site.
+const FloatingCart = () => {
+  const { count, openCart } = useCart()
+  if (count <= 0) return null
+  return (
+    <button
+      onClick={openCart}
+      aria-label={`Open cart, ${count} ${count === 1 ? 'item' : 'items'}`}
+      className="fixed bottom-5 right-5 z-40 flex items-center justify-center w-12 h-12 bg-fg text-bg shadow-lg hover:opacity-90 transition-opacity"
+    >
+      <IoCartOutline size={22} aria-hidden="true" />
+      <span className="absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] px-1 rounded-full bg-bg text-fg text-[10px] font-medium flex items-center justify-center tabular-nums">
+        {count}
+      </span>
+    </button>
+  )
+}
+
+const Layout = ({ children, pathname }: { children: ReactNode; pathname?: string }) => {
   const [menuOpen, setMenuOpen] = useState(false)
   const [mounted, setMounted] = useState(false)
-  const { count, openCart } = useCart()
+  const normalized = (pathname ?? '').replace(/\/+$/, '')
+  const isShop = normalized === '/shop' || normalized.startsWith('/shop/')
 
   useEffect(() => { setMounted(true) }, [])
 
@@ -35,19 +58,27 @@ const Layout = ({ children }: { children: ReactNode }) => {
       {/* Sticky header */}
       <header
         className="sticky top-0 z-50 border-b border-fg/12"
-        style={{ backgroundColor: 'rgba(11,11,10,0.85)', backdropFilter: 'blur(8px)' }}
+        style={{ backgroundColor: 'rgb(var(--pvr-bg) / 0.85)', backdropFilter: 'blur(8px)' }}
       >
-        <div className="max-w-[1320px] mx-auto px-6 md:px-12 h-14 flex items-center justify-between">
-          {/* Logo + wordmark */}
+        <div className="max-w-[1320px] mx-auto px-6 md:px-12 h-14 flex items-center justify-between relative">
+          {/* Desktop: full logo */}
           <Link
             to="/"
-            className="flex items-center gap-3 shrink-0 text-fg"
+            className="hidden md:flex items-center shrink-0 text-fg"
             onClick={() => setMenuOpen(false)}
+            aria-label="Public Vinyl Radio"
           >
-            <HeadIcon width={22} height={22} aria-hidden="true" />
-            <span className="text-xs font-bold tracking-[2px] uppercase">
-              Public Vinyl Radio
-            </span>
+            <PVRLogo className="h-7 w-auto" aria-hidden="true" />
+          </Link>
+
+          {/* Mobile: icon only, centered */}
+          <Link
+            to="/"
+            className="md:hidden absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-fg"
+            onClick={() => setMenuOpen(false)}
+            aria-label="Public Vinyl Radio"
+          >
+            <HeadIcon width={24} height={24} aria-hidden="true" />
           </Link>
 
           {/* Desktop nav */}
@@ -73,36 +104,12 @@ const Layout = ({ children }: { children: ReactNode }) => {
                 {label}
               </a>
             ))}*/}
+            <ThemeToggle />
           </nav>
 
-          {/* Cart icon */}
-          {count > 0 && (
-            <button
-              onClick={openCart}
-              className="relative text-xs tracking-[1px] uppercase text-fg/60 hover:text-fg transition-colors hidden md:flex items-center gap-1.5"
-              aria-label="Open cart"
-            >
-              Cart
-              <span className="w-4 h-4 rounded-full bg-fg text-bg text-[10px] flex items-center justify-center tabular-nums">
-                {count}
-              </span>
-            </button>
-          )}
-
-          {/* Mobile: cart + hamburger */}
-          <div className="flex items-center gap-4 md:hidden">
-            {count > 0 && (
-              <button
-                onClick={openCart}
-                className="relative text-xs tracking-[1px] uppercase text-fg/60 hover:text-fg transition-colors flex items-center gap-1.5"
-                aria-label="Open cart"
-              >
-                Cart
-                <span className="w-4 h-4 rounded-full bg-fg text-bg text-[10px] flex items-center justify-center tabular-nums">
-                  {count}
-                </span>
-              </button>
-            )}
+          {/* Mobile: theme + hamburger */}
+          <div className="flex items-center gap-4 md:hidden ml-auto">
+            <ThemeToggle />
           <button
             className="relative flex w-8 h-8 shrink-0 items-center justify-center"
             onClick={() => setMenuOpen((v) => !v)}
@@ -130,6 +137,9 @@ const Layout = ({ children }: { children: ReactNode }) => {
           <CartDrawer />
         </Suspense>
       )}
+
+      {/* Floating cart — shop routes only */}
+      {isShop && <FloatingCart />}
 
       {/* Mobile full-screen overlay */}
       {menuOpen && (

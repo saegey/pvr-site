@@ -71,17 +71,17 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
     <div className="w-full">
       <style>{`
         .image-gallery { width: 100%; }
-        .image-gallery-slides { border: 1px solid rgba(236,236,230,0.14); }
+        .image-gallery-slides { border: 1px solid rgb(var(--pvr-fg) / 0.14); }
         .image-gallery-slide {
           display: flex; align-items: center; justify-content: center;
-          height: 500px; background-color: rgb(22 22 20);
+          height: 500px; background-color: rgb(var(--pvr-fg) / 0.05);
         }
         .image-gallery-slide img { width: auto; height: 100%; max-width: 100%; max-height: 100%; object-fit: contain; }
         .image-gallery-thumbnail img { height: 60px; object-fit: cover; }
         .image-gallery-fullscreen-button { opacity: 0.4; filter: none; }
         .image-gallery-fullscreen-button:hover { opacity: 1; color: white; }
         .image-gallery-fullscreen-button .image-gallery-svg { width: 20px; height: 20px; }
-        .image-gallery-thumbnail.active { border: 1px solid rgba(236,236,230,0.4); }
+        .image-gallery-thumbnail.active { border: 1px solid rgb(var(--pvr-fg) / 0.4); }
         .image-gallery-index { background: rgba(0,0,0,0.4); color: white; padding: 8px 12px; font-size: 14px; }
       `}</style>
       {/* startIndex is spread in because react-image-gallery's bundled types omit it (supported at runtime). */}

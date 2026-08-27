@@ -39,6 +39,7 @@ exports.createSchemaCustomization = ({ actions }: { actions: any }) => {
       tracklist: [Track]
       host: [String]
       isActive: Boolean
+      featured: Boolean
     }
 
     type DataYaml implements Node {
@@ -62,6 +63,14 @@ exports.createResolvers = ({ createResolvers }: { createResolvers: any }) => {
         resolve(source: any) {
           // Default to true when not set
           return typeof source.isActive === "boolean" ? source.isActive : true;
+        },
+      },
+      featured: {
+        type: "Boolean",
+        resolve(source: any) {
+          // Default to false — a show is only promoted on the homepage when
+          // it explicitly sets `featured: true`.
+          return typeof source.featured === "boolean" ? source.featured : false;
         },
       },
     },

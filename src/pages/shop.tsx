@@ -1,313 +1,65 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect } from 'react'
 import { graphql, Link } from 'gatsby'
 import SEO from '../components/seo'
-import { PRODUCTS, Product, ProductVariant } from '../data/products'
-import { useCart } from '../context/cart-context'
+import { PRODUCTS, Product } from '../data/products'
 
 const formatPrice = (n: number) => `$${n.toFixed(2)}`
 const cardImageSrc = (src: string) => src.replace(/\.(png|jpe?g)$/i, '.webp')
 
-// ─── Lightbox ────────────────────────────────────────────────────────────────
-const Lightbox = ({
-  images,
-  index,
-  onClose,
-}: {
-  images: string[]
-  index: number
-  onClose: () => void
-}) => {
-  const [current, setCurrent] = useState(index)
-  const touchStartX = React.useRef<number | null>(null)
-
-  const prev = useCallback(() => setCurrent(i => (i - 1 + images.length) % images.length), [images.length])
-  const next = useCallback(() => setCurrent(i => (i + 1) % images.length), [images.length])
-
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose()
-      if (e.key === 'ArrowLeft') prev()
-      if (e.key === 'ArrowRight') next()
-    }
-    window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
-  }, [onClose, prev, next])
-
-  const handleTouchStart = (e: React.TouchEvent) => {
-    touchStartX.current = e.touches[0].clientX
-  }
-
-  const handleTouchEnd = (e: React.TouchEvent) => {
-    if (touchStartX.current === null) return
-    const diff = touchStartX.current - e.changedTouches[0].clientX
-    if (Math.abs(diff) > 40) diff > 0 ? next() : prev()
-    touchStartX.current = null
-  }
-
-  return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center"
-      style={{ backgroundColor: 'rgba(11,11,10,0.95)' }}
-      onClick={onClose}
-      onTouchStart={handleTouchStart}
-      onTouchEnd={handleTouchEnd}
-    >
-      {/* Close */}
-      <button
-        className="absolute top-5 right-5 text-fg/50 hover:text-fg transition-colors"
-        onClick={onClose}
-        aria-label="Close"
-        style={{ fontSize: '28px', lineHeight: 1, background: 'none', border: 'none', cursor: 'pointer' }}
-      >
-        ×
-      </button>
-
-      {/* Prev */}
-      {images.length > 1 && (
-        <button
-          className="absolute left-4 text-fg/55 hover:text-fg transition-colors"
-          onClick={e => { e.stopPropagation(); prev() }}
-          aria-label="Previous"
-          style={{ fontSize: '28px', background: 'none', border: 'none', cursor: 'pointer', padding: '16px' }}
-        >
-          ‹
-        </button>
-      )}
-
-      {/* Image */}
-      <img
-        src={images[current]}
-        alt={`Image ${current + 1}`}
-        onClick={e => e.stopPropagation()}
-        style={{
-          maxWidth: '90vw',
-          maxHeight: '90vh',
-          objectFit: 'contain',
-          userSelect: 'none',
-        }}
-      />
-
-      {/* Next */}
-      {images.length > 1 && (
-        <button
-          className="absolute right-4 text-fg/55 hover:text-fg transition-colors"
-          onClick={e => { e.stopPropagation(); next() }}
-          aria-label="Next"
-          style={{ fontSize: '28px', background: 'none', border: 'none', cursor: 'pointer', padding: '16px' }}
-        >
-          ›
-        </button>
-      )}
-
-      {/* Dots */}
-      {images.length > 1 && (
-        <div className="absolute bottom-5 flex gap-2">
-          {images.map((_, i) => (
-            <button
-              key={i}
-              onClick={e => { e.stopPropagation(); setCurrent(i) }}
-              style={{
-                width: 6, height: 6, borderRadius: '50%', border: 'none', padding: 0, cursor: 'pointer',
-                background: i === current ? 'rgb(236 236 230)' : 'rgba(236,236,230,0.3)',
-              }}
-            />
-          ))}
-        </div>
-      )}
-    </div>
-  )
-}
-
 // ─── Product Card ─────────────────────────────────────────────────────────────
+// A clean browse tile. Purchasing (variants, add-to-cart) and the full image
+// gallery live on the product page (/shop/<id>), so the list just needs to
+// invite a click — no cart controls here.
 const ProductCard = ({ product }: { product: Product }) => {
-  const { addItem } = useCart()
-  const [imageIndex, setImageIndex] = useState(0)
-  const [selectedVariant, setSelectedVariant] = useState<ProductVariant | null>(
-    product.variants?.[0] ?? null
-  )
-  const [added, setAdded] = useState(false)
-  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null)
-  const [loadedImages, setLoadedImages] = useState<Set<number>>(() => new Set())
-  const touchStartX = React.useRef<number | null>(null)
-
-  const priceLookupKey = selectedVariant?.priceLookupKey ?? product.priceLookupKey ?? ''
-
-  const handleAdd = () => {
-    if (!priceLookupKey) return
-    addItem({
-      productId: product.id,
-      productName: product.name,
-      variantLabel: selectedVariant?.label,
-      priceLookupKey,
-      price: product.price,
-      image: product.images[0],
-    })
-    setAdded(true)
-    setTimeout(() => setAdded(false), 1800)
-  }
-
-  const handleImageTouchStart = (e: React.TouchEvent) => {
-    touchStartX.current = e.touches[0].clientX
-  }
-
-  const handleImageTouchEnd = (e: React.TouchEvent) => {
-    if (touchStartX.current === null) return
-    const distance = touchStartX.current - e.changedTouches[0].clientX
-    if (Math.abs(distance) > 40) {
-      setImageIndex((index) =>
-        distance > 0
-          ? (index + 1) % product.images.length
-          : (index - 1 + product.images.length) % product.images.length
-      )
-    }
-    touchStartX.current = null
-  }
+  const [loaded, setLoaded] = useState(false)
+  const image = product.images[0]
 
   return (
-    <>
-      <article className="flex flex-col">
-        {/* Image area */}
-        <div
-          className="relative bg-fg/5 overflow-hidden group"
-          style={{ aspectRatio: '5/4', touchAction: 'pan-y' }}
-          onTouchStart={product.images.length > 1 ? handleImageTouchStart : undefined}
-          onTouchEnd={product.images.length > 1 ? handleImageTouchEnd : undefined}
-        >
-          {product.images.length > 0 ? (
-            <>
-              {!loadedImages.has(imageIndex) && (
-                <div
-                  className="absolute inset-0 animate-pulse"
-                  aria-hidden="true"
-                  style={{ background: 'linear-gradient(110deg, rgba(236,236,230,0.04), rgba(236,236,230,0.12), rgba(236,236,230,0.04))' }}
-                />
-              )}
-              <Link to={`/shop/${product.id}`} aria-label={`View ${product.name}`} className="block w-full h-full">
-                <img
-                  src={cardImageSrc(product.images[imageIndex])}
-                  alt={`${product.name} — image ${imageIndex + 1}`}
-                  className="w-full h-full object-cover transition-opacity duration-300"
-                  loading="lazy"
-                  decoding="async"
-                  onLoad={() => setLoadedImages((images) => new Set(images).add(imageIndex))}
-                />
-              </Link>
-            </>
-          ) : (
-            <div
-              className="w-full h-full"
-              style={{
-                background:
-                  'repeating-linear-gradient(135deg, #141412, #141412 8px, #1a1a17 8px, #1a1a17 16px)',
-              }}
+    <Link to={`/shop/${product.id}`} className="group flex flex-col">
+      {/* Image */}
+      <div className="relative bg-fg/5 overflow-hidden" style={{ aspectRatio: '5/4' }}>
+        {image ? (
+          <>
+            {!loaded && (
+              <div
+                className="absolute inset-0 animate-pulse"
+                aria-hidden="true"
+                style={{ background: 'linear-gradient(110deg, rgb(var(--pvr-fg) / 0.04), rgb(var(--pvr-fg) / 0.12), rgb(var(--pvr-fg) / 0.04))' }}
+              />
+            )}
+            <img
+              src={cardImageSrc(image)}
+              alt={product.name}
+              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+              loading="lazy"
+              decoding="async"
+              onLoad={() => setLoaded(true)}
             />
-          )}
+          </>
+        ) : (
+          <div
+            className="w-full h-full"
+            style={{ background: 'repeating-linear-gradient(135deg, rgb(var(--pvr-fg) / 0.04), rgb(var(--pvr-fg) / 0.04) 8px, rgb(var(--pvr-fg) / 0.08) 8px, rgb(var(--pvr-fg) / 0.08) 16px)' }}
+          />
+        )}
+      </div>
 
-          {/* Expand button */}
-          {product.images.length > 0 && (
-            <button
-              onClick={() => setLightboxIndex(imageIndex)}
-              aria-label="Zoom image"
-              className="absolute top-2.5 right-2.5 z-10 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity flex items-center justify-center"
-              style={{
-                width: 32, height: 32,
-                background: 'rgba(11,11,10,0.7)',
-                border: '1px solid rgba(236,236,230,0.2)',
-                cursor: 'pointer',
-                color: 'rgb(236 236 230)',
-              }}
-            >
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                <path d="M1 5V1h4M9 1h4v4M13 9v4H9M5 13H1V9" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </button>
-          )}
+      {/* Info */}
+      <div className="pt-3 sm:pt-4 flex items-baseline justify-between gap-2 sm:gap-4">
+        <h2 className="card-title text-[15px] sm:text-lg text-fg leading-snug group-hover:text-fg/65 transition-colors">
+          {product.name}
+        </h2>
+        <p className="text-[11px] sm:text-xs text-fg/55 tabular-nums shrink-0">{formatPrice(product.price)}</p>
+      </div>
 
-          {/* Image switcher dots */}
-          {product.images.length > 1 && (
-            <div className="absolute bottom-3 left-0 right-0 flex justify-center gap-1.5">
-              {product.images.map((_, i) => (
-                <button
-                  key={i}
-                  onClick={() => setImageIndex(i)}
-                  aria-label={`Image ${i + 1}`}
-                  className="transition-colors"
-                  style={{
-                    width: 6, height: 6, borderRadius: '50%',
-                    background: i === imageIndex ? 'rgb(var(--pvr-fg))' : 'rgb(var(--pvr-fg) / 0.3)',
-                    border: 'none', padding: 0, cursor: 'pointer',
-                  }}
-                />
-              ))}
-            </div>
-          )}
-
-        </div>
-
-        {/* Info */}
-        <div className="pt-5 flex flex-col gap-4 flex-1">
-          <div>
-            <Link to={`/shop/${product.id}`} className="text-fg hover:text-fg/65 transition-colors">
-              <h2
-                className="leading-snug"
-                style={{ fontFamily: 'var(--font-mono)', fontWeight: 700, fontSize: '18px' }}
-              >
-                {product.name}
-              </h2>
-            </Link>
-            <p className="text-xs text-fg/55 mt-1">{formatPrice(product.price)}</p>
-          </div>
-
-          <p className="text-xs text-fg/55 leading-[1.7]">{product.description}</p>
-
-          {/* Variant selector */}
-          {product.variants && product.variants.length > 0 && (
-            <div className="flex flex-wrap gap-2">
-              {product.variants.map(v => (
-                <button
-                  key={v.label}
-                  onClick={() => setSelectedVariant(v)}
-                  className="px-3 py-1.5 text-xs tracking-[1px] uppercase border transition-colors"
-                  style={{
-                    borderColor:
-                      selectedVariant?.label === v.label
-                        ? 'rgb(var(--pvr-fg))'
-                        : 'rgb(var(--pvr-fg) / 0.2)',
-                    color:
-                      selectedVariant?.label === v.label
-                        ? 'rgb(var(--pvr-fg))'
-                        : 'rgb(var(--pvr-fg) / 0.5)',
-                  }}
-                >
-                  {v.label}
-                </button>
-              ))}
-            </div>
-          )}
-
-          {/* Add to cart */}
-          <button
-            onClick={handleAdd}
-            disabled={!priceLookupKey}
-            className="mt-auto py-3 text-xs tracking-[2px] uppercase border transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
-            style={{
-              borderColor: added ? 'rgb(var(--pvr-fg))' : 'rgb(var(--pvr-fg) / 0.3)',
-              color: added ? 'rgb(var(--pvr-fg))' : 'rgb(var(--color-fg) / 0.7)',
-            }}
-          >
-            {added ? 'Added ✓' : 'Add to Cart'}
-          </button>
-        </div>
-      </article>
-
-      {lightboxIndex !== null && (
-        <Lightbox
-          images={product.images.map(cardImageSrc)}
-          index={lightboxIndex}
-          onClose={() => setLightboxIndex(null)}
-        />
+      {product.description && (
+        <p className="hidden sm:block font-text mt-1.5 text-[13px] text-fg/55 leading-relaxed line-clamp-2">{product.description}</p>
       )}
-    </>
+
+      <span className="hidden sm:inline-block mt-3 text-[11px] tracking-[1px] uppercase text-fg/45 group-hover:text-fg/80 transition-colors">
+        View →
+      </span>
+    </Link>
   )
 }
 
@@ -327,20 +79,44 @@ const ShopPage = () => {
     }
   }, [])
 
+  const heroImages = PRODUCTS.map((p) => p.images[0]).filter(Boolean).slice(0, 4)
+
   return (
     <>
-      <div className="max-w-[1320px] mx-auto px-4 md:px-12 pt-16 pb-12">
-        <p className="text-xs tracking-[2px] uppercase text-fg/55 mb-6">Shop</p>
-        <h1
-          className="text-fg leading-tight"
-          style={{
-            fontFamily: 'var(--font-display)',
-            fontSize: 'clamp(34px, 4.5vw, 60px)',
-            letterSpacing: '-0.5px',
-          }}
-        >
-          Gear.
-        </h1>
+      {/* Hero */}
+      <div className="max-w-[1320px] mx-auto px-4 md:px-12 pt-14 md:pt-16 pb-10 md:pb-14">
+        <div className="grid md:grid-cols-[1.1fr_1fr] gap-8 md:gap-12 items-center">
+          <div>
+            <p className="text-xs tracking-[2px] uppercase text-fg/55 mb-5">Shop</p>
+            <h1
+              className="text-fg leading-[0.9]"
+              style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(52px, 9vw, 104px)', letterSpacing: '-0.5px' }}
+            >
+              Gear.
+            </h1>
+            <p className="font-text mt-6 text-base text-fg/70 leading-relaxed max-w-[420px]">
+              Tees, totes, cyanotype prints, and whatever else we make — designed and printed
+              by the collective, worn at the shows.
+            </p>
+          </div>
+
+          {heroImages.length > 0 && (
+            <div className="hidden md:grid grid-cols-2 gap-2">
+              {heroImages.map((src, i) => (
+                <div key={i} className="aspect-square overflow-hidden bg-fg/5">
+                  <img
+                    src={cardImageSrc(src)}
+                    alt=""
+                    aria-hidden="true"
+                    className="w-full h-full object-cover"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
 
       {success && (
@@ -351,10 +127,11 @@ const ShopPage = () => {
         </div>
       )}
 
+      {/* Product grid */}
       <div className="max-w-[1320px] mx-auto px-4 md:px-12 pb-24">
         <div className="border-t border-fg/12 pt-8">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-16">
-            {PRODUCTS.map(product => (
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-x-4 sm:gap-x-8 gap-y-8 sm:gap-y-14">
+            {PRODUCTS.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
           </div>

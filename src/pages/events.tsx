@@ -6,6 +6,8 @@ import {
   partitionEvents,
   formatEventDateShort,
   formatTimeRange,
+  eventCoverSrc,
+  type PublicEvent,
 } from '../data/public-events'
 
 type Summary = {
@@ -57,6 +59,44 @@ const EventsPage = () => {
   // Past on load.
   const { upcoming, past } = partitionEvents();
 
+  // Cover photo (or poster) for the row thumbnail.
+  const eventThumb = eventCoverSrc;
+  const eventMeta = (e: PublicEvent) =>
+    [
+      e.photos?.length ? `${e.photos.length} photos` : null,
+      e.tracklist?.length ? `${e.tracklist.length} tracks` : null,
+      e.audioUrl ? 'Set audio' : null,
+    ]
+      .filter(Boolean)
+      .join(' · ');
+
+  // Hero collage photos — deliberately NOT the event covers (those are the row
+  // thumbnails), so the hero shows different shots. First pass takes one
+  // non-cover photo per event for variety; then tops up from any remaining
+  // non-cover photos if still short of four.
+  const heroPhotos = (() => {
+    const covers = new Set(past.map((e) => eventCoverSrc(e)).filter(Boolean) as string[]);
+    const src = (p: { original: string; thumbnail?: string }) => p.thumbnail || p.original;
+    const pick: string[] = [];
+
+    for (const e of past) {
+      const alt = (e.photos ?? []).map(src).find((s) => !covers.has(s) && !pick.includes(s));
+      if (alt) pick.push(alt);
+      if (pick.length >= 4) break;
+    }
+    if (pick.length < 4) {
+      for (const e of past) {
+        for (const p of e.photos ?? []) {
+          const s = src(p);
+          if (!covers.has(s) && !pick.includes(s)) pick.push(s);
+          if (pick.length >= 4) break;
+        }
+        if (pick.length >= 4) break;
+      }
+    }
+    return pick.slice(0, 4);
+  })();
+
   useEffect(() => {
     if (!session) return;
     const mine = readRsvpCookie(session.slug);
@@ -76,35 +116,69 @@ const EventsPage = () => {
 
   return (
     <>
-      {/* ── Header band ── */}
-      <div className="max-w-[1320px] mx-auto px-4 md:px-12 pt-16 pb-12">
-        <p className="text-xs tracking-[2px] uppercase text-fg/55 mb-6">
-          Events
-        </p>
-        <h1
-          className="text-fg leading-tight mb-10"
-          style={{
-            fontFamily: "var(--font-display)",
-            fontSize: "clamp(34px, 4.5vw, 60px)",
-            letterSpacing: "-0.5px",
-          }}
-        >
-          Out in public.
-          <br />
-          In the living room.
-        </h1>
-        <div className="border-t border-fg/12 pt-8 max-w-[640px]">
-          <p className="text-sm text-fg/60 leading-[1.8]">
-            We play records wherever we can — rooftops, warehouses, living
-            rooms. Public shows are open to anyone. Private sessions are small,
-            invite-only, and seriously good.
-          </p>
+      {/* ── Hero ── */}
+      <div className="relative overflow-hidden">
+        {/* Full-bleed wood-grain texture (tiled, theme-aware) */}
+        <div
+          className="hero-grunge absolute inset-0 pointer-events-none"
+          style={{ opacity: 0.18, '--grunge-image': "url('/images/wood-grain-texture.webp')", '--grunge-size': '700px' } as React.CSSProperties}
+          aria-hidden="true"
+        />
+        <div className="relative max-w-[1040px] mx-auto px-4 md:px-12 pt-14 md:pt-16 pb-10 md:pb-14">
+          <div className="grid md:grid-cols-[1.25fr_1fr] gap-8 md:gap-12 items-center">
+            <div>
+              <p className="text-xs tracking-[2px] uppercase font-medium text-fg/70 mb-5">
+                Events
+              </p>
+              <h1
+                className="text-fg leading-[1.05]"
+                style={{
+                  fontFamily: "var(--font-display)",
+                  fontSize: "clamp(34px, 5vw, 60px)",
+                  letterSpacing: "-0.5px",
+                }}
+              >
+                Out in public.
+                <br />
+                In the living room.
+              </h1>
+              <p className="font-text font-medium mt-6 text-base leading-[1.7] max-w-[440px] text-fg/80">
+                We play records wherever we can — rooftops, warehouses, living
+                rooms. Public nights are open to anyone, and every past night
+                has a photo + tracklist recap.
+              </p>
+            </div>
+
+            {/* Recent recap collage */}
+            {heroPhotos.length > 0 && (
+              <div className="hidden md:grid grid-cols-2 gap-2.5">
+                {heroPhotos.map((src, i) => (
+                  <div
+                    key={i}
+                    className="aspect-square overflow-hidden bg-fg/5 border border-fg/15"
+                  >
+                    <img
+                      src={src}
+                      alt=""
+                      aria-hidden="true"
+                      className="w-full h-full object-cover grayscale"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
+      {/* Full-bleed rule below the hero */}
+      <div className="border-t border-fg/12" aria-hidden="true" />
+
       {/* ── Public Events ── */}
-      <div className="max-w-[1320px] mx-auto px-4 md:px-12 mb-20">
-        <div className="flex items-baseline justify-between border-t border-b border-fg/12 py-4 mb-0">
+      <div className="max-w-[1040px] mx-auto px-4 md:px-12 mb-20">
+        <div className="flex items-baseline justify-between border-b border-fg/12 py-4 mb-0">
           <span className="text-xs tracking-[2px] uppercase text-fg/55">
             Public Events
           </span>
@@ -118,35 +192,45 @@ const EventsPage = () => {
 
         {upcoming.map((event) => (
           <div
-            key={event.title}
-            className="flex flex-col md:flex-row md:items-center gap-3 md:gap-6 py-6 border-b border-fg/12 hover:bg-fg/[0.03] transition-colors -mx-4 px-4"
+            key={event.slug}
+            className="group flex flex-col md:flex-row md:items-center gap-4 md:gap-6 py-6 border-b border-fg/12 hover:bg-fg/[0.03] transition-colors -mx-4 px-4"
           >
-            {/* Top row on mobile: index + date + RSVP pill */}
-            <div className="flex items-center gap-3 md:contents">
-              <span className="text-xs tracking-[1px] uppercase text-fg/55 md:w-28 md:shrink-0">
-                {formatEventDateShort(event.startDateTime)}
-              </span>
-              {/* RSVP pill — right-aligned on mobile top row */}
-              {event.rsvpEnabled && (
-                <Link
-                  to={`/events/${event.slug}`}
-                  className="ml-auto md:hidden text-xs tracking-[1px] uppercase text-fg/50 border border-fg/20 px-3 py-1.5 hover:border-fg/50 hover:text-fg transition-colors shrink-0"
-                >
-                  Free · RSVP
-                </Link>
+            {/* Thumbnail */}
+            <Link
+              to={`/events/${event.slug}`}
+              className="block w-full md:w-44 md:shrink-0 aspect-video bg-fg/5 overflow-hidden"
+              aria-label={event.title}
+            >
+              {eventThumb(event) && (
+                <img
+                  src={eventThumb(event)}
+                  alt={event.title}
+                  className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
+                  loading="lazy"
+                  decoding="async"
+                />
               )}
-            </div>
+            </Link>
 
-            {/* Title + venue/DJs */}
+            {/* Date + title + venue/DJs */}
             <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-3">
+                <span className="text-xs tracking-[1px] uppercase text-fg/55">
+                  {formatEventDateShort(event.startDateTime)}
+                </span>
+                {event.rsvpEnabled && (
+                  <Link
+                    to={`/events/${event.slug}`}
+                    className="ml-auto md:hidden text-xs tracking-[1px] uppercase text-fg/50 border border-fg/20 px-3 py-1.5 hover:border-fg/50 hover:text-fg transition-colors shrink-0"
+                  >
+                    Free · RSVP
+                  </Link>
+                )}
+              </div>
               <Link
                 to={`/events/${event.slug}`}
-                className="text-fg leading-snug"
-                style={{
-                  fontFamily: "var(--font-mono)",
-                  fontWeight: 700,
-                  fontSize: "clamp(18px, 4vw, 21px)",
-                }}
+                className="card-title block mt-1 text-fg leading-snug"
+                style={{ fontSize: "clamp(18px, 4vw, 21px)" }}
               >
                 {event.title}
               </Link>
@@ -159,28 +243,19 @@ const EventsPage = () => {
             </div>
 
             {/* RSVP — desktop only */}
-            {event.rsvpEnabled ? (
-              <Link
-                to={`/events/${event.slug}`}
-                className="hidden md:inline text-xs tracking-[1px] uppercase text-fg/50 border border-fg/20 px-4 py-2 hover:border-fg/50 hover:text-fg transition-colors shrink-0"
-              >
-                Free · RSVP
-              </Link>
-            ) : (
-              <Link
-                to={`/events/${event.slug}`}
-                className="hidden md:inline text-xs tracking-[1px] uppercase text-fg/50 border border-fg/20 px-4 py-2 hover:border-fg/50 hover:text-fg transition-colors shrink-0"
-              >
-                Details →
-              </Link>
-            )}
+            <Link
+              to={`/events/${event.slug}`}
+              className="hidden md:inline text-xs tracking-[1px] uppercase text-fg/50 border border-fg/20 px-4 py-2 hover:border-fg/50 hover:text-fg transition-colors shrink-0"
+            >
+              {event.rsvpEnabled ? "Free · RSVP" : "Details →"}
+            </Link>
           </div>
         ))}
       </div>
 
       {/* ── Past Events ── */}
       {past.length > 0 && (
-        <div className="max-w-[1320px] mx-auto px-4 md:px-12 mb-20">
+        <div className="max-w-[1040px] mx-auto px-4 md:px-12 mb-20">
           <div className="flex items-baseline justify-between border-t border-b border-fg/12 py-4 mb-0">
             <span className="text-xs tracking-[2px] uppercase text-fg/40">
               Past Events
@@ -190,36 +265,51 @@ const EventsPage = () => {
           {past.map((event) => (
             <div
               key={event.slug}
-              className="flex flex-col md:flex-row md:items-center gap-3 md:gap-6 py-6 border-b border-fg/12 opacity-55 hover:opacity-100 transition-opacity -mx-4 px-4"
+              className="group flex flex-col md:flex-row md:items-center gap-4 md:gap-6 py-6 border-b border-fg/12 -mx-4 px-4"
             >
-              <div className="flex items-center gap-3 md:contents">
-                <span className="text-xs tracking-[1px] uppercase text-fg/45 md:w-28 md:shrink-0">
-                  {formatEventDateShort(event.startDateTime)}
-                </span>
-              </div>
+              {/* Recap thumbnail */}
+              <Link
+                to={`/events/${event.slug}`}
+                className="block w-full md:w-44 md:shrink-0 aspect-video bg-fg/5 overflow-hidden"
+                aria-label={event.title}
+              >
+                {eventThumb(event) && (
+                  <img
+                    src={eventThumb(event)}
+                    alt={event.title}
+                    className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                )}
+              </Link>
 
               <div className="flex-1 min-w-0">
+                <span className="text-xs tracking-[1px] uppercase text-fg/45">
+                  {formatEventDateShort(event.startDateTime)}
+                </span>
                 <Link
                   to={`/events/${event.slug}`}
-                  className="text-fg leading-snug"
-                  style={{
-                    fontFamily: "var(--font-mono)",
-                    fontWeight: 700,
-                    fontSize: "clamp(18px, 4vw, 21px)",
-                  }}
+                  className="card-title block mt-1 text-fg leading-snug"
+                  style={{ fontSize: "clamp(18px, 4vw, 21px)" }}
                 >
                   {event.title}
                 </Link>
                 <p className="text-xs text-fg/45 mt-1">
                   {event.venue}, {event.location} · with {event.djs.join(", ")}
                 </p>
+                {eventMeta(event) && (
+                  <p className="text-[11px] tracking-[1px] uppercase text-fg/40 mt-2">
+                    {eventMeta(event)}
+                  </p>
+                )}
               </div>
 
               <Link
                 to={`/events/${event.slug}`}
-                className="hidden md:inline text-xs tracking-[1px] uppercase text-fg/40 border border-fg/15 px-4 py-2 hover:border-fg/40 hover:text-fg transition-colors shrink-0"
+                className="hidden md:inline text-xs tracking-[1px] uppercase text-fg/45 border border-fg/20 px-4 py-2 hover:border-fg/50 hover:text-fg transition-colors shrink-0"
               >
-                Details →
+                View recap →
               </Link>
             </div>
           ))}
@@ -228,7 +318,7 @@ const EventsPage = () => {
 
       {/* ── Private Listening Sessions ── */}
       {showPrivateSessions && (
-      <div className="max-w-[1320px] mx-auto px-4 md:px-12 mb-24">
+      <div className="max-w-[1040px] mx-auto px-4 md:px-12 mb-24">
         <div className="border-t border-fg/12 pt-6 mb-3">
           <span className="text-xs tracking-[2px] uppercase text-fg/55">
             Private Listening Sessions

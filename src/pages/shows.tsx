@@ -33,14 +33,24 @@ export default function ShowsArchivePage({ data }: PageProps<DataProps>) {
 
   return (
     <>
-      <section className="max-w-[1320px] mx-auto px-4 md:px-12 pt-16 pb-12">
-        <p className="text-xs tracking-[2px] uppercase text-fg/55 mb-6">Archive</p>
-        <h1 className="text-fg leading-tight mb-10" style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(34px, 4.5vw, 60px)', letterSpacing: '-0.5px' }}>Recorded Live on Vinyl</h1>
-        <div className="border-t border-fg/12 pt-8 max-w-[640px]">
-          <p className="text-sm text-fg/60 leading-[1.8]">Recorded vinyl sets, track-by-track journeys, and live selections from PVR.</p>
+      {/* Hero band — weave texture background (tiled, theme-aware) */}
+      <div className="relative overflow-hidden">
+        <div
+          className="hero-grunge absolute inset-0 pointer-events-none"
+          style={{ opacity: 0.12, '--grunge-image': "url('/images/lines-wiggle.webp')", '--grunge-size': '200px' } as React.CSSProperties}
+          aria-hidden="true"
+        />
+        <div className="relative max-w-[1320px] mx-auto px-4 md:px-12 pt-16 pb-12">
+          <p className="text-xs tracking-[2px] uppercase font-medium text-fg/80 mb-6">Archive</p>
+          <h1 className="text-fg leading-tight mb-10" style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(34px, 4.5vw, 60px)', letterSpacing: '-0.5px' }}>Recorded Live on Vinyl</h1>
+          <div className="max-w-[640px]">
+            <p className="font-text font-medium text-base text-fg/85 leading-[1.8]">Recorded vinyl sets, track-by-track journeys, and live selections from PVR.</p>
+          </div>
         </div>
+      </div>
 
-        <div className="mt-10 border-t border-b border-fg/12 py-4 flex justify-between text-xs tracking-[1px] text-fg/55">
+      <section className="max-w-[1320px] mx-auto px-4 md:px-12 pt-10 pb-12">
+        <div className="border-b border-fg/12 py-4 flex justify-between text-xs tracking-[1px] text-fg/55">
           <span className="uppercase">All shows</span>
           <span>{Math.min(visible, shows.length)} of {shows.length}</span>
         </div>
@@ -58,9 +68,9 @@ export default function ShowsArchivePage({ data }: PageProps<DataProps>) {
               </div>
               <div>
                 <p className="text-xs tracking-[2px] uppercase text-fg/55">{formatDate(show.frontmatter.date)}</p>
-                <h2 className="mt-3 text-fg leading-snug" style={{ fontFamily: 'var(--font-mono)', fontWeight: 700, fontSize: 'clamp(18px, 4vw, 21px)' }}>{show.frontmatter.title}</h2>
+                <h2 className="card-title mt-3 text-fg leading-snug" style={{ fontSize: 'clamp(18px, 4vw, 21px)' }}>{show.frontmatter.title}</h2>
                 {show.frontmatter.host?.length > 0 && <p className="mt-1 text-sm text-fg/55">with {show.frontmatter.host.join(', ')}</p>}
-                <p className="mt-4 max-w-2xl text-sm leading-relaxed text-fg/50 line-clamp-3">{show.frontmatter.description}</p>
+                <p className="font-text mt-4 max-w-2xl text-[15px] leading-relaxed text-fg/55 line-clamp-3">{show.frontmatter.description}</p>
                 <div className="mt-5 flex flex-wrap gap-2">
                   {(show.frontmatter.tags || []).map((tag) => <span key={tag} className="text-[11px] tracking-[1px] uppercase px-2 py-1 border border-fg/20 text-fg/55">{tag}</span>)}
                 </div>

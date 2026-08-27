@@ -7,7 +7,7 @@ import { useOgImageFromPath } from '../hooks/useOgImage'
 type Person = {
   name: string
   role: string
-  bio: string
+  bio?: string
   website: string | null
   image: React.ReactNode
 }
@@ -15,8 +15,7 @@ type Person = {
 const CORE: Person[] = [
   {
     name: 'Adam',
-    role: 'Founder · DJ · Editor',
-    bio: 'Digs the records, builds the speakers, runs the boards. Software engineer by trade, vinyl obsessive the rest of the time.',
+    role: 'Founder · Vinyl Selector · Editor',
     website: 'http://saegey.com',
     image: (
       <StaticImage
@@ -34,7 +33,6 @@ const CORE: Person[] = [
   {
     name: 'Scarlett',
     role: 'Photography · Social',
-    bio: "Shoots the nights and runs the feed — the eye that carries PVR's look off the decks and online.",
     website: null,
     image: (
       <StaticImage
@@ -54,8 +52,7 @@ const CORE: Person[] = [
 const COLLABORATORS: Person[] = [
   {
     name: 'Ben',
-    role: 'Collaborator · DJ',
-    bio: "Designer and selector who helped shape PVR's early look and sound. Still drops in to spin and collaborate.",
+    role: 'Collaborator · Vinyl Selector',
     website: 'https://www.benschauland.com',
     image: (
       <StaticImage
@@ -89,7 +86,9 @@ const PersonRow = ({ person }: { person: Person }) => (
         <p className="text-xs tracking-[1px] uppercase text-fg/55 mt-1">{person.role}</p>
       </div>
     </div>
-    <p className="text-sm text-fg/60 leading-[1.7] mb-3 md:hidden">{person.bio}</p>
+    {person.bio && (
+      <p className="font-text text-[15px] text-fg/65 leading-[1.7] mb-3 md:hidden">{person.bio}</p>
+    )}
     {person.website && (
       <a
         href={person.website}
@@ -101,15 +100,15 @@ const PersonRow = ({ person }: { person: Person }) => (
       </a>
     )}
 
-    {/* Desktop: 4-column grid */}
+    {/* Desktop: photo · name/role (+ optional bio) · website */}
     <div
-      className="hidden md:grid items-start gap-8"
-      style={{ gridTemplateColumns: '60px 1fr 2fr 100px' }}
+      className="hidden md:grid items-center gap-6"
+      style={{ gridTemplateColumns: '60px 1fr auto' }}
     >
       <div className="w-[60px] h-[60px] rounded-full overflow-hidden shrink-0 grayscale">
         {person.image}
       </div>
-      <div className="pt-1">
+      <div>
         <p
           className="text-fg leading-snug"
           style={{ fontFamily: 'var(--font-display)', fontSize: '20px' }}
@@ -117,20 +116,20 @@ const PersonRow = ({ person }: { person: Person }) => (
           {person.name}
         </p>
         <p className="text-xs tracking-[1px] uppercase text-fg/55 mt-1">{person.role}</p>
+        {person.bio && (
+          <p className="font-text text-[15px] text-fg/65 leading-[1.7] mt-2 max-w-[520px]">{person.bio}</p>
+        )}
       </div>
-      <p className="text-sm text-fg/60 leading-[1.7] pt-1">{person.bio}</p>
-      <div className="pt-1">
-        {person.website ? (
-          <a
-            href={person.website}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-xs tracking-[1px] uppercase text-fg/55 hover:text-fg transition-colors whitespace-nowrap"
-          >
-            Website →
-          </a>
-        ) : null}
-      </div>
+      {person.website && (
+        <a
+          href={person.website}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-xs tracking-[1px] uppercase text-fg/55 hover:text-fg transition-colors whitespace-nowrap"
+        >
+          Website →
+        </a>
+      )}
     </div>
   </div>
 )
@@ -140,16 +139,20 @@ const AboutPage = () => {
     <>
 
       {/* ── Header band ── */}
-      <div className="max-w-[1320px] mx-auto px-4 md:px-12 pt-16 pb-12">
+      <div className="relative overflow-hidden">
+        {/* Grunge texture background — tiled, theme-aware */}
+        <div className="hero-grunge absolute inset-0 pointer-events-none" style={{ opacity: 0.55 }} aria-hidden="true" />
+
+        <div className="relative max-w-[1320px] mx-auto px-4 md:px-12 pt-16 pb-12">
         <div className="flex flex-col-reverse md:grid md:gap-12" style={{ gridTemplateColumns: 'minmax(0,1.2fr) minmax(0,1fr)' }}>
-          {/* Left: eyebrow + h1 */}
-          <div className="flex flex-col justify-end mt-8 md:mt-0">
-            <p className="text-xs tracking-[2px] uppercase text-fg/55 mb-6">About</p>
+          {/* Left: eyebrow pinned top, headline pinned bottom (frames the photo) */}
+          <div className="flex flex-col justify-between mt-8 md:mt-0">
+            <p className="text-xs tracking-[2px] uppercase text-fg/55 mb-6 md:mb-0">About</p>
             <h1
-              className="text-fg leading-tight"
+              className="text-fg leading-[1.05]"
               style={{
                 fontFamily: 'var(--font-display)',
-                fontSize: 'clamp(34px, 4.5vw, 60px)',
+                fontSize: 'clamp(40px, 5.5vw, 78px)',
                 letterSpacing: '-0.5px',
               }}
             >
@@ -157,52 +160,60 @@ const AboutPage = () => {
             </h1>
           </div>
 
-          {/* Right: photo — full width on mobile, constrained on desktop */}
-          <div className="overflow-hidden grayscale w-full" style={{ aspectRatio: '4/3' }}>
-            <StaticImage
-              src="../images/DSC00847.jpg"
-              alt="Public Vinyl Radio"
-              placeholder="blurred"
-              formats={['auto', 'webp']}
-              style={{ width: '100%', height: '100%' }}
-              imgStyle={{ objectFit: 'cover' }}
-            />
+          {/* Right: framed photo — the mat + border separate it from the grunge bg */}
+          <div className="bg-bg border border-fg/25 p-2 md:p-3 shadow-md">
+            <div className="overflow-hidden grayscale w-full" style={{ aspectRatio: '4/3' }}>
+              <StaticImage
+                src="../images/DSC00847.jpg"
+                alt="Public Vinyl Radio"
+                placeholder="blurred"
+                formats={['auto', 'webp']}
+                style={{ width: '100%', height: '100%' }}
+                imgStyle={{ objectFit: 'cover' }}
+              />
+            </div>
           </div>
+        </div>
         </div>
       </div>
 
+      {/* Full-bleed rule under the hero */}
+      <div className="border-t border-fg/12" aria-hidden="true" />
+
       {/* ── Intro ── */}
-      <div className="max-w-[820px] mx-auto px-4 md:px-12 py-12 border-t border-fg/12">
-        <p className="text-base text-fg/75 leading-[1.8]">
+      <div className="max-w-[820px] mx-auto px-4 md:px-12 py-12">
+        <p className="font-text text-lg text-fg/80 leading-[1.8]">
           100% vinyl, start to finish. We dig for the records, build the systems that play
           them, and put on the music that moves us — global rhythms, deep grooves, no filler.
         </p>
       </div>
 
-      {/* ── The Sound / DIY ── */}
-      <div className="max-w-[820px] mx-auto px-4 md:px-12">
-        <div className="border-t border-fg/12 py-12">
-          <p className="text-xs tracking-[2px] uppercase text-fg/55 mb-4">The Sound</p>
-          <p className="text-sm text-fg/65 leading-[1.8]">
-            We play records because they're alive — the pops, the hiss, the imperfections that
-            make a set breathe. Everything runs through custom-built speakers and a rotary mixer,
-            tuned for feel, not for volume. Hi-fi warmth over a predictable PA stack.
-          </p>
-        </div>
+      {/* ── The Sound ── */}
+      <div className="border-t border-fg/12" aria-hidden="true" />
+      <div className="max-w-[820px] mx-auto px-4 md:px-12 py-12">
+        <p className="text-xs tracking-[2px] uppercase text-fg/55 mb-4">The Sound</p>
+        <p className="font-text text-[15px] text-fg/70 leading-[1.8]">
+          We play records because they're alive — the pops, the hiss, the imperfections that
+          make a set breathe. Everything runs through custom-built speakers and a rotary mixer,
+          tuned for feel, not for volume. Hi-fi warmth over a predictable PA stack.
+        </p>
+      </div>
 
-        <div className="border-t border-fg/12 py-12">
-          <p className="text-xs tracking-[2px] uppercase text-fg/55 mb-4">DIY to the Core</p>
-          <p className="text-sm text-fg/65 leading-[1.8]">
-            Public Vinyl Radio is a vinyl collective, DIY to the bone. We build our own speakers,
-            cut our own merch, print our own flyers, make our own art. The door's open to selectors
-            who dig the same.
-          </p>
-        </div>
+      {/* ── DIY to the Core ── */}
+      <div className="border-t border-fg/12" aria-hidden="true" />
+      <div className="max-w-[820px] mx-auto px-4 md:px-12 py-12">
+        <p className="text-xs tracking-[2px] uppercase text-fg/55 mb-4">DIY to the Core</p>
+        <p className="font-text text-[15px] text-fg/70 leading-[1.8]">
+          Public Vinyl Radio is a vinyl collective, DIY to the bone. We build our own speakers,
+          cut our own merch, print our own flyers, make our own art. The door's open to selectors
+          who dig the same.
+        </p>
       </div>
 
       {/* ── The People Behind It ── */}
-      <div className="max-w-[1320px] mx-auto px-4 md:px-12 mt-4 mb-24">
-        <div className="border-t border-fg/12 pt-6 mb-2">
+      <div className="border-t border-fg/12" aria-hidden="true" />
+      <div className="max-w-[820px] mx-auto px-4 md:px-12 pt-6 mb-24">
+        <div className="mb-2">
           <p className="text-xs tracking-[2px] uppercase text-fg/55">The People Behind It</p>
         </div>
 
@@ -234,7 +245,7 @@ const AboutPage = () => {
           >
             Play With Us
           </h2>
-          <p className="text-sm text-fg/60 leading-[1.7] mb-8 max-w-[480px]">
+          <p className="font-text text-[15px] text-fg/65 leading-[1.7] mb-8 max-w-[480px]">
             Vinyl selector with a crate worth hearing? We're building a home for analog sound
             and global rhythms. Bring a set.
           </p>

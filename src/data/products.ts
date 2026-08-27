@@ -25,7 +25,7 @@ export type Product = {
 export const PRODUCTS: Product[] = [
   {
     id: "pvr-cyanotype-print--pvr-logo",
-    name: "PVR Cyanotype Print",
+    name: "PVR Print",
     description:
       "8×10 cyanotype print on 280g/m² paper and hand-printed at home — each one is unique with its own natural variations.",
     price: 20,
@@ -86,7 +86,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: "pvr-cyanotype-print--ballard",
-    name: "Ballard Cyanotype Print",
+    name: "Ballard Print",
     description:
       "8×10 cyanotype print on 280g/m² paper. Shot on film in Ballard and hand-printed at home — each one is unique with its own natural variations.",
     price: 20,
@@ -99,7 +99,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: "pvr-cyanotype-print--brewery-district",
-    name: "Ballard Brewery District Cyanotype Print",
+    name: "Ballard Brewery District Print",
     description:
       "8×10 cyanotype print on 280g/m² paper. Shot on film in the Ballard brewery district and hand-printed at home — each one is unique with its own natural variations.",
     price: 20,
@@ -112,7 +112,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: "pvr-cyanotype-print--summer-solstice",
-    name: "Summer Solstice Cyanotype Print",
+    name: "Summer Solstice Print",
     description:
       "8×10 cyanotype print on 280g/m² paper. Vinyl event flyer from our Summer Solstice night at Rapha Seattle, June 20th 2025. Hand-printed at home — each one is unique with its own natural variations.",
     price: 20,

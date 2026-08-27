@@ -39,7 +39,9 @@
     "event:tracklist": "node scripts/event-tracklist.mts",
     "event:tracklist:dry": "node scripts/event-tracklist.mts --dry-run",
     "event:photos": "op run --env-file=.env.r2.op -- node scripts/event-photos.mts",
-    "event:photos:dry": "op run --env-file=.env.r2.op -- node scripts/event-photos.mts --dry-run"
+    "event:photos:dry": "op run --env-file=.env.r2.op -- node scripts/event-photos.mts --dry-run",
+    "pvr:ig": "scripts/pxd-export.sh --format jpeg --quality 90 --width 1440 --subdir instagram",
+    "pvr:web": "scripts/pxd-export.sh --format webp --quality 82 --width 1600 --subdir web"
   },
   "overrides": {
     "eslint-config-react-app": {

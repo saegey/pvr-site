@@ -22,7 +22,7 @@ const formatTime = (time: number) => {
 };
 
 const trackStyle = (fill: number) =>
-  `linear-gradient(to right, rgb(236 236 230) 0%, rgb(236 236 230) ${fill}%, rgba(236,236,230,0.15) ${fill}%, rgba(236,236,230,0.15) 100%)`;
+  `linear-gradient(to right, rgb(var(--pvr-fg)) 0%, rgb(var(--pvr-fg)) ${fill}%, rgb(var(--pvr-fg) / 0.15) ${fill}%, rgb(var(--pvr-fg) / 0.15) 100%)`;
 
 const R2PlaylistPlayer = ({ tracks, autoplay = false, showDownload = true }: R2PlaylistPlayerProps) => {
   const audioRef = useRef<HTMLAudioElement>(null);
@@ -108,7 +108,7 @@ const R2PlaylistPlayer = ({ tracks, autoplay = false, showDownload = true }: R2P
     border: 'none',
     cursor: 'pointer',
     padding: 0,
-    color: 'rgb(236 236 230)',
+    color: 'rgb(var(--pvr-fg))',
     display: 'flex',
     alignItems: 'center',
   };
@@ -120,18 +120,18 @@ const R2PlaylistPlayer = ({ tracks, autoplay = false, showDownload = true }: R2P
         maxWidth: '700px',
         margin: '0 auto',
         borderRadius: '10px',
-        backgroundColor: 'rgba(255,255,255,0.05)',
-        border: '1px solid rgba(255,255,255,0.1)',
+        backgroundColor: 'rgb(var(--pvr-fg) / 0.05)',
+        border: '1px solid rgb(var(--pvr-fg) / 0.1)',
         overflow: 'hidden',
       }}
     >
       {/* Current Track Info */}
-      <div style={{ padding: '16px', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
-        <div style={{ fontSize: '15px', fontWeight: 'bold', marginBottom: '4px', color: 'rgb(236 236 230)' }}>
+      <div style={{ padding: '16px', borderBottom: '1px solid rgb(var(--pvr-fg) / 0.1)' }}>
+        <div style={{ fontSize: '15px', fontWeight: 'bold', marginBottom: '4px', color: 'rgb(var(--pvr-fg))' }}>
           {currentTrack.title}
         </div>
         {currentTrack.artist && (
-          <div style={{ fontSize: '13px', color: 'rgba(236,236,230,0.7)' }}>
+          <div style={{ fontSize: '13px', color: 'rgb(var(--pvr-fg) / 0.7)' }}>
             {currentTrack.artist}
           </div>
         )}
@@ -166,8 +166,8 @@ const R2PlaylistPlayer = ({ tracks, autoplay = false, showDownload = true }: R2P
                 height: '48px',
                 borderRadius: '50%',
                 border: 'none',
-                backgroundColor: 'rgb(236 236 230)',
-                color: 'rgb(11 11 10)',
+                backgroundColor: 'rgb(var(--pvr-fg))',
+                color: 'rgb(var(--pvr-bg))',
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
@@ -199,7 +199,7 @@ const R2PlaylistPlayer = ({ tracks, autoplay = false, showDownload = true }: R2P
 
           {/* Time and Volume */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <span style={{ fontSize: '12px', fontFamily: 'monospace', color: 'rgba(236,236,230,0.7)', flex: 1 }}>
+            <span style={{ fontSize: '12px', fontFamily: 'monospace', color: 'rgb(var(--pvr-fg) / 0.7)', flex: 1 }}>
               {formatTime(currentTime)} / {formatTime(duration)}
             </span>
 
@@ -230,7 +230,7 @@ const R2PlaylistPlayer = ({ tracks, autoplay = false, showDownload = true }: R2P
       </div>
 
       {/* Playlist */}
-      <div style={{ maxHeight: '300px', overflowY: 'auto', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
+      <div style={{ maxHeight: '300px', overflowY: 'auto', borderTop: '1px solid rgb(var(--pvr-fg) / 0.1)' }}>
         {tracks.map((track, index) => (
           <div
             key={index}
@@ -238,29 +238,29 @@ const R2PlaylistPlayer = ({ tracks, autoplay = false, showDownload = true }: R2P
             style={{
               padding: '10px 16px',
               cursor: 'pointer',
-              backgroundColor: index === currentTrackIndex ? 'rgba(255,255,255,0.1)' : 'transparent',
-              borderBottom: index < tracks.length - 1 ? '1px solid rgba(255,255,255,0.05)' : 'none',
+              backgroundColor: index === currentTrackIndex ? 'rgb(var(--pvr-fg) / 0.1)' : 'transparent',
+              borderBottom: index < tracks.length - 1 ? '1px solid rgb(var(--pvr-fg) / 0.05)' : 'none',
               transition: 'background-color 0.2s',
             }}
-            onMouseEnter={e => { if (index !== currentTrackIndex) (e.currentTarget as HTMLElement).style.backgroundColor = 'rgba(255,255,255,0.08)' }}
-            onMouseLeave={e => { (e.currentTarget as HTMLElement).style.backgroundColor = index === currentTrackIndex ? 'rgba(255,255,255,0.1)' : 'transparent' }}
+            onMouseEnter={e => { if (index !== currentTrackIndex) (e.currentTarget as HTMLElement).style.backgroundColor = 'rgb(var(--pvr-fg) / 0.08)' }}
+            onMouseLeave={e => { (e.currentTarget as HTMLElement).style.backgroundColor = index === currentTrackIndex ? 'rgb(var(--pvr-fg) / 0.1)' : 'transparent' }}
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-              <div style={{ fontSize: '12px', color: 'rgba(236,236,230,0.5)', width: '24px', flexShrink: 0 }}>
+              <div style={{ fontSize: '12px', color: 'rgb(var(--pvr-fg) / 0.5)', width: '24px', flexShrink: 0 }}>
                 {index === currentTrackIndex && isPlaying ? <IoPlay size={12} /> : index + 1}
               </div>
               <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontSize: '13px', fontWeight: index === currentTrackIndex ? 'bold' : 'normal', color: 'rgb(236 236 230)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                <div style={{ fontSize: '13px', fontWeight: index === currentTrackIndex ? 'bold' : 'normal', color: 'rgb(var(--pvr-fg))', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                   {track.title}
                 </div>
                 {track.artist && (
-                  <div style={{ fontSize: '12px', color: 'rgba(236,236,230,0.6)' }}>
+                  <div style={{ fontSize: '12px', color: 'rgb(var(--pvr-fg) / 0.6)' }}>
                     {track.artist}
                   </div>
                 )}
               </div>
               {!!track.duration && (
-                <div style={{ fontSize: '12px', fontFamily: 'monospace', color: 'rgba(236,236,230,0.5)', flexShrink: 0 }}>
+                <div style={{ fontSize: '12px', fontFamily: 'monospace', color: 'rgb(var(--pvr-fg) / 0.5)', flexShrink: 0 }}>
                   {formatTime(track.duration)}
                 </div>
               )}

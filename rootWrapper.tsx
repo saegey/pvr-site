@@ -22,7 +22,7 @@ const rootWrapper = ({ element, props }: Props) => {
   if (shouldBypassLayout(pathname)) {
     return <>{element}</>
   }
-  return <CartProvider><Layout>{element}</Layout></CartProvider>
+  return <CartProvider><Layout pathname={pathname}>{element}</Layout></CartProvider>
 }
 
 export default rootWrapper
